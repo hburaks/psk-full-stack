@@ -43,6 +43,8 @@ public class User implements UserDetails, Principal {
     @Column(unique = true)
     private String email;
     private String password;
+    private String phoneNumber;
+    private String birthYear;
     private boolean accountLocked;
     private boolean enabled;
 
