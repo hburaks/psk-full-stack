@@ -1,6 +1,6 @@
 services:
   postgres:
-    container_name: postgres-sql-bsn
+    container_name: postgres-sql-psk
     image: postgres
     environment:
       POSTGRES_USER: username
@@ -10,12 +10,12 @@ services:
     volumes:
       - postgres:/data/postgres
     ports:
-      - 5432:5432
+      - 5433:5433
     networks:
       - spring-demo
     restart: unless-stopped
   mail-dev:
-    container_name: mail-dev-bsn
+    container_name: mail-dev-psk
     image: maildev/maildev
     ports:
       - 1080:1080
