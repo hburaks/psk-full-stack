@@ -1,5 +1,7 @@
 package com.hburak_dev.psk_full_stack.authentication;
 
+import com.hburak_dev.psk_full_stack.email.EmailService;
+import com.hburak_dev.psk_full_stack.email.EmailTemplateName;
 import com.hburak_dev.psk_full_stack.role.RoleRepository;
 import com.hburak_dev.psk_full_stack.user.Token;
 import com.hburak_dev.psk_full_stack.user.TokenRepository;
@@ -25,6 +27,7 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
     private final TokenRepository tokenRepository;
+    private final EmailService emailService;
 
     @Value("${application.mailing.frontend.activation-url}")
     private String activationUrl;
@@ -85,7 +88,8 @@ public class AuthenticationService {
     private void sendValidationEmail(User user) throws MessagingException {
         var newToken = generateAndSaveActivationToken(user);
 
-        // emailService.sendEmail()
+        emailService.sendEmail(user.getEmail(), user.getFullName(), EmailTemplateName.ACTIVATE_ACCOUNT, activationUrl, newToken, "Account activation");
+
     }
 
     private String generateActivationCode(int length) {
