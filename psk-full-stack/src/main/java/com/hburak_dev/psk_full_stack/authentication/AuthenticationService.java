@@ -3,6 +3,7 @@ package com.hburak_dev.psk_full_stack.authentication;
 import com.hburak_dev.psk_full_stack.email.EmailService;
 import com.hburak_dev.psk_full_stack.email.EmailTemplateName;
 import com.hburak_dev.psk_full_stack.role.RoleRepository;
+import com.hburak_dev.psk_full_stack.security.JwtService;
 import com.hburak_dev.psk_full_stack.user.Token;
 import com.hburak_dev.psk_full_stack.user.TokenRepository;
 import com.hburak_dev.psk_full_stack.user.User;
@@ -10,6 +11,8 @@ import com.hburak_dev.psk_full_stack.user.UserRepository;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -17,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -25,6 +29,8 @@ public class AuthenticationService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
+    private final AuthenticationManager authenticationManager;
     private final RoleRepository roleRepository;
     private final TokenRepository tokenRepository;
     private final EmailService emailService;
@@ -104,5 +110,23 @@ public class AuthenticationService {
         }
 
         return codeBuilder.toString();
+    }
+
+    public AuthenticationResponse authenticate(AuthenticationRequest request) {
+        var auth = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        request.getEmail(),
+                        request.getPassword()
+                )
+        );
+
+        var claims = new HashMap<String, Object>();
+        var user = ((User) auth.getPrincipal());
+        claims.put("fullName", user.getFullName());
+
+        var jwtToken = jwtService.generateToken(claims, (User) auth.getPrincipal());
+        return AuthenticationResponse.builder()
+                .token(jwtToken)
+                .build();
     }
 }
