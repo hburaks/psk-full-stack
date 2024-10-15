@@ -1,4 +1,4 @@
-package com.hburak_dev.psk_full_stack.config.BeansConfig;
+package com.hburak_dev.psk_full_stack.config;
 
 
 import lombok.RequiredArgsConstructor;
