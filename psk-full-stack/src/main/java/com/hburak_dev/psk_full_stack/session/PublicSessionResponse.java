@@ -13,6 +13,4 @@ public class PublicSessionResponse {
 
     private LocalDateTime date;
 
-    private SessionStatusType sessionStatus;
-
 }

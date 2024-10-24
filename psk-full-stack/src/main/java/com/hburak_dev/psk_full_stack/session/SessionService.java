@@ -6,10 +6,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public interface SessionService {
 
-    PublicSessionResponse getAllSessionsWeekly(LocalDateTime week);
+    List<PublicSessionResponse> getAllSessionsWeekly(LocalDateTime week);
 
     PageResponse<SessionResponse> getMySessions(Authentication connectedUser);
 
@@ -29,8 +30,8 @@ public interface SessionService {
 
     PageResponse<UserWithSessionResponse> getAllUsersWithSessionV2(int page, int size, Authentication connectedUser);
 
-    PublicSessionResponse makeUnavailableV2(SessionAvailabilityRequest sessionAvailabilityRequest, Authentication connectedUser);
+    SessionResponseV2 makeUnavailableV2(SessionAvailabilityRequest sessionAvailabilityRequest, Authentication connectedUser);
 
-    PublicSessionResponse makeAvailableV2(SessionAvailabilityRequest sessionAvailabilityRequest, Authentication connectedUser);
+    SessionResponseV2 makeAvailableV2(SessionAvailabilityRequest sessionAvailabilityRequest, Authentication connectedUser);
 
 }
