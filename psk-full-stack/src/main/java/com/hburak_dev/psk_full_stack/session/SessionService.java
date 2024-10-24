@@ -12,7 +12,7 @@ public interface SessionService {
 
     List<PublicSessionResponse> getAllSessionsWeekly(LocalDateTime week);
 
-    PageResponse<SessionResponse> getMySessions(Authentication connectedUser);
+    PageResponse<SessionResponse> getMySessions(int page, int size, Authentication connectedUser);
 
     Integer createUserSession(UserSessionRequest userSessionRequest, Authentication connectedUser);
 

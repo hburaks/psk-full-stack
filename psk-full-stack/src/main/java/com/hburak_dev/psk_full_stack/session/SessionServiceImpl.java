@@ -1,8 +1,13 @@
 package com.hburak_dev.psk_full_stack.session;
 
 import com.hburak_dev.psk_full_stack.common.PageResponse;
+import com.hburak_dev.psk_full_stack.user.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -35,8 +40,27 @@ public class SessionServiceImpl implements SessionService {
     }
 
     @Override
-    public PageResponse<SessionResponse> getMySessions(Authentication connectedUser) {
-        return null;
+    public PageResponse<SessionResponse> getMySessions(int page, int size, Authentication connectedUser) {
+        User user = (User) connectedUser.getPrincipal();
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
+
+        Page<Session> sessions = sessionRepository.findByUserId(pageable, user.getId());
+
+        List<SessionResponse> sessionResponseList = sessions
+                .stream()
+                .map(sessionMapper::toSessionResponse)
+                .toList();
+
+        return new PageResponse<>(
+                sessionResponseList,
+                sessions.getNumber(),
+                sessions.getSize(),
+                sessions.getTotalElements(),
+                sessions.getTotalPages(),
+                sessions.isFirst(),
+                sessions.isLast()
+        );
     }
 
     @Override

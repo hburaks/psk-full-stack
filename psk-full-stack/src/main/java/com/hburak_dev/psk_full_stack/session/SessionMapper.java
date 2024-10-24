@@ -12,4 +12,14 @@ public class SessionMapper {
                 .date(session.getDate())
                 .build();
     }
+
+    public SessionResponse toSessionResponse(Session session) {
+
+        return SessionResponse.builder()
+                .date(session.getDate())
+                .sessionStatus(session.getSessionStatus())
+                .sessionId(session.getId())
+                .noteForUser(session.getNoteForUser())
+                .build();
+    }
 }
