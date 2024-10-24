@@ -33,4 +33,6 @@ public class Session extends BaseEntity {
 
     private String noteForPsychologist;
 
+    private boolean isSessionPaid;
+
 }

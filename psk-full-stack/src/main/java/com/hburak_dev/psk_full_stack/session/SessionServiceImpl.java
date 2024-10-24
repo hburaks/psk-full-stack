@@ -65,7 +65,12 @@ public class SessionServiceImpl implements SessionService {
 
     @Override
     public Integer createUserSession(UserSessionRequest userSessionRequest, Authentication connectedUser) {
-        return null;
+        User user = (User) connectedUser.getPrincipal();
+        Session session = sessionMapper.toSession(userSessionRequest, user);
+        session.setCreatedBy(user.getId());
+        Session savedSession = sessionRepository.save(session);
+
+        return savedSession.getId();
     }
 
     @Override
@@ -110,6 +115,16 @@ public class SessionServiceImpl implements SessionService {
 
     @Override
     public SessionResponseV2 makeAvailableV2(SessionAvailabilityRequest sessionAvailabilityRequest, Authentication connectedUser) {
+        return null;
+    }
+
+    @Override
+    public SessionResponseV2 makeSessionPaid(Boolean isPaid, Authentication connectedUser) {
+        return null;
+    }
+
+    @Override
+    public SessionResponseV2 makeSessionNotPaid(Boolean isPaid, Authentication connectedUser) {
         return null;
     }
 }

@@ -34,4 +34,7 @@ public interface SessionService {
 
     SessionResponseV2 makeAvailableV2(SessionAvailabilityRequest sessionAvailabilityRequest, Authentication connectedUser);
 
+    SessionResponseV2 makeSessionPaid(Boolean isPaid, Authentication connectedUser);
+
+    SessionResponseV2 makeSessionNotPaid(Boolean isPaid, Authentication connectedUser);
 }

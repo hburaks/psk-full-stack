@@ -23,4 +23,6 @@ public class SessionResponseV2 {
 
     private String noteForPsychologist;
 
+    private String isPaid;
+
 }

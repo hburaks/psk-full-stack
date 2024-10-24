@@ -11,8 +11,6 @@ import java.time.LocalDateTime;
 @Builder
 public class UserSessionRequest {
 
-    private Integer userId;
-
     private LocalDateTime date;
 
 }
