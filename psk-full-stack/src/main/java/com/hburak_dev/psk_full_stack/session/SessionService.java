@@ -18,7 +18,7 @@ public interface SessionService {
 
     ResponseEntity<Boolean> cancelUserSession(Integer id, Authentication connectedUser);
 
-    PageResponse<SessionResponseV2> getAllSessionsV2(Authentication connectedUser);
+    PageResponse<SessionResponseV2> getAllSessionsV2(int page, int size);
 
     SessionResponseV2 addNoteToSessionForUserV2(SessionUserNoteRequest sessionNoteRequest, Authentication connectedUser);
 

@@ -97,8 +97,25 @@ public class SessionServiceImpl implements SessionService {
     }
 
     @Override
-    public PageResponse<SessionResponseV2> getAllSessionsV2(Authentication connectedUser) {
-        return null;
+    public PageResponse<SessionResponseV2> getAllSessionsV2(int page, int size) {
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
+        Page<Session> sessions = sessionRepository.findAll(pageable);
+
+        List<SessionResponseV2> sessionResponseList = sessions
+                .stream()
+                .map(sessionMapper::toSessionResponseV2) // Oturumları dönüşüm yapın
+                .toList();
+
+        return new PageResponse<>(
+                sessionResponseList,
+                sessions.getNumber(),
+                sessions.getSize(),
+                sessions.getTotalElements(),
+                sessions.getTotalPages(),
+                sessions.isFirst(),
+                sessions.isLast()
+        );
     }
 
     @Override
