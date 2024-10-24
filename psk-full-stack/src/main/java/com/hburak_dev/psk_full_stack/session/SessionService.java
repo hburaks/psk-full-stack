@@ -17,9 +17,11 @@ public interface SessionService {
 
     ResponseEntity<Boolean> cancelUserSession(Integer id, Authentication connectedUser);
 
-    PageResponse<SessionResponse> getAllSessionsV2(Authentication connectedUser);
+    PageResponse<SessionResponseV2> getAllSessionsV2(Authentication connectedUser);
 
-    SessionResponse addNoteToSessionV2(SessionNoteRequest sessionNoteRequest, Authentication connectedUser);
+    SessionResponseV2 addNoteToSessionForUserV2(SessionUserNoteRequest sessionNoteRequest, Authentication connectedUser);
+
+    SessionResponseV2 addNoteToSessionForPsychologistV2(SessionPsychologistNoteRequest sessionNoteRequest, Authentication connectedUser);
 
     Integer updateSessionStatusV2(SessionStatusRequest sessionStatusRequest, Authentication connectedUser);
 
@@ -27,8 +29,8 @@ public interface SessionService {
 
     PageResponse<UserWithSessionResponse> getAllUsersWithSessionV2(int page, int size, Authentication connectedUser);
 
-    PublicSessionResponse makeUnavailable(UserSessionRequest userSessionRequest, Authentication connectedUser);
+    PublicSessionResponse makeUnavailableV2(SessionAvailabilityRequest sessionAvailabilityRequest, Authentication connectedUser);
 
-    PublicSessionResponse makeAvailable(UserSessionRequest userSessionRequest, Authentication connectedUser);
+    PublicSessionResponse makeAvailableV2(SessionAvailabilityRequest sessionAvailabilityRequest, Authentication connectedUser);
 
 }
