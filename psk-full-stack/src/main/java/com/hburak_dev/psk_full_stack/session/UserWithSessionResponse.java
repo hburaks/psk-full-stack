@@ -4,13 +4,19 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @Builder
 public class UserWithSessionResponse {
 
-    private UserForSessionResponse userForSessionResponse;
+    private Integer id;
 
-    private SessionResponseV2 sessionResponse;
+    private String firstname;
+
+    private String lastname;
+
+    private List<Integer> sessionIds;
 
 }

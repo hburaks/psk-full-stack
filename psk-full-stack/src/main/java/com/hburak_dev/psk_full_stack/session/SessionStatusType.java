@@ -10,7 +10,8 @@ public enum SessionStatusType {
     AWAITING_PAYMENT_CONFIRMATION("Ödeme Onayı Bekleniyor"),
     APPOINTMENT_SCHEDULED("Randevu Alındı"),
     COMPLETED("Gerçekleşti"),
-    CANCELED("İptal");
+    CANCELED("İptal"),
+    UNAVAILABLE("Müsait Değil");
 
     private final String description;
 

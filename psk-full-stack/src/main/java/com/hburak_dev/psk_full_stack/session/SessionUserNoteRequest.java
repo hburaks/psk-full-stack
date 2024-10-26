@@ -9,7 +9,7 @@ import lombok.Setter;
 @Builder
 public class SessionUserNoteRequest {
 
-    private String sessionId;
+    private Integer sessionId;
 
     private String noteForUser;
 

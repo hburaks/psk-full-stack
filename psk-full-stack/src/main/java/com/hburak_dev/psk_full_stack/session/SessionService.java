@@ -12,7 +12,7 @@ public interface SessionService {
 
     List<PublicSessionResponse> getAllSessionsWeekly(LocalDateTime week);
 
-    PageResponse<SessionResponse> getMySessions(int page, int size, Authentication connectedUser);
+    List<SessionResponse> getMySessions(Authentication connectedUser);
 
     Integer createUserSession(UserSessionRequest userSessionRequest, Authentication connectedUser);
 
@@ -20,21 +20,21 @@ public interface SessionService {
 
     PageResponse<SessionResponseV2> getAllSessionsV2(int page, int size);
 
-    SessionResponseV2 addNoteToSessionForUserV2(SessionUserNoteRequest sessionNoteRequest, Authentication connectedUser);
+    SessionResponseV2 addNoteToSessionForUserV2(SessionUserNoteRequest sessionNoteRequest);
 
-    SessionResponseV2 addNoteToSessionForPsychologistV2(SessionPsychologistNoteRequest sessionNoteRequest, Authentication connectedUser);
+    SessionResponseV2 addNoteToSessionForPsychologistV2(SessionPsychologistNoteRequest sessionNoteRequest);
 
-    Integer updateSessionStatusV2(SessionStatusRequest sessionStatusRequest, Authentication connectedUser);
+    Integer updateSessionStatusV2(SessionStatusRequest sessionStatusRequest);
 
-    Integer updateSessionDateV2(SessionDateRequest sessionStatusRequest, Authentication connectedUser);
+    Integer updateSessionDateV2(SessionDateRequest sessionStatusRequest);
 
-    PageResponse<UserWithSessionResponse> getAllUsersWithSessionV2(int page, int size, Authentication connectedUser);
+    PageResponse<UserWithSessionResponse> getAllUsersWithSessionV2(int page, int size);
 
-    SessionResponseV2 makeUnavailableV2(SessionAvailabilityRequest sessionAvailabilityRequest, Authentication connectedUser);
+    List<PublicSessionResponse> makeUnavailableV2(List<LocalDateTime> unavailableTimes);
 
-    SessionResponseV2 makeAvailableV2(SessionAvailabilityRequest sessionAvailabilityRequest, Authentication connectedUser);
+    List<PublicSessionResponse> makeAvailableV2(List<LocalDateTime> availableTimes);
 
-    SessionResponseV2 makeSessionPaid(Boolean isPaid, Authentication connectedUser);
+    SessionResponseV2 updateSessionPaidStatusV2(Boolean isPaid, Integer sessionId);
 
-    SessionResponseV2 makeSessionNotPaid(Boolean isPaid, Authentication connectedUser);
+    List<SessionResponseV2> getAllSessionsOfUserV2(Integer userId);
 }

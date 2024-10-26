@@ -3,6 +3,9 @@ package com.hburak_dev.psk_full_stack.session;
 import com.hburak_dev.psk_full_stack.user.User;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class SessionMapper {
 
@@ -30,6 +33,7 @@ public class SessionMapper {
                 .user(user)
                 .sessionStatus(SessionStatusType.AWAITING_PSYCHOLOGIST_APPROVAL)
                 .isSessionPaid(false)
+                .isMock(false)
                 .build();
     }
 
@@ -48,6 +52,13 @@ public class SessionMapper {
                 .noteForPsychologist(session.getNoteForPsychologist())
                 .isPaid(session.isSessionPaid())
                 .build();
+    }
+
+
+    public List<Integer> toSessionIdList(List<Session> sessions) {
+        return sessions.stream()
+                .map(Session::getId)
+                .collect(Collectors.toList());
     }
 
 }

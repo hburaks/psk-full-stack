@@ -35,4 +35,6 @@ public class Session extends BaseEntity {
 
     private boolean isSessionPaid;
 
+    private boolean isMock;
+
 }
