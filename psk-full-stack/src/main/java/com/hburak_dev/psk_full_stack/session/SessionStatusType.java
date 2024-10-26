@@ -5,14 +5,17 @@ import lombok.Getter;
 @Getter
 public enum SessionStatusType {
 
-    ANSWER_A("A"),
-    ANSWER_B("B"),
-    ANSWER_C("C"),
-    ANSWER_D("D");
+    AWAITING_PSYCHOLOGIST_APPROVAL("Terapist Onayı Bekleniyor"),
+    AWAITING_PAYMENT("Ödeme Bekleniyor"),
+    AWAITING_PAYMENT_CONFIRMATION("Ödeme Onayı Bekleniyor"),
+    APPOINTMENT_SCHEDULED("Randevu Alındı"),
+    COMPLETED("Gerçekleşti"),
+    CANCELED("İptal"),
+    UNAVAILABLE("Müsait Değil");
 
-    private final String answer;
+    private final String description;
 
-    SessionStatusType(String answer) {
-        this.answer = answer;
+    SessionStatusType(String description) {
+        this.description = description;
     }
 }
