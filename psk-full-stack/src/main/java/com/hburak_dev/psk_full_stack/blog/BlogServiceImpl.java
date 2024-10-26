@@ -32,8 +32,8 @@ public class BlogServiceImpl implements BlogService {
         User user = ((User) connectedUser.getPrincipal());
         Blog blog = blogMapper.toBlog(request);
         blog.setCreatedBy(user.getId());
-        blogRepository.save(blog);
-        return blog.getId();
+        Blog savedBlog = blogRepository.save(blog);
+        return savedBlog.getId();
     }
 
     @Override
