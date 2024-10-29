@@ -1,12 +1,10 @@
 package com.hburak_dev.psk_full_stack.test;
 
+import com.hburak_dev.psk_full_stack.comment.Comment;
 import com.hburak_dev.psk_full_stack.common.BaseEntity;
 import com.hburak_dev.psk_full_stack.question.Question;
 import com.hburak_dev.psk_full_stack.user.User;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,8 +32,13 @@ public class Test extends BaseEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
-    private boolean isSolved;
+    private boolean isPublicTest;
 
-    private boolean isDefault;
+    @OneToMany(mappedBy = "test")
+    private List<Comment> comments;
 
+    private boolean isActive;
+
+    @Lob
+    byte[] cover;
 }

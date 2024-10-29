@@ -27,6 +27,8 @@ public class Choice extends BaseEntity {
 
     private boolean isSelected;
 
+    private boolean isCorrect;
+
     private String text;
 
 }
