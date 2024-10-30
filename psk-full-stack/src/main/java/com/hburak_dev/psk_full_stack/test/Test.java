@@ -25,6 +25,13 @@ public class Test extends BaseEntity {
 
     private String subTitle;
 
+    @Lob
+    byte[] cover;
+
+    private boolean isActive;
+
+    private boolean isPublicTest;
+
     @OneToMany(mappedBy = "test")
     private List<Question> questions;
 
@@ -32,13 +39,9 @@ public class Test extends BaseEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
-    private boolean isPublicTest;
 
     @OneToMany(mappedBy = "test")
     private List<Comment> comments;
 
-    private boolean isActive;
 
-    @Lob
-    byte[] cover;
 }
