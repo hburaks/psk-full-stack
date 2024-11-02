@@ -1,5 +1,6 @@
 package com.hburak_dev.psk_full_stack.test;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.hburak_dev.psk_full_stack.comment.Comment;
 import com.hburak_dev.psk_full_stack.common.BaseEntity;
 import com.hburak_dev.psk_full_stack.question.Question;
@@ -28,20 +29,17 @@ public class Test extends BaseEntity {
     @Lob
     byte[] cover;
 
-    private boolean isActive;
+    private Boolean isActive;
 
-    private boolean isPublicTest;
-
-    @OneToMany(mappedBy = "test")
+    @OneToMany(mappedBy = "test", cascade = CascadeType.ALL)
     private List<Question> questions;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JsonIgnoreProperties("tests")
     private User user;
 
-
-    @OneToMany(mappedBy = "test")
+    @ManyToMany(cascade = CascadeType.ALL)
     private List<Comment> comments;
 
-
 }
+

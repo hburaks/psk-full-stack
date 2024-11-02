@@ -1,5 +1,6 @@
 package com.hburak_dev.psk_full_stack.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.hburak_dev.psk_full_stack.role.Role;
 import com.hburak_dev.psk_full_stack.session.Session;
 import com.hburak_dev.psk_full_stack.test.Test;
@@ -49,9 +50,11 @@ public class User implements UserDetails, Principal {
     private boolean enabled;
 
     @OneToMany(mappedBy = "user")
+    @JsonIgnoreProperties("user")
     private List<Test> tests;
 
     @OneToMany(mappedBy = "user")
+    @JsonIgnoreProperties("user")
     private List<Session> sessions;
 
 

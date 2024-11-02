@@ -8,7 +8,8 @@ public enum AnswerType {
     ANSWER_A("A"),
     ANSWER_B("B"),
     ANSWER_C("C"),
-    ANSWER_D("D");
+    ANSWER_D("D"),
+    ANSWER_E("E");
 
     private final String answer;
 
