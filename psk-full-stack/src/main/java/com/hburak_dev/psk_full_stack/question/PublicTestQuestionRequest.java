@@ -12,6 +12,8 @@ import java.util.List;
 @Builder
 public class PublicTestQuestionRequest {
 
+    private Integer questionId;
+
     private String text;
 
     private List<PublicChoiceRequest> publicChoiceRequestList;

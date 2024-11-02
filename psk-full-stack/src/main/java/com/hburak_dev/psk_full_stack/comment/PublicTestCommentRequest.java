@@ -9,6 +9,8 @@ import lombok.Setter;
 @Setter
 public class PublicTestCommentRequest {
 
+    private Integer commentId;
+
     private Integer score;
 
     private String title;

@@ -27,28 +27,28 @@ public interface TestService {
     /**
      * Sends the answers of the test to the psychologist and gets the rest of the tests
      */
-    List<MyTestResponse> sendMyTestAnswer(MyAnswerRequest myAnswerRequest, Authentication connectedUser);
+    ResponseEntity<Boolean> saveMyTestAnswer(MyAnswerRequest myAnswerRequest, Authentication connectedUser);
 
     /**
      * Creates public test
      */
-    PublicTestResponse createPublicTestV2(PublicTestRequest publicTestRequest);
+    PublicTestAdminResponse createPublicTestV2(PublicTestRequest publicTestRequest);
 
     /**
      * Update public test
      */
-    PublicTestResponse updatePublicTestV2(PublicTestRequest publicTestRequest);
+    PublicTestAdminResponse updatePublicTestV2(PublicTestRequest publicTestRequest);
 
     /**
      * Update public test availability value
      */
-    PublicTestResponse updatePublicTestAvailability(Integer testId, Boolean isAvailable);
+    PublicTestAdminResponse updatePublicTestAvailabilityV2(Integer testId, Boolean isAvailable);
 
 
     /**
      * Admin gets all test that assigned to the user
      */
-    List<UserTestResponse> getAllTestsAssignedToUserV2(Integer userId);
+    List<UserTestForAdminResponse> getAllTestsAssignedToUserV2(Integer userId);
 
 
     /**

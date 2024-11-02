@@ -16,6 +16,8 @@ import java.util.List;
 @Builder
 public class PublicTestRequest {
 
+    private Integer testId;
+
     private String title;
 
     private String subTitle;
@@ -28,6 +30,6 @@ public class PublicTestRequest {
     @OneToMany(mappedBy = "test")
     private List<PublicTestCommentRequest> comments;
 
-    private boolean isActive;
+    private Boolean isActive;
 
 }

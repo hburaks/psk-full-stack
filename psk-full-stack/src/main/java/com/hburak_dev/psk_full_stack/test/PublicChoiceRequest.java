@@ -10,9 +10,9 @@ import lombok.Setter;
 @Builder
 public class PublicChoiceRequest {
 
-    private AnswerType answerType;
+    private Integer choiceId;
 
-    private boolean isCorrect;
+    private AnswerType answerType;
 
     private String text;
 

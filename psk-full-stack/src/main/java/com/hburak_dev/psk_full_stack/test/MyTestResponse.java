@@ -22,5 +22,4 @@ public class MyTestResponse {
 
     private List<MyQuestionResponse> questions;
 
-
 }

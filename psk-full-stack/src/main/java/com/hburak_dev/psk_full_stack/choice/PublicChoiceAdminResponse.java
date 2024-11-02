@@ -5,13 +5,15 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-@Builder
 @Getter
 @Setter
-public class UserChoiceResponse {
+@Builder
+public class PublicChoiceAdminResponse {
 
-    private AnswerType answerType;
+    Integer id;
 
     private String text;
+
+    private AnswerType answerType;
 
 }
