@@ -9,4 +9,8 @@ public interface BlogRepository extends JpaRepository<Blog, Integer> {
 
     @Query("SELECT b FROM Blog b")
     Page<Blog> findAllBlogs(Pageable pageable);
+
+    @Query("SELECT b FROM Blog b WHERE b.shareable = true")
+    Page<Blog> findAllShareableBlogs(Pageable pageable);
+
 }

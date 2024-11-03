@@ -40,9 +40,8 @@ public class BlogServiceImpl implements BlogService {
     @Transactional
     public PageResponse<BlogResponse> findAllBlogsShareable(int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
-        Page<Blog> blogs = blogRepository.findAllBlogs(pageable);
+        Page<Blog> blogs = blogRepository.findAllShareableBlogs(pageable);
         List<BlogResponse> blogsResponse = blogs.stream()
-                .filter(Blog::isShareable)
                 .map(blogMapper::toBlogResponse)
                 .toList();
         return new PageResponse<>(
