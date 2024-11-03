@@ -3,6 +3,7 @@ package com.hburak_dev.psk_full_stack.session;
 import com.hburak_dev.psk_full_stack.user.User;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,9 +28,9 @@ public class SessionMapper {
                 .build();
     }
 
-    public Session toSession(UserSessionRequest userSessionRequest, User user) {
+    public Session toSession(LocalDateTime date, User user) {
         return Session.builder()
-                .date(userSessionRequest.getDate())
+                .date(date)
                 .user(user)
                 .sessionStatus(SessionStatusType.AWAITING_PSYCHOLOGIST_APPROVAL)
                 .isSessionPaid(false)

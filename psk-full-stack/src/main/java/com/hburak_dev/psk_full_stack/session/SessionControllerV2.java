@@ -64,4 +64,9 @@ public class SessionControllerV2 {
         return sessionService.getAllSessionsOfUserV2(userId);
     }
 
+    @PostMapping("/create")
+    public Integer createSessionForUserV2(@RequestBody UserSessionRequest userSessionRequest, @RequestParam Integer userId) {
+        return sessionService.createSessionForUserV2(userSessionRequest, userId);
+    }
+
 }

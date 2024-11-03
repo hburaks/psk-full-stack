@@ -16,6 +16,8 @@ public interface SessionService {
 
     Integer createUserSession(UserSessionRequest userSessionRequest, Authentication connectedUser);
 
+    Integer createSessionForUserV2(UserSessionRequest userSessionRequest, Integer userId);
+
     ResponseEntity<Boolean> cancelUserSession(Integer id, Authentication connectedUser);
 
     PageResponse<SessionResponseV2> getAllSessionsV2(int page, int size);

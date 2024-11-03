@@ -62,20 +62,33 @@ public class SessionServiceImpl implements SessionService {
     @Override
     public Integer createUserSession(UserSessionRequest userSessionRequest, Authentication connectedUser) {
         User user = (User) connectedUser.getPrincipal();
-        userSessionRequest.setDate(Util.toFullHour(userSessionRequest.getDate()));
 
-        boolean sessionExists = sessionRepository.existsByDate(userSessionRequest.getDate());
+        return createSessionWithIdAndDate(user, userSessionRequest.getDate());
+    }
+
+    private Integer createSessionWithIdAndDate(User user, LocalDateTime date) {
+
+        LocalDateTime fullHour = Util.toFullHour(date);
+
+        boolean sessionExists = sessionRepository.existsByDate(fullHour);
         if (!sessionExists) {
-            Session session = sessionMapper.toSession(userSessionRequest, user);
+            Session session = sessionMapper.toSession(fullHour, user);
             session.setCreatedBy(user.getId()); // TODO: is this necessary
             Session savedSession = sessionRepository.save(session);
             return savedSession.getId();
         } else {
-            throw new SessionNotFoundException("Bu zaman diliminde takvim müsait değil: " + userSessionRequest.getDate());
+            throw new SessionNotFoundException("Bu zaman diliminde takvim müsait değil: " + fullHour);
         }
-
-
     }
+
+    @Override
+    public Integer createSessionForUserV2(UserSessionRequest userSessionRequest, Integer userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new SessionNotFoundException("Bu id ile kullanıcı bulunamadı: " + userId));
+
+        return createSessionWithIdAndDate(user, userSessionRequest.getDate());
+    }
+
 
     @Override
     public ResponseEntity<Boolean> cancelUserSession(Integer id, Authentication connectedUser) {
