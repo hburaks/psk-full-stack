@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("blogs")
+@RequestMapping("v3/blogs")
 @RequiredArgsConstructor
 @Tag(name = "Blog")
-public class BlogController {
+public class BlogControllerV3 {
 
     private final BlogServiceImpl service;
 
