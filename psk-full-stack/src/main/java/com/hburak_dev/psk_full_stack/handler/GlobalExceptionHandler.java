@@ -96,7 +96,7 @@ public class GlobalExceptionHandler {
                 .status(INTERNAL_SERVER_ERROR)
                 .body(
                         ExceptionResponse.builder()
-                                .businessErrorDescription("Internal error, please contact the admin")
+                                .businessErrorDescription("Hata oluştu, Lütfen admin ile iletişime geçin.")
                                 .error(exp.getMessage())
                                 .build()
                 );
