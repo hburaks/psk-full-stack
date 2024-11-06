@@ -1,0 +1,2051 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "OpenApi specification - Hasan Burak Songur",
+    "description": "OpenApi documentation for Spring Security",
+    "termsOfService": "Terms of service",
+    "contact": {
+      "name": "Hasan Burak Songur",
+      "url": "hasanburaksongur.com",
+      "email": "hasanburaksongur@gmail.com"
+    },
+    "license": {
+      "name": "Licence name",
+      "url": "https://some-url.com"
+    },
+    "version": "1.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8088/api/v1",
+      "description": "Local ENV"
+    },
+    {
+      "url": "https://hasanburaksongur.com",
+      "description": "PROD ENV"
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": [
+      ]
+    }
+  ],
+  "paths": {
+    "/v2/test/update": {
+      "put": {
+        "tags": [
+          "Test"
+        ],
+        "operationId": "updatePublicTestV2",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PublicTestRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicTestAdminResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/test/update-availability": {
+      "put": {
+        "tags": [
+          "Test"
+        ],
+        "operationId": "updatePublicTestAvailabilityV2",
+        "parameters": [
+          {
+            "name": "testId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "isAvailable",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicTestAdminResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/blogs/update/{id}": {
+      "put": {
+        "tags": [
+          "Blog"
+        ],
+        "operationId": "updateBlog",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": [
+                  "blog"
+                ],
+                "type": "object",
+                "properties": {
+                  "blog": {
+                    "$ref": "#/components/schemas/BlogRequest"
+                  },
+                  "cover": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/test/create": {
+      "post": {
+        "tags": [
+          "Test"
+        ],
+        "operationId": "createPublicTestV2",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PublicTestRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicTestAdminResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/test/assign-test": {
+      "post": {
+        "tags": [
+          "Test"
+        ],
+        "operationId": "assignTestToUserV2",
+        "parameters": [
+          {
+            "name": "testId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "userId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/sessions/update-status": {
+      "post": {
+        "tags": [
+          "session-controller-v-2"
+        ],
+        "operationId": "updateSessionStatusV2",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SessionStatusRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/sessions/update-paid-status": {
+      "post": {
+        "tags": [
+          "session-controller-v-2"
+        ],
+        "operationId": "updateSessionPaidStatusV2",
+        "parameters": [
+          {
+            "name": "isPaid",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "sessionId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionResponseV2"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/sessions/update-date": {
+      "post": {
+        "tags": [
+          "session-controller-v-2"
+        ],
+        "operationId": "updateSessionDateV2",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SessionDateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/sessions/make-unavailable": {
+      "post": {
+        "tags": [
+          "session-controller-v-2"
+        ],
+        "operationId": "makeUnavailableV2",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PublicSessionResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/sessions/make-available": {
+      "post": {
+        "tags": [
+          "session-controller-v-2"
+        ],
+        "operationId": "makeAvailableV2",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PublicSessionResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/sessions/create": {
+      "post": {
+        "tags": [
+          "session-controller-v-2"
+        ],
+        "operationId": "createSessionForUserV2",
+        "parameters": [
+          {
+            "name": "date",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/sessions/add-note/user": {
+      "post": {
+        "tags": [
+          "session-controller-v-2"
+        ],
+        "operationId": "addNoteToSessionForUserV2",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SessionUserNoteRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionResponseV2"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/sessions/add-note/psychologist": {
+      "post": {
+        "tags": [
+          "session-controller-v-2"
+        ],
+        "operationId": "addNoteToSessionForPsychologistV2",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SessionPsychologistNoteRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionResponseV2"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/blogs/update-shareable-status": {
+      "post": {
+        "tags": [
+          "Blog"
+        ],
+        "operationId": "updateShareableStatus",
+        "parameters": [
+          {
+            "name": "blogId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/blogs/save": {
+      "post": {
+        "tags": [
+          "Blog"
+        ],
+        "operationId": "saveBlog",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": [
+                  "blog"
+                ],
+                "type": "object",
+                "properties": {
+                  "blog": {
+                    "$ref": "#/components/schemas/BlogRequest"
+                  },
+                  "cover": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tests/public/check-answer": {
+      "post": {
+        "tags": [
+          "Test"
+        ],
+        "operationId": "checkPublicTestAnswer",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PublicTestAnswerRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicTestAnswerCommentResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tests/my-tests/save-answer": {
+      "post": {
+        "tags": [
+          "Test"
+        ],
+        "operationId": "saveMyTestAnswer",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MyAnswerRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sessions/{id}/cancel": {
+      "post": {
+        "tags": [
+          "session-controller"
+        ],
+        "operationId": "cancelUserSession",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sessions/create": {
+      "post": {
+        "tags": [
+          "session-controller"
+        ],
+        "operationId": "createSessionForUserV2_1",
+        "parameters": [
+          {
+            "name": "date",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/register": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "operationId": "register",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegistrationRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/authenticate": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "operationId": "authenticate",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthenticationRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthenticationResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v3/blogs/get-all-blogs": {
+      "get": {
+        "tags": [
+          "Blog"
+        ],
+        "operationId": "findAllBlogsShareable",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageResponseBlogResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/test/user-tests/{userId}": {
+      "get": {
+        "tags": [
+          "Test"
+        ],
+        "operationId": "getAllTestsAssignedToUserV2",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserTestForAdminResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/sessions/users-with-sessions": {
+      "get": {
+        "tags": [
+          "session-controller-v-2"
+        ],
+        "operationId": "getAllUsersWithSessionV2",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageResponseUserWithSessionResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/sessions/user/{userId}": {
+      "get": {
+        "tags": [
+          "session-controller-v-2"
+        ],
+        "operationId": "getAllSessionsOfUserV2",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SessionResponseV2"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/sessions/all": {
+      "get": {
+        "tags": [
+          "session-controller-v-2"
+        ],
+        "operationId": "getAllSessionsV2",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageResponseSessionResponseV2"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/blogs/get-all-blogs": {
+      "get": {
+        "tags": [
+          "Blog"
+        ],
+        "operationId": "findAllBlogs",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageResponseBlogResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tests/public": {
+      "get": {
+        "tags": [
+          "Test"
+        ],
+        "operationId": "getAllPublicTests",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PublicTestResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tests/my-tests": {
+      "get": {
+        "tags": [
+          "Test"
+        ],
+        "operationId": "getAllMyTests",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MyTestResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sessions/weekly": {
+      "get": {
+        "tags": [
+          "session-controller"
+        ],
+        "operationId": "getAllSessionsWeekly",
+        "parameters": [
+          {
+            "name": "dateTime",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PublicSessionResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sessions/my-sessions": {
+      "get": {
+        "tags": [
+          "session-controller"
+        ],
+        "operationId": "getMySessions",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SessionResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/activate-account": {
+      "get": {
+        "tags": [
+          "Authentication"
+        ],
+        "operationId": "confirm",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v2/blogs/delete/{id}": {
+      "delete": {
+        "tags": [
+          "Blog"
+        ],
+        "operationId": "deleteBlog",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "PublicChoiceRequest": {
+        "type": "object",
+        "properties": {
+          "choiceId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "answerType": {
+            "type": "string",
+            "enum": [
+              "ANSWER_A",
+              "ANSWER_B",
+              "ANSWER_C",
+              "ANSWER_D",
+              "ANSWER_E"
+            ]
+          },
+          "text": {
+            "type": "string"
+          }
+        }
+      },
+      "PublicTestCommentRequest": {
+        "type": "object",
+        "properties": {
+          "commentId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "score": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "title": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "cover": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "byte"
+            }
+          }
+        }
+      },
+      "PublicTestQuestionRequest": {
+        "type": "object",
+        "properties": {
+          "questionId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "text": {
+            "type": "string"
+          },
+          "publicChoiceRequestList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PublicChoiceRequest"
+            }
+          }
+        }
+      },
+      "PublicTestRequest": {
+        "type": "object",
+        "properties": {
+          "testId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "title": {
+            "type": "string"
+          },
+          "subTitle": {
+            "type": "string"
+          },
+          "cover": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "byte"
+            }
+          },
+          "publicTestQuestionRequestList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PublicTestQuestionRequest"
+            }
+          },
+          "comments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PublicTestCommentRequest"
+            }
+          },
+          "isActive": {
+            "type": "boolean"
+          }
+        }
+      },
+      "PublicChoiceAdminResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "text": {
+            "type": "string"
+          },
+          "answerType": {
+            "type": "string",
+            "enum": [
+              "ANSWER_A",
+              "ANSWER_B",
+              "ANSWER_C",
+              "ANSWER_D",
+              "ANSWER_E"
+            ]
+          }
+        }
+      },
+      "PublicQuestionAdminResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "text": {
+            "type": "string"
+          },
+          "publicChoiceResponseList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PublicChoiceAdminResponse"
+            }
+          }
+        }
+      },
+      "PublicTestAdminResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "cover": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "byte"
+            }
+          },
+          "title": {
+            "type": "string"
+          },
+          "subTitle": {
+            "type": "string"
+          },
+          "questions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PublicQuestionAdminResponse"
+            }
+          },
+          "isActive": {
+            "type": "boolean"
+          }
+        }
+      },
+      "BlogRequest": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "subTitle": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "cover": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "byte"
+            }
+          },
+          "shareable": {
+            "type": "boolean"
+          }
+        }
+      },
+      "SessionStatusRequest": {
+        "type": "object",
+        "properties": {
+          "sessionId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "sessionStatusType": {
+            "type": "string",
+            "enum": [
+              "AWAITING_PSYCHOLOGIST_APPROVAL",
+              "AWAITING_PAYMENT",
+              "AWAITING_PAYMENT_CONFIRMATION",
+              "APPOINTMENT_SCHEDULED",
+              "COMPLETED",
+              "CANCELED",
+              "UNAVAILABLE"
+            ]
+          }
+        }
+      },
+      "SessionResponseV2": {
+        "type": "object",
+        "properties": {
+          "sessionId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "userForSessionResponse": {
+            "$ref": "#/components/schemas/UserForSessionResponse"
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "sessionStatus": {
+            "type": "string",
+            "enum": [
+              "AWAITING_PSYCHOLOGIST_APPROVAL",
+              "AWAITING_PAYMENT",
+              "AWAITING_PAYMENT_CONFIRMATION",
+              "APPOINTMENT_SCHEDULED",
+              "COMPLETED",
+              "CANCELED",
+              "UNAVAILABLE"
+            ]
+          },
+          "noteForUser": {
+            "type": "string"
+          },
+          "noteForPsychologist": {
+            "type": "string"
+          },
+          "isPaid": {
+            "type": "boolean"
+          }
+        }
+      },
+      "UserForSessionResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "firstname": {
+            "type": "string"
+          },
+          "lastname": {
+            "type": "string"
+          }
+        }
+      },
+      "SessionDateRequest": {
+        "type": "object",
+        "properties": {
+          "sessionId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "PublicSessionResponse": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "SessionUserNoteRequest": {
+        "type": "object",
+        "properties": {
+          "sessionId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "noteForUser": {
+            "type": "string"
+          }
+        }
+      },
+      "SessionPsychologistNoteRequest": {
+        "type": "object",
+        "properties": {
+          "sessionId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "noteForPsychologist": {
+            "type": "string"
+          }
+        }
+      },
+      "PublicTestAnswerQuestionRequest": {
+        "type": "object",
+        "properties": {
+          "questionId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "chosenAnswer": {
+            "type": "string",
+            "enum": [
+              "ANSWER_A",
+              "ANSWER_B",
+              "ANSWER_C",
+              "ANSWER_D",
+              "ANSWER_E"
+            ]
+          }
+        }
+      },
+      "PublicTestAnswerRequest": {
+        "type": "object",
+        "properties": {
+          "testId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "questions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PublicTestAnswerQuestionRequest"
+            }
+          }
+        }
+      },
+      "PublicTestAnswerCommentResponse": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "cover": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "byte"
+            }
+          }
+        }
+      },
+      "MyAnswerQuestionRequest": {
+        "type": "object",
+        "properties": {
+          "questionId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "chosenAnswer": {
+            "type": "string",
+            "enum": [
+              "ANSWER_A",
+              "ANSWER_B",
+              "ANSWER_C",
+              "ANSWER_D",
+              "ANSWER_E"
+            ]
+          }
+        }
+      },
+      "MyAnswerRequest": {
+        "type": "object",
+        "properties": {
+          "testId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "questions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MyAnswerQuestionRequest"
+            }
+          }
+        }
+      },
+      "RegistrationRequest": {
+        "required": [
+          "email",
+          "firstname",
+          "lastname",
+          "password",
+          "phoneNumber"
+        ],
+        "type": "object",
+        "properties": {
+          "firstname": {
+            "type": "string"
+          },
+          "lastname": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "maxLength": 2147483647,
+            "minLength": 8,
+            "type": "string"
+          },
+          "phoneNumber": {
+            "maxLength": 10,
+            "minLength": 10,
+            "type": "string"
+          },
+          "birthYear": {
+            "maxLength": 4,
+            "minLength": 4,
+            "type": "string"
+          }
+        }
+      },
+      "AuthenticationRequest": {
+        "required": [
+          "email",
+          "password"
+        ],
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "maxLength": 2147483647,
+            "minLength": 8,
+            "type": "string"
+          }
+        }
+      },
+      "AuthenticationResponse": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string"
+          }
+        }
+      },
+      "BlogResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "createdDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "title": {
+            "type": "string"
+          },
+          "subTitle": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "cover": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "byte"
+            }
+          },
+          "shareable": {
+            "type": "boolean"
+          }
+        }
+      },
+      "PageResponseBlogResponse": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BlogResponse"
+            }
+          },
+          "number": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "first": {
+            "type": "boolean"
+          },
+          "last": {
+            "type": "boolean"
+          }
+        }
+      },
+      "UserChoiceResponse": {
+        "type": "object",
+        "properties": {
+          "answerType": {
+            "type": "string",
+            "enum": [
+              "ANSWER_A",
+              "ANSWER_B",
+              "ANSWER_C",
+              "ANSWER_D",
+              "ANSWER_E"
+            ]
+          },
+          "text": {
+            "type": "string"
+          }
+        }
+      },
+      "UserCommentResponse": {
+        "type": "object",
+        "properties": {
+          "score": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "title": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "cover": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "byte"
+            }
+          }
+        }
+      },
+      "UserQuestionResponse": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string"
+          },
+          "userAnswer": {
+            "type": "string",
+            "enum": [
+              "ANSWER_A",
+              "ANSWER_B",
+              "ANSWER_C",
+              "ANSWER_D",
+              "ANSWER_E"
+            ]
+          },
+          "choices": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserChoiceResponse"
+            }
+          }
+        }
+      },
+      "UserTestForAdminResponse": {
+        "type": "object",
+        "properties": {
+          "testId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "title": {
+            "type": "string"
+          },
+          "subTitle": {
+            "type": "string"
+          },
+          "cover": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "byte"
+            }
+          },
+          "userId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "questions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserQuestionResponse"
+            }
+          },
+          "comments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserCommentResponse"
+            }
+          },
+          "answerDistribution": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        }
+      },
+      "PageResponseUserWithSessionResponse": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserWithSessionResponse"
+            }
+          },
+          "number": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "first": {
+            "type": "boolean"
+          },
+          "last": {
+            "type": "boolean"
+          }
+        }
+      },
+      "UserWithSessionResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "firstname": {
+            "type": "string"
+          },
+          "lastname": {
+            "type": "string"
+          },
+          "sessionIds": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        }
+      },
+      "PageResponseSessionResponseV2": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SessionResponseV2"
+            }
+          },
+          "number": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "first": {
+            "type": "boolean"
+          },
+          "last": {
+            "type": "boolean"
+          }
+        }
+      },
+      "PublicChoiceResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "text": {
+            "type": "string"
+          },
+          "answerType": {
+            "type": "string",
+            "enum": [
+              "ANSWER_A",
+              "ANSWER_B",
+              "ANSWER_C",
+              "ANSWER_D",
+              "ANSWER_E"
+            ]
+          }
+        }
+      },
+      "PublicQuestionResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "text": {
+            "type": "string"
+          },
+          "publicChoiceResponseList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PublicChoiceResponse"
+            }
+          }
+        }
+      },
+      "PublicTestResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "cover": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "byte"
+            }
+          },
+          "title": {
+            "type": "string"
+          },
+          "subTitle": {
+            "type": "string"
+          },
+          "questions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PublicQuestionResponse"
+            }
+          }
+        }
+      },
+      "MyChoiceResponse": {
+        "type": "object",
+        "properties": {
+          "choiceId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "answerType": {
+            "type": "string",
+            "enum": [
+              "ANSWER_A",
+              "ANSWER_B",
+              "ANSWER_C",
+              "ANSWER_D",
+              "ANSWER_E"
+            ]
+          },
+          "text": {
+            "type": "string"
+          }
+        }
+      },
+      "MyQuestionResponse": {
+        "type": "object",
+        "properties": {
+          "questionId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "text": {
+            "type": "string"
+          },
+          "choices": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MyChoiceResponse"
+            }
+          }
+        }
+      },
+      "MyTestResponse": {
+        "type": "object",
+        "properties": {
+          "testId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "title": {
+            "type": "string"
+          },
+          "subTitle": {
+            "type": "string"
+          },
+          "cover": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "byte"
+            }
+          },
+          "questions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MyQuestionResponse"
+            }
+          }
+        }
+      },
+      "SessionResponse": {
+        "type": "object",
+        "properties": {
+          "sessionId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "sessionStatus": {
+            "type": "string",
+            "enum": [
+              "AWAITING_PSYCHOLOGIST_APPROVAL",
+              "AWAITING_PAYMENT",
+              "AWAITING_PAYMENT_CONFIRMATION",
+              "APPOINTMENT_SCHEDULED",
+              "COMPLETED",
+              "CANCELED",
+              "UNAVAILABLE"
+            ]
+          },
+          "noteForUser": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "description": "JWT auth description",
+        "in": "header",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
