@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Account Activation</title>
+    <title>Hesap Aktivasyonu</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -45,12 +45,12 @@
 </head>
 <body>
 <div class="container">
-    <h1>Account Activation</h1>
-    <p class="greeting" th:text="'Hello ' + ${username} + ','"></p>
-    <p>Thank you for signing up! Please use the following activation code to activate your account:</p>
+    <h1>Hesap Aktivasyonu</h1>
+    <p class="greeting" th:text="'Merhaba ' + ${username} + ','"></p>
+    <p>Kayıt olduğunuz için teşekkürler! Hesabınızı aktifleştirmek için lütfen aşağıdaki aktivasyon kodunu kullanın:</p>
     <div class="activation-code"><span th:text="${activation_code}"></span></div>
     <div class="activation-link">
-        <a th:href="${confirmationUrl}" target="_blank">Activate your account</a>
+        <a th:href="${confirmationUrl}" target="_blank">Hesabınızı aktifleştirin</a>
     </div>
 </div>
 </body>

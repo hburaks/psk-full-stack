@@ -2,6 +2,7 @@ package com.hburak_dev.psk_full_stack.authentication;
 
 import com.hburak_dev.psk_full_stack.email.EmailService;
 import com.hburak_dev.psk_full_stack.email.EmailTemplateName;
+import com.hburak_dev.psk_full_stack.exception.ActivationTokenException;
 import com.hburak_dev.psk_full_stack.role.RoleRepository;
 import com.hburak_dev.psk_full_stack.security.JwtService;
 import com.hburak_dev.psk_full_stack.user.Token;
@@ -61,14 +62,14 @@ public class AuthenticationService {
     public void activateAccount(String token) throws MessagingException {
         Token savedToken = tokenRepository.findByToken(token)
                 // todo exception has to be defined
-                .orElseThrow(() -> new RuntimeException("Invalid token"));
+                .orElseThrow(() -> new ActivationTokenException("Aktivasyon kodu geçerli değil"));
         if (LocalDateTime.now().isAfter(savedToken.getExpiresAt())) {
             sendValidationEmail(savedToken.getUser());
-            throw new RuntimeException("Activation token has expired. A new token has been send to the same email address");
+            throw new ActivationTokenException("Aktivasyon kodunun süresi doldu. Aynı e-posta adresine yeni bir kod gönderildi.");
         }
 
         var user = userRepository.findById(savedToken.getUser().getId())
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+                .orElseThrow(() -> new UsernameNotFoundException("Kullanıcı bulunamadı"));
         user.setEnabled(true);
         userRepository.save(user);
 
@@ -93,7 +94,7 @@ public class AuthenticationService {
     private void sendValidationEmail(User user) throws MessagingException {
         var newToken = generateAndSaveActivationToken(user);
 
-        emailService.sendEmail(user.getEmail(), user.getFullName(), EmailTemplateName.ACTIVATE_ACCOUNT, activationUrl, newToken, "Account activation");
+        emailService.sendEmail(user.getEmail(), user.getFullName(), EmailTemplateName.ACTIVATE_ACCOUNT, activationUrl, newToken, "Hesap Aktifleştirme");
 
     }
 
