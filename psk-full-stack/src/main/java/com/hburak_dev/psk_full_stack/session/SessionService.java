@@ -14,7 +14,9 @@ public interface SessionService {
 
     List<SessionResponse> getMySessions(Authentication connectedUser);
 
-    Integer createUserSession(UserSessionRequest userSessionRequest, Authentication connectedUser);
+    Integer createUserSession(LocalDateTime date, Authentication connectedUser);
+
+    Integer createSessionForUserV2(LocalDateTime date, Integer userId);
 
     ResponseEntity<Boolean> cancelUserSession(Integer id, Authentication connectedUser);
 

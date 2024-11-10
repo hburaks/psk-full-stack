@@ -60,22 +60,48 @@ public class SessionServiceImpl implements SessionService {
     }
 
     @Override
-    public Integer createUserSession(UserSessionRequest userSessionRequest, Authentication connectedUser) {
+    public Integer createUserSession(LocalDateTime localDateTime, Authentication connectedUser) {
         User user = (User) connectedUser.getPrincipal();
-        userSessionRequest.setDate(Util.toFullHour(userSessionRequest.getDate()));
 
-        boolean sessionExists = sessionRepository.existsByDate(userSessionRequest.getDate());
-        if (!sessionExists) {
-            Session session = sessionMapper.toSession(userSessionRequest, user);
-            session.setCreatedBy(user.getId()); // TODO: is this necessary
-            Session savedSession = sessionRepository.save(session);
-            return savedSession.getId();
-        } else {
-            throw new SessionNotFoundException("Bu zaman diliminde takvim müsait değil: " + userSessionRequest.getDate());
+        return createSessionWithIdAndDate(user, localDateTime);
+    }
+
+    private Integer createSessionWithIdAndDate(User user, LocalDateTime date) {
+        LocalDateTime fullHour = Util.toFullHour(date);
+        validateSessionDate(fullHour);
+
+        if (sessionRepository.existsByDate(fullHour)) {
+            throw new SessionNotFoundException("Bu zaman diliminde takvim müsait değil: " + fullHour);
         }
 
-
+        Session session = sessionMapper.toSession(fullHour, user);
+        session.setCreatedBy(user.getId()); // TODO: is this necessary
+        Session savedSession = sessionRepository.save(session);
+        return savedSession.getId();
     }
+
+    private void validateSessionDate(LocalDateTime fullHour) {
+        if (fullHour.isBefore(LocalDateTime.now())) {
+            throw new SessionNotFoundException("Geçmiş tarihli seans oluşturulamaz: " + fullHour);
+        }
+        if (fullHour.getDayOfWeek() == DayOfWeek.SUNDAY) {
+            throw new SessionNotFoundException("Pazar günü seans oluşturulamaz: " + fullHour);
+        }
+        if (fullHour.getHour() >= 20 || fullHour.getHour() < 10) {
+            throw new SessionNotFoundException("Sabah 10'dan önce veya akşam 20'den sonra seans oluşturulamaz: " + fullHour);
+        }
+        if (fullHour.isAfter(LocalDateTime.now().plusDays(60))) {
+            throw new SessionNotFoundException("60 günden daha ileri bir tarih için seans oluşturulamaz: " + fullHour);
+        }
+    }
+    @Override
+    public Integer createSessionForUserV2(LocalDateTime date, Integer userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new SessionNotFoundException("Bu id ile kullanıcı bulunamadı: " + userId));
+
+        return createSessionWithIdAndDate(user, date);
+    }
+
 
     @Override
     public ResponseEntity<Boolean> cancelUserSession(Integer id, Authentication connectedUser) {

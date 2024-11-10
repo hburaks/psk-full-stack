@@ -1,5 +1,6 @@
 package com.hburak_dev.psk_full_stack.handler;
 
+import com.hburak_dev.psk_full_stack.exception.ActivationTokenException;
 import jakarta.mail.MessagingException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -54,7 +55,7 @@ public class GlobalExceptionHandler {
                         ExceptionResponse.builder()
                                 .businessErrorCode(BAD_CREDENTIALS.getCode())
                                 .businessErrorDescription(BAD_CREDENTIALS.getDescription())
-                                .error("Login and / or Password is incorrect")
+                                .error("Email veya Şifre yanlış")
                                 .build()
                 );
     }
@@ -96,9 +97,27 @@ public class GlobalExceptionHandler {
                 .status(INTERNAL_SERVER_ERROR)
                 .body(
                         ExceptionResponse.builder()
-                                .businessErrorDescription("Internal error, please contact the admin")
+                                .businessErrorDescription("Hata oluştu, Lütfen admin ile iletişime geçin.")
                                 .error(exp.getMessage())
                                 .build()
                 );
     }
+
+    @ExceptionHandler(ActivationTokenException.class)
+    public ResponseEntity<ExceptionResponse> handleException(ActivationTokenException exp) {
+        Set<String> validationErrors = new HashSet<>();
+        validationErrors.add(exp.getMessage());
+        return ResponseEntity
+                .status(INVALID_ACTIVATION_TOKEN.getHttpStatus())
+                .body(
+                        ExceptionResponse.builder()
+                                .businessErrorCode(exp.getErrorCode().getCode())
+                                .businessErrorDescription(exp.getErrorCode().getDescription())
+                                .validationErrors(validationErrors)
+                                .error(exp.getMessage())
+                                .build()
+                );
+    }
+
+
 }

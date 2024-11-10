@@ -16,11 +16,11 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-@SuperBuilder // For to use builder in child entity
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-@MappedSuperclass // Entity değil fakat extend edilen entity içerisinde takip edilecek
-@EntityListeners(AuditingEntityListener.class)// It is a must for jpa to keep update the parameters
+@MappedSuperclass
+@EntityListeners(AuditingEntityListener.class)
 public class BaseEntity {
 
     @Id

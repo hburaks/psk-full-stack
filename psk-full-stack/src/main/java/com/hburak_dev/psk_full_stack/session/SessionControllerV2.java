@@ -2,9 +2,11 @@ package com.hburak_dev.psk_full_stack.session;
 
 import com.hburak_dev.psk_full_stack.common.PageResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @RestController
@@ -63,5 +65,18 @@ public class SessionControllerV2 {
     public List<SessionResponseV2> getAllSessionsOfUserV2(@PathVariable Integer userId) {
         return sessionService.getAllSessionsOfUserV2(userId);
     }
+
+    @PostMapping("/create")
+    public Integer createSessionForUserV2(
+            @RequestParam("date")
+            @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH") String date, @RequestParam Integer userId) {
+
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH");
+
+        LocalDateTime localDateTime = LocalDateTime.parse(date, dateTimeFormatter);
+
+        return sessionService.createSessionForUserV2(localDateTime, userId);
+    }
+
 
 }

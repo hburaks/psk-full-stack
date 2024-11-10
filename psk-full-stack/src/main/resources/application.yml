@@ -9,3 +9,6 @@ springdoc:
 server:
   servlet:
     context-path: /api
+application:
+  cors:
+    origins: http://localhost:8088/,http://localhost:4200

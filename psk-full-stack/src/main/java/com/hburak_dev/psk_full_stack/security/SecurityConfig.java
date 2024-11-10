@@ -40,7 +40,8 @@ public class SecurityConfig {
                                         "/configuration/security",
                                         "/swagger-ui/**",
                                         "/webjars/**",
-                                        "/swagger-ui.html"
+                                        "/swagger-ui.html",
+                                        "/v3/**"
                                 )
                                 .permitAll()
                                 .requestMatchers("/v1/**").hasRole("USER")

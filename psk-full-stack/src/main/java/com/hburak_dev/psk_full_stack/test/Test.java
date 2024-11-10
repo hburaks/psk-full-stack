@@ -1,12 +1,11 @@
 package com.hburak_dev.psk_full_stack.test;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.hburak_dev.psk_full_stack.comment.Comment;
 import com.hburak_dev.psk_full_stack.common.BaseEntity;
 import com.hburak_dev.psk_full_stack.question.Question;
 import com.hburak_dev.psk_full_stack.user.User;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,15 +26,20 @@ public class Test extends BaseEntity {
 
     private String subTitle;
 
-    @OneToMany(mappedBy = "test")
+    @Lob
+    byte[] cover;
+
+    private Boolean isActive;
+
+    @OneToMany(mappedBy = "test", cascade = CascadeType.ALL)
     private List<Question> questions;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JsonIgnoreProperties("tests")
     private User user;
 
-    private boolean isSolved;
-
-    private boolean isDefault;
+    @ManyToMany(cascade = CascadeType.ALL)
+    private List<Comment> comments;
 
 }
+

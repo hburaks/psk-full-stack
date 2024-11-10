@@ -1,5 +1,6 @@
 package com.hburak_dev.psk_full_stack.question;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hburak_dev.psk_full_stack.choice.Choice;
 import com.hburak_dev.psk_full_stack.common.BaseEntity;
 import com.hburak_dev.psk_full_stack.test.Test;
@@ -23,14 +24,15 @@ public class Question extends BaseEntity {
     private String text;
 
     @ManyToOne
-    @JoinColumn(name = "test_id")
+    @JsonIgnore
     private Test test;
 
 
     @Enumerated(EnumType.STRING)
     private AnswerType userAnswer;
 
-    @OneToMany(mappedBy = "question")
+
+    @ManyToMany(cascade = CascadeType.ALL)
     private List<Choice> choices;
 
 }
