@@ -11,7 +11,8 @@ public enum BusinessErrorCodes {
     NEW_PASSWORD_DOES_NOT_MATCH(301, BAD_REQUEST, "The new password does not match"),
     ACCOUNT_LOCKED(302, FORBIDDEN, "User account is locked"),
     ACCOUNT_DISABLED(303, FORBIDDEN, "User account is disabled"),
-    BAD_CREDENTIALS(304, FORBIDDEN, "Login and / or Password is incorrect"),
+    BAD_CREDENTIALS(304, FORBIDDEN, "Email veya Şifre yanlış"),
+    INVALID_ACTIVATION_TOKEN(305, BAD_REQUEST, "Aktivasyon kodu geçersiz"),
     ;
 
     @Getter
