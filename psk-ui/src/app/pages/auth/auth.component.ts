@@ -1,12 +1,11 @@
 import {Component} from '@angular/core';
-import {AuthenticationService} from "../services/services/authentication.service";
-import {AuthenticationRequest} from "../services/models/authentication-request";
-import {AuthenticationResponse} from "../services/models/authentication-response";
-import {DecodedToken} from "../services/models/decoded-token";
+import {AuthenticationService} from "../../services/services/authentication.service";
+import {AuthenticationRequest} from "../../services/models/authentication-request";
+import {AuthenticationResponse} from "../../services/models/authentication-response";
+import {DecodedToken} from "../../services/models/decoded-token";
 import {ActivatedRoute, Router} from "@angular/router";
-import {TokenService} from "../services/token/token.service";
-import {RegistrationRequest} from "../services/models/registration-request";
-import {Confirm$Params} from "../services/fn/authentication/confirm";
+import {TokenService} from "../../services/token/token.service";
+import {RegistrationRequest} from "../../services/models/registration-request";
 
 @Component({
   selector: 'app-register',
@@ -33,9 +32,12 @@ export class AuthComponent {
     password: '',
     phoneNumber: ''
   }
-  activateAccountRequest: Confirm$Params = {
-    token: ''
-  }
+
+
+  activationMessage: string[] = [];
+  isActivationOkay = true;
+  isActivationSubmitted = false;
+
   confirmPassword: string = '';
   errorMsg: Array<string> = [];
 
@@ -160,27 +162,40 @@ export class AuthComponent {
     )
   }
 
-  activateAccount(): void {
+  activateAccount(token: string): void {
     this.errorMsg = [];
     this.authService.confirm(
       {
-        token: this.activateAccountRequest.token
+        token: token
       }
     ).subscribe(
       {
         next: (res: any) => {
+          this.activationMessage.push('Hesabınız başarıyla aktive edildi.\nGiriş yapabilirsiniz.');
+          this.isActivationSubmitted = true;
           console.log(res.toString())
         },
         error: (err) => {
-          let parsedErr = JSON.parse(err.error);
+          this.activationMessage.push('Sistem hatası oluştu.');
+          this.isActivationSubmitted = true;
+          this.isActivationOkay = false;
+          const parsedErr = JSON.parse(err.error);
           if (parsedErr.validationErrors) {
-            this.errorMsg = parsedErr.validationErrors;
+            this.activationMessage = parsedErr.validationErrors;
           } else {
-            this.errorMsg.push(parsedErr.error)
+            this.activationMessage.push(parsedErr.error)
           }
           console.log(parsedErr);
         }
       }
     )
+  }
+
+  redirectToLogin() {
+    this.router.navigate(['login']);
+  }
+
+  onCodeCompleted(token: string) {
+    this.activateAccount(token);
   }
 }

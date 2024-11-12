@@ -4,20 +4,24 @@ import {BrowserModule} from '@angular/platform-browser';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {HttpClient, HttpClientModule} from "@angular/common/http";
-import {AuthComponent} from './auth/auth.component';
+import {AuthComponent} from './pages/auth/auth.component';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {CodeInputModule} from "angular-code-input";
+import {MainPageComponent} from './pages/main-page/main-page.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    AuthComponent
+    AuthComponent,
+    MainPageComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    CodeInputModule
   ],
   providers: [
     HttpClient

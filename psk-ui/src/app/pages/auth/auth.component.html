@@ -3,27 +3,49 @@
     <div class="rounded auth-container px-5">
       <button class="btn btn-link" *ngIf="isLogin" (click)="toggleContent('register')">Kayıt Ol</button>
       <button class="btn btn-link" *ngIf="isRegister" (click)="toggleContent('login')">Giriş Yap</button>
+      <div class="mt-3 mb-2 text-center">
+        <img src="../../../assets/materials/logo-ex.svg" alt="Logo" class="img-fluid">
+      </div>
       <div class="alert alert-danger text-center my-3 pb-0" role="alert" *ngIf="errorMsg.length">
         <p *ngFor="let msg of errorMsg">{{msg}}</p>
-      </div>
-      <div class="mt-3 mb-2 text-center">
-        <img src="./assets/materials/logo-ex.svg" alt="Logo" class="img-fluid">
       </div>
       <div class=" mb-2">
         <p class="text-center description-text">{{infoText}}</p>
       </div>
       <div>
         <div class="login" *ngIf="isActivateAccount">
-          <div class="mb-2">
-            <input [(ngModel)]="activateAccountRequest.token" type="text" class="form-control"
-                   id="activation-code"
-                   placeholder="Aktivasyon Kodu" aria-label="Aktivasyon Kodu">
+          <div *ngIf="isActivationSubmitted else codeForm">
+            <div class="activation-message" *ngIf="isActivationOkay; else activationError">
+              <div class="alert alert-success text-center pb-0" role="alert">
+                <h3>Aktivasyon Başarılı!</h3>
+                <p>Hesabınız başarıyla aktive edildi.</p>
+              </div>
+            </div>
+            <ng-template #activationError>
+              <div class="alert alert-danger text-center pb-0" role="alert">
+                <h3>Aktivasyon Başarısız!</h3>
+                <p>{{ activationMessage }}</p>
+              </div>
+            </ng-template>
           </div>
+          <ng-template #codeForm>
+            <div class="text-center activation-token mb-3" style="max-width: 350px;">
+              <code-input [isCodeHidden]="false"
+                          [codeLength]="6"
+                          [code]="'number'"
+                          (codeCompleted)="onCodeCompleted($event)">
+              </code-input>
+            </div>
+          </ng-template>
           <div class="d-grid">
-            <button class="btn btn-primary" (click)="activateAccount()" type="button">Hesabı Aktifleştir</button>
+            <button *ngIf="!isActivationOkay" class="btn btn-primary"
+                    (click)="isActivationSubmitted = false; isActivationOkay= true">Tekrar Dene
+            </button>
+            <button *ngIf="isActivationOkay" class="btn btn-primary" (click)="redirectToLogin()" type="button">Giriş
+              Yap
+            </button>
           </div>
         </div>
-
         <div class="register" *ngIf="isRegister">
           <div class="mb-2">
             <input [(ngModel)]="registerRequest.firstname" name="firstName" type="text" id="name" class="form-control"

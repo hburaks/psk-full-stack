@@ -18,6 +18,16 @@ img {
   height: auto;
 }
 
+.activation-token {
+  margin: 0 auto;
+}
+
+code-input {
+  @media (max-width: 460px) {
+    --item-height: 3em;
+  }
+}
+
 .auth-bg {
   /*background-color: #7749F8;*/
   position: relative;
