@@ -1,0 +1,24 @@
+.header-logo {
+  height: 2.5rem;
+  margin: 0 2rem 0 0;
+  display: block;
+}
+
+.navbar {
+  background-color: #ffffff !important;
+
+}
+
+.header-content {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.nav-link:hover {
+  color: var(--bs-primary) !important;
+}
+
+.navbar {
+  --bs-navbar-active-color: rgba(119, 73, 248, 0.6);
+  --bs-navbar-color: rgba(var(--bs-emphasis-color-rgb), 0.6);
+}

@@ -1,6 +1,11 @@
 .bg {
+  display: flex;
+  flex-direction: column;
   width: 100%;
   min-height: 100vh;
   background-color: #f8f9fa;
 }
 
+app-footer {
+  margin-top: auto;
+}

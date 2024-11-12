@@ -1,0 +1,45 @@
+<nav class="navbar navbar-expand-md bg-body-tertiary shadow-sm">
+  <div class="container header-content d-flex justify-content-between align-items-center">
+    <img src="../../../assets/materials/logo-horizontal.svg" alt="Logo" class="header-logo">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-center align-items-center " id="navbarSupportedContent">
+      <ul class="navbar-nav my-2 mb-lg-0 align-items-center">
+        <li class="nav-item">
+          <a [class.active]="isMainActive" class="nav-link" href="#">Anasayfa</a>
+        </li>
+        <li class="nav-item">
+          <a [class.active]="isAboutActive" class="nav-link" href="/about">Hakkında</a>
+        </li>
+        <li class="nav-item">
+          <a [class.active]="isBlogActive" class="nav-link" href="/blog">Blog</a>
+        </li>
+        <li *ngIf="isPublicHeader" class="nav-item">
+          <a [class.active]="isTestActive" class="nav-link" href="/test">Testler</a>
+        </li>
+        <li *ngIf="isPublicHeader" class="nav-item">
+          <a [class.active]="isSessionActive" class="nav-link" href="/session">Randevu</a>
+        </li>
+        <li *ngIf="isAdminHeader || isUserHeader" class="nav-item">
+          <a [class.active]="isSessionActive" class="nav-link" href="{{panelPath}}">Kullanıcı Paneli</a>
+        </li>
+        <li *ngIf="isScreenSmall && isPublicHeader" class="nav-item">
+          <a [class.active]="isRegisterActive" class="nav-link" href="/register">Kayıt Ol</a>
+        </li>
+        <li *ngIf="isScreenSmall && isPublicHeader" class="nav-item">
+          <a [class.active]="isLoginActive" class="nav-link" href="/login">Giriş Yap</a>
+        </li>
+      </ul>
+    </div>
+    <div class="d-flex" *ngIf="!isScreenSmall">
+      <a *ngIf="isPublicHeader" class="btn btn-sm btn-outline-primary me-2" href="/register" type="button">Kayıt Ol</a>
+      <a *ngIf="isPublicHeader" class="btn btn-sm btn-primary" href="/login" type="button">Giriş Yap</a>
+      <button (click)="logout()" *ngIf="isAdminHeader || isUserHeader" class="btn btn-sm btn-outline-primary"
+              type="button">
+        <i class="fa-solid fa-right-from-bracket"></i>Çıkış Yap
+      </button>
+    </div>
+  </div>
+</nav>

@@ -2,10 +2,10 @@ import {Component} from '@angular/core';
 import {AuthenticationService} from "../../services/services/authentication.service";
 import {AuthenticationRequest} from "../../services/models/authentication-request";
 import {AuthenticationResponse} from "../../services/models/authentication-response";
-import {DecodedToken} from "../../services/models/decoded-token";
 import {ActivatedRoute, Router} from "@angular/router";
 import {TokenService} from "../../services/token/token.service";
 import {RegistrationRequest} from "../../services/models/registration-request";
+import {CommonService} from "../../services/common.service";
 
 @Component({
   selector: 'app-register',
@@ -51,7 +51,8 @@ export class AuthComponent {
     private authService: AuthenticationService,
     private router: Router,
     private tokenService: TokenService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private commonService: CommonService
   ) {
   }
 
@@ -100,11 +101,6 @@ export class AuthComponent {
     }
   }
 
-  toggleContent(path: string): void {
-    this.router.navigate([path]);
-  }
-
-
   login(): void {
     this.errorMsg = [];
     this.authService.authenticate(
@@ -115,21 +111,27 @@ export class AuthComponent {
       {
         next: (res: AuthenticationResponse) => {
           this.tokenService.token = res.token as string;
-          const decodedToken: DecodedToken = JSON.parse(atob(this.tokenService.token.split('.')[1]));
-          if (decodedToken.authorities.includes("ROLE_ADMIN")) {
-            this.router.navigate(['navigateAdminMain'])
+          const authorities: string[] = this.tokenService.userRoles;
+          console.log(authorities + " authorities");
+          // TODO:test const decodedToken: DecodedToken = JSON.parse(atob(this.tokenService.token.split('.')[1]));
+          if (authorities.includes("ROLE_ADMIN")) {
+            this.commonService.isAdminRegistered = true;
+            this.router.navigate(['admin/panel'])
           } else {
-            this.router.navigate(['navigateMain'])
-
+            console.log("user panel");
+            this.commonService.isUserRegistered = true;
+            this.router.navigate(['user/panel'])
           }
+          this.commonService.updateUserStatus(true);
         },
         error: (err) => {
           if (err.error.validationErrors) {
+            console.log("validationErrors");
             this.errorMsg = err.error.validationErrors;
           } else {
             this.errorMsg.push(err.error.error)
+            this.errorMsg.push("Sistem hatası oluştu.");
           }
-          console.log(err);
         }
       }
     )
@@ -156,7 +158,6 @@ export class AuthComponent {
           } else {
             this.errorMsg.push(err.error.error)
           }
-          console.log(err);
         }
       }
     )
@@ -185,7 +186,7 @@ export class AuthComponent {
           } else {
             this.activationMessage.push(parsedErr.error)
           }
-          console.log(parsedErr);
+          this.errorMsg.push("Sistem hatası oluştu.");
         }
       }
     )

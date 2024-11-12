@@ -53,3 +53,20 @@ code-input {
     padding: 3rem 1rem;
   }
 }
+
+.auth-wrap {
+  @media (max-width: 992px) {
+    padding-inline: 1rem;
+  }
+  @media (max-width: 576px) {
+    padding-inline: 0.5rem;
+  }
+}
+
+.alert-danger {
+  padding: 0;
+}
+
+p:first-child:not(:last-child) {
+  margin-top: 1rem;
+}
