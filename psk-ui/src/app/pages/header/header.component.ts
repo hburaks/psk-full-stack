@@ -23,6 +23,7 @@ export class HeaderComponent implements OnInit {
   isSessionActive: boolean = false;
   isRegisterActive: boolean = false;
   isLoginActive: boolean = false;
+  isPanelActive: boolean = false;
 
   panelPath: string = '';
 
@@ -65,6 +66,7 @@ export class HeaderComponent implements OnInit {
     this.isSessionActive = url === '/session';
     this.isRegisterActive = url === '/register';
     this.isLoginActive = url === '/login';
+    this.isPanelActive = url === '/user/panel' || url === '/admin/panel';
   }
 
   logout() {

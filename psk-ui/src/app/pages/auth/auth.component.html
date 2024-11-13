@@ -1,11 +1,12 @@
 <div class="auth-wrap py-3">
   <div class="rounded auth-bg">
-    <div class="rounded auth-container px-5">
+    <div class="rounded auth-container">
       <div class="mt-3 mb-2 text-center">
         <img src="../../../assets/materials/logo-ex.svg" alt="Logo" class="img-fluid">
       </div>
       <div class="alert alert-danger text-center m-0" role="alert" *ngIf="errorMsg.length">
-        <p *ngFor="let msg of errorMsg">{{msg}}</p>
+        <p *ngFor="let msg of errorMsg; let i = index"
+           [ngClass]="{'single-error': errorMsg.length === 1, 'multiple-errors': errorMsg.length > 1}">{{msg}}</p>
       </div>
       <div class=" mb-2">
         <p class="text-center description-text">{{infoText}}</p>
