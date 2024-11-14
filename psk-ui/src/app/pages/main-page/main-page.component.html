@@ -1,1 +1,43 @@
-<p>main-page works!</p>
+<div class="page-content container">
+  <div class="row mx-0 card my-5 py-4 px-md-5 px-sm-2">
+    <div class="col">
+      <div class="card-body about-card-body my-1 row row-about align-items-center g-5">
+        <div class="about-logo mt-0 col-4">
+          <div class="logo-circle mx-auto"></div>
+        </div>
+        <div class="col-8 mt-0 about-text">
+          <p class="fs-5 mb-0 fw-bold">Klinik Psikolog Ecem Doğan Songur</p>
+          <p class="fw-light mt-2 text-secondary">Foundations are the visual elements needed to create engaging
+            end-to-end user experiences.
+            This includes guidance on iconography, typography, layout and structure.
+          </p>
+          <a class="btn btn-primary" href="/blog">Hakkında..</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card-list mx-0 row justify-content-center">
+    <div class="col-12">
+      <h2>Blog Yazıları</h2>
+    </div>
+    <div class="col-md-4 col-sm-6 mb-2 px-2 blog-card" *ngFor="let blogCard of blogCardList">
+      <div class="card px-0">
+        <img src="{{blogCard.cover}}" class="card-img-top card-image">
+        <div class="card-body">
+          <h5 class="card-title">{{blogCard.title}}</h5>
+          <p class="card-text">{{blogCard.subTitle}}</p>
+          <a href="#" class="btn btn-outline-primary">Devamı..</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 text-end">
+      <a class="btn btn-primary" href="/blog">Daha Fazlası..</a>
+    </div>
+  </div>
+  <div class="mx-0 row justify-content-center">
+    <div class="col-12">
+      <h2>Testler</h2>
+    </div>
+  </div>
+</div>
+
