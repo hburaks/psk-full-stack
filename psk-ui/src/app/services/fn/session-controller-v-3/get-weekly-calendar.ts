@@ -8,18 +8,16 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { PageResponseBlogResponse } from '../../models/page-response-blog-response';
+import { DailyCalendarResponse } from '../../models/daily-calendar-response';
 
-export interface FindAllBlogs$Params {
-  page?: number;
-  size?: number;
+export interface GetWeeklyCalendar$Params {
+  dateTime: string;
 }
 
-export function findAllBlogs(http: HttpClient, rootUrl: string, params?: FindAllBlogs$Params, context?: HttpContext): Observable<StrictHttpResponse<PageResponseBlogResponse>> {
-  const rb = new RequestBuilder(rootUrl, findAllBlogs.PATH, 'get');
+export function getWeeklyCalendar(http: HttpClient, rootUrl: string, params: GetWeeklyCalendar$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<DailyCalendarResponse>>> {
+  const rb = new RequestBuilder(rootUrl, getWeeklyCalendar.PATH, 'get');
   if (params) {
-    rb.query('page', params.page, {});
-    rb.query('size', params.size, {});
+    rb.query('dateTime', params.dateTime, {});
   }
 
   return http.request(
@@ -27,9 +25,9 @@ export function findAllBlogs(http: HttpClient, rootUrl: string, params?: FindAll
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<PageResponseBlogResponse>;
+      return r as StrictHttpResponse<Array<DailyCalendarResponse>>;
     })
   );
 }
 
-findAllBlogs.PATH = '/v2/blogs/get-all-blogs';
+getWeeklyCalendar.PATH = '/v3/sessions/weekly-calendar';
