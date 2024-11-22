@@ -28,4 +28,4 @@ export function getAllPublicTests(http: HttpClient, rootUrl: string, params?: Ge
   );
 }
 
-getAllPublicTests.PATH = '/tests/public';
+getAllPublicTests.PATH = '/v3/test';

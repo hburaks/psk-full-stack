@@ -31,4 +31,4 @@ export function checkPublicTestAnswer(http: HttpClient, rootUrl: string, params:
   );
 }
 
-checkPublicTestAnswer.PATH = '/tests/public/check-answer';
+checkPublicTestAnswer.PATH = '/v3/test/check-answer';

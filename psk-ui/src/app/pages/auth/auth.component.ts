@@ -3,9 +3,9 @@ import {AuthenticationService} from "../../services/services/authentication.serv
 import {AuthenticationRequest} from "../../services/models/authentication-request";
 import {AuthenticationResponse} from "../../services/models/authentication-response";
 import {ActivatedRoute, Router} from "@angular/router";
-import {TokenService} from "../../services/token/token.service";
+import { TokenService } from '../../custom-services/token/token.service';
 import {RegistrationRequest} from "../../services/models/registration-request";
-import {CommonService} from "../../services/common.service";
+import { CommonService } from 'src/app/custom-services/common.service';
 
 @Component({
   selector: 'app-register',

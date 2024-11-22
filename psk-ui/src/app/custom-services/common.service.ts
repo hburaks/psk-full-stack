@@ -1,20 +1,20 @@
-import {Injectable} from '@angular/core';
-import {BehaviorSubject} from 'rxjs/internal/BehaviorSubject';
-import {TokenService} from './token/token.service';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
+import { TokenService } from './token/token.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CommonService {
-
   isUserRegistered: boolean = false;
   isAdminRegistered: boolean = false;
 
-  private userStatusSubject = new BehaviorSubject<boolean>(this.checkInitialUserStatus());
+  private userStatusSubject = new BehaviorSubject<boolean>(
+    this.checkInitialUserStatus()
+  );
   userStatus$ = this.userStatusSubject.asObservable();
 
-  constructor(private tokenService: TokenService) {
-  }
+  constructor(private tokenService: TokenService) {}
 
   updateUserStatus(isLoggedIn: boolean) {
     this.userStatusSubject.next(isLoggedIn);

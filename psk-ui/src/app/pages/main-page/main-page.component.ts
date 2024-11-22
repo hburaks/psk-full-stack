@@ -5,9 +5,6 @@ import { BlogResponse } from '../../services/models/blog-response';
 import { PublicTestResponse } from '../../services/models/public-test-response';
 import { MyTestResponse } from '../../services/models/my-test-response';
 import { TestService } from '../../services/services/test.service';
-import { SessionControllerService } from '../../services/services/session-controller.service';
-import { PublicSessionResponse } from '../../services/models/public-session-response';
-import { WeekDay } from '@angular/common';
 import { SessionControllerV3Service } from 'src/app/services/services';
 import {
   DailyCalendarResponse,
@@ -64,7 +61,7 @@ export class MainPageComponent implements OnInit {
 
   constructor(
     private blogService: BlogService,
-    private testService: TestService,
+    private testServiceV3: TestService,
     private sessionControllerV3Service: SessionControllerV3Service
   ) {}
 
@@ -112,15 +109,15 @@ export class MainPageComponent implements OnInit {
   }
 
   getTestList() {
-    this.testService.getAllPublicTests().subscribe({
+    this.testServiceV3.getAllPublicTests().subscribe({
       next: (publicTests: Array<PublicTestResponse>) => {
         this.fetchedTestList = publicTests || [];
         if (this.fetchedTestList.length !== 0) {
           this.testCardList = this.fetchedTestList.slice(0, 3);
         }
       },
-      error: (error) => {
-        console.error('Error fetching public tests', error);
+      error: (err) => {
+        console.error('Error fetching public tests', err);
       },
     });
   }

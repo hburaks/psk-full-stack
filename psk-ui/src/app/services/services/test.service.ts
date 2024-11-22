@@ -91,6 +91,31 @@ export class TestService extends BaseService {
     );
   }
 
+  /** Path part for operation `checkPublicTestAnswer()` */
+  static readonly CheckPublicTestAnswerPath = '/v3/test/check-answer';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `checkPublicTestAnswer()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  checkPublicTestAnswer$Response(params: CheckPublicTestAnswer$Params, context?: HttpContext): Observable<StrictHttpResponse<PublicTestAnswerCommentResponse>> {
+    return checkPublicTestAnswer(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `checkPublicTestAnswer$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  checkPublicTestAnswer(params: CheckPublicTestAnswer$Params, context?: HttpContext): Observable<PublicTestAnswerCommentResponse> {
+    return this.checkPublicTestAnswer$Response(params, context).pipe(
+      map((r: StrictHttpResponse<PublicTestAnswerCommentResponse>): PublicTestAnswerCommentResponse => r.body)
+    );
+  }
+
   /** Path part for operation `createPublicTestV2()` */
   static readonly CreatePublicTestV2Path = '/v2/test/create';
 
@@ -141,31 +166,6 @@ export class TestService extends BaseService {
     );
   }
 
-  /** Path part for operation `checkPublicTestAnswer()` */
-  static readonly CheckPublicTestAnswerPath = '/tests/public/check-answer';
-
-  /**
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `checkPublicTestAnswer()` instead.
-   *
-   * This method sends `application/json` and handles request body of type `application/json`.
-   */
-  checkPublicTestAnswer$Response(params: CheckPublicTestAnswer$Params, context?: HttpContext): Observable<StrictHttpResponse<PublicTestAnswerCommentResponse>> {
-    return checkPublicTestAnswer(this.http, this.rootUrl, params, context);
-  }
-
-  /**
-   * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `checkPublicTestAnswer$Response()` instead.
-   *
-   * This method sends `application/json` and handles request body of type `application/json`.
-   */
-  checkPublicTestAnswer(params: CheckPublicTestAnswer$Params, context?: HttpContext): Observable<PublicTestAnswerCommentResponse> {
-    return this.checkPublicTestAnswer$Response(params, context).pipe(
-      map((r: StrictHttpResponse<PublicTestAnswerCommentResponse>): PublicTestAnswerCommentResponse => r.body)
-    );
-  }
-
   /** Path part for operation `saveMyTestAnswer()` */
   static readonly SaveMyTestAnswerPath = '/tests/my-tests/save-answer';
 
@@ -191,6 +191,31 @@ export class TestService extends BaseService {
     );
   }
 
+  /** Path part for operation `getAllPublicTests()` */
+  static readonly GetAllPublicTestsPath = '/v3/test';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getAllPublicTests()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getAllPublicTests$Response(params?: GetAllPublicTests$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<PublicTestResponse>>> {
+    return getAllPublicTests(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getAllPublicTests$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getAllPublicTests(params?: GetAllPublicTests$Params, context?: HttpContext): Observable<Array<PublicTestResponse>> {
+    return this.getAllPublicTests$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<PublicTestResponse>>): Array<PublicTestResponse> => r.body)
+    );
+  }
+
   /** Path part for operation `getAllTestsAssignedToUserV2()` */
   static readonly GetAllTestsAssignedToUserV2Path = '/v2/test/user-tests/{userId}';
 
@@ -213,31 +238,6 @@ export class TestService extends BaseService {
   getAllTestsAssignedToUserV2(params: GetAllTestsAssignedToUserV2$Params, context?: HttpContext): Observable<Array<UserTestForAdminResponse>> {
     return this.getAllTestsAssignedToUserV2$Response(params, context).pipe(
       map((r: StrictHttpResponse<Array<UserTestForAdminResponse>>): Array<UserTestForAdminResponse> => r.body)
-    );
-  }
-
-  /** Path part for operation `getAllPublicTests()` */
-  static readonly GetAllPublicTestsPath = '/tests/public';
-
-  /**
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `getAllPublicTests()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  getAllPublicTests$Response(params?: GetAllPublicTests$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<PublicTestResponse>>> {
-    return getAllPublicTests(this.http, this.rootUrl, params, context);
-  }
-
-  /**
-   * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `getAllPublicTests$Response()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  getAllPublicTests(params?: GetAllPublicTests$Params, context?: HttpContext): Observable<Array<PublicTestResponse>> {
-    return this.getAllPublicTests$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Array<PublicTestResponse>>): Array<PublicTestResponse> => r.body)
     );
   }
 

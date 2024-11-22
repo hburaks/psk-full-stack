@@ -1,11 +1,15 @@
 package com.hburak_dev.psk_full_stack;
 
-import com.hburak_dev.psk_full_stack.exception.SessionNotFoundException;
+import com.hburak_dev.psk_full_stack.choice.Choice;
+import com.hburak_dev.psk_full_stack.question.AnswerType;
+import com.hburak_dev.psk_full_stack.question.Question;
 import com.hburak_dev.psk_full_stack.role.Role;
 import com.hburak_dev.psk_full_stack.role.RoleRepository;
 import com.hburak_dev.psk_full_stack.session.Session;
 import com.hburak_dev.psk_full_stack.session.SessionRepository;
 import com.hburak_dev.psk_full_stack.session.SessionStatusType;
+import com.hburak_dev.psk_full_stack.test.Test;
+import com.hburak_dev.psk_full_stack.test.TestRepository;
 import com.hburak_dev.psk_full_stack.user.User;
 import com.hburak_dev.psk_full_stack.user.UserRepository;
 
@@ -34,7 +38,8 @@ public class PskFullStackApplication {
 	public CommandLineRunner dataInitializer(
 			SessionRepository sessionRepository,
 			UserRepository userRepository,
-			RoleRepository roleRepository) {
+			RoleRepository roleRepository,
+			TestRepository testRepository) {
 		return args -> {
 			if (roleRepository.findByName("ROLE_USER").isEmpty()) {
 				roleRepository.save(Role.builder().name("ROLE_USER").build());
@@ -47,6 +52,79 @@ public class PskFullStackApplication {
 					.stream()
 					.findFirst()
 					.orElseThrow(() -> new RuntimeException("No users found"));
+
+			if (testRepository.count() == 0) {
+				List<Test> mockTests = new ArrayList<>();
+
+				mockTests.add(Test.builder()
+						.title("Depresyon Değerlendirmesi")
+						.subTitle("Depresyon belirtilerini değerlendir")
+						.createdBy(mockUser.getId())
+						.isActive(true)
+						.questions(List.of(
+								Question.builder()
+										.text("Ne sıklıkla üzgün veya mutsuz hissediyorsunuz?")
+										.createdBy(mockUser.getId())
+										.choices(List.of(
+												Choice.builder().answerType(AnswerType.ANSWER_A).text("Hiçbir zaman").createdBy(mockUser.getId())
+														.build(),
+												Choice.builder().answerType(AnswerType.ANSWER_B).text("Bazen").createdBy(mockUser.getId())
+														.build(),
+												Choice.builder().answerType(AnswerType.ANSWER_C).text("Sık sık").createdBy(mockUser.getId())
+														.build(),
+												Choice.builder().answerType(AnswerType.ANSWER_D).text("Her zaman").createdBy(mockUser.getId())
+														.build()))
+										.build(),
+								Question.builder()
+										.text("Uyku problemi yaşıyor musunuz?")
+										.createdBy(mockUser.getId())
+										.choices(List.of(
+												Choice.builder().answerType(AnswerType.ANSWER_A).text("Hayır").createdBy(mockUser.getId()).build(),
+												Choice.builder().answerType(AnswerType.ANSWER_B).text("Ara sıra")
+														.createdBy(mockUser.getId()).build(),
+												Choice.builder().answerType(AnswerType.ANSWER_C).text("Sıklıkla").createdBy(mockUser.getId())
+														.build(),
+												Choice.builder().answerType(AnswerType.ANSWER_D).text("Her gece").createdBy(mockUser.getId())
+														.build()))
+										.build()))
+						.build());
+
+				mockTests.add(Test.builder()
+						.title("Anksiyete Taraması")
+						.subTitle("Anksiyete seviyenizi kontrol edin")
+						.createdBy(mockUser.getId())
+						.isActive(true)
+						.questions(List.of(
+								Question.builder()
+										.createdBy(mockUser.getId())
+										.text("Ne sıklıkla gergin veya endişeli hissediyorsunuz?")
+										.choices(List.of(
+												Choice.builder().answerType(AnswerType.ANSWER_A).text("Nadiren").createdBy(mockUser.getId())
+														.build(),
+												Choice.builder().answerType(AnswerType.ANSWER_B).text("Bazen").createdBy(mockUser.getId())
+														.build(),
+												Choice.builder().answerType(AnswerType.ANSWER_C).text("Sık sık").createdBy(mockUser.getId())
+														.build(),
+												Choice.builder().answerType(AnswerType.ANSWER_D).text("Çok sık").createdBy(mockUser.getId())
+														.build()))
+										.build(),
+								Question.builder()
+										.createdBy(mockUser.getId())
+										.text("Panik atak yaşıyor musunuz?")
+										.choices(List.of(
+												Choice.builder().answerType(AnswerType.ANSWER_A).text("Hiçbir zaman").createdBy(mockUser.getId())
+														.build(),
+												Choice.builder().answerType(AnswerType.ANSWER_B).text("Nadiren").createdBy(mockUser.getId())
+														.build(),
+												Choice.builder().answerType(AnswerType.ANSWER_C).text("Bazen").createdBy(mockUser.getId())
+														.build(),
+												Choice.builder().answerType(AnswerType.ANSWER_D).text("Sıklıkla").createdBy(mockUser.getId())
+														.build()))
+										.build()))
+						.build());
+
+				testRepository.saveAll(mockTests);
+			}
 
 			LocalDateTime now = LocalDateTime.now();
 			LocalDateTime monday = now.with(DayOfWeek.MONDAY).withHour(10).withMinute(0);

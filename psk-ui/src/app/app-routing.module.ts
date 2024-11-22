@@ -3,7 +3,7 @@ import {RouterModule, Routes} from '@angular/router';
 import {AuthComponent} from "./pages/auth/auth.component";
 import {MainPageComponent} from "./pages/main-page/main-page.component";
 import {BlogComponent} from "./pages/blog/blog.component";
-import {adminGuard, userGuard} from "./services/guard/auth.guard";
+import { adminGuard, userGuard } from './custom-services/guard/auth.guard';
 
 const routes: Routes = [
   {path: 'register', component: AuthComponent},
