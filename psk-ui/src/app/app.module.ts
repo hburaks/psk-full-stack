@@ -12,6 +12,7 @@ import {HeaderComponent} from './pages/header/header.component';
 import {FooterComponent} from './pages/footer/footer.component';
 import {BlogComponent} from './pages/blog/blog.component';
 import {UserPanelComponent} from './modules/user/pages/user-panel/user-panel.component';
+import { CommonService } from './services/common.service';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import {UserPanelComponent} from './modules/user/pages/user-panel/user-panel.com
     CodeInputModule
   ],
   providers: [
-    HttpClient
+    HttpClient,
+    CommonService
   ],
   bootstrap: [AppComponent]
 })

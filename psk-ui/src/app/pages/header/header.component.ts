@@ -1,18 +1,16 @@
-import {Component, HostListener, OnInit} from '@angular/core';
-import {NavigationEnd, Router} from "@angular/router";
-import {CommonService} from "../../services/common.service";
+import { Component, HostListener, OnInit } from '@angular/core';
+import { NavigationEnd, Router } from '@angular/router';
+import { CommonService } from '../../services/common.service';
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss']
+  styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements OnInit {
-
   isUserHeader: boolean = false;
   isPublicHeader: boolean = true;
   isAdminHeader: boolean = false;
-
 
   isScreenSmall: boolean = false;
 
@@ -27,16 +25,14 @@ export class HeaderComponent implements OnInit {
 
   panelPath: string = '';
 
-
   constructor(private router: Router, private commonService: CommonService) {
-    this.router.events.subscribe(event => {
+    this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         this.updateActiveState(this.router.url);
       }
     });
     this.checkUserStatus();
   }
-
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
@@ -46,15 +42,19 @@ export class HeaderComponent implements OnInit {
   ngOnInit() {
     this.isScreenSmall = window.innerWidth < 768;
     this.updateActiveState(this.router.url);
-    this.checkUserStatus()
+    this.checkUserStatus();
   }
 
   checkUserStatus() {
-    this.commonService.userStatus$.subscribe(isLoggedIn => {
+    this.commonService.userStatus$.subscribe((isLoggedIn) => {
       this.isPublicHeader = !isLoggedIn;
       this.isAdminHeader = this.commonService.isAdminRegistered;
       this.isUserHeader = this.commonService.isUserRegistered;
-      this.panelPath = this.isUserHeader ? '/user/panel' : this.isAdminHeader ? '/admin/panel' : '';
+      this.panelPath = this.isUserHeader
+        ? '/user/panel'
+        : this.isAdminHeader
+        ? '/admin/panel'
+        : '';
     });
   }
 
@@ -79,5 +79,4 @@ export class HeaderComponent implements OnInit {
     localStorage.clear();
     this.router.navigate(['']);
   }
-
 }
