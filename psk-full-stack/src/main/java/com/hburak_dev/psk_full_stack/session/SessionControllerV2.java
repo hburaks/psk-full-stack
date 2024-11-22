@@ -10,7 +10,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @RestController
-@RequestMapping("/v2/sessions")
+@RequestMapping("v2/sessions")
 @RequiredArgsConstructor
 public class SessionControllerV2 {
 

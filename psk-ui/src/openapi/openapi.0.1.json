@@ -708,38 +708,6 @@
         }
       }
     },
-    "/v3/sessions/weekly-calendar": {
-      "get": {
-        "tags": ["session-controller-v-3"],
-        "operationId": "getWeeklyCalendar",
-        "parameters": [
-          {
-            "name": "dateTime",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/DailyCalendarResponse"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/v3/blogs/get-all-blogs": {
       "get": {
         "tags": ["Blog"],
@@ -994,6 +962,38 @@
                   "type": "array",
                   "items": {
                     "$ref": "#/components/schemas/MyTestResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sessions/weekly": {
+      "get": {
+        "tags": ["session-controller"],
+        "operationId": "getAllSessionsWeekly",
+        "parameters": [
+          {
+            "name": "dateTime",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PublicSessionResponse"
                   }
                 }
               }
@@ -1510,41 +1510,6 @@
         "properties": {
           "token": {
             "type": "string"
-          }
-        }
-      },
-      "DailyCalendarResponse": {
-        "type": "object",
-        "properties": {
-          "dayOfWeek": {
-            "type": "string",
-            "enum": [
-              "MONDAY",
-              "TUESDAY",
-              "WEDNESDAY",
-              "THURSDAY",
-              "FRIDAY",
-              "SATURDAY",
-              "SUNDAY"
-            ]
-          },
-          "sessions": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/HourlySessionResponse"
-            }
-          }
-        }
-      },
-      "HourlySessionResponse": {
-        "type": "object",
-        "properties": {
-          "date": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "available": {
-            "type": "boolean"
           }
         }
       },

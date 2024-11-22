@@ -10,8 +10,6 @@ import java.util.List;
 
 public interface SessionService {
 
-    List<PublicSessionResponse> getAllSessionsWeekly(LocalDateTime week);
-
     List<SessionResponse> getMySessions(Authentication connectedUser);
 
     Integer createUserSession(LocalDateTime date, Authentication connectedUser);
@@ -39,4 +37,7 @@ public interface SessionService {
     SessionResponseV2 updateSessionPaidStatusV2(Boolean isPaid, Integer sessionId);
 
     List<SessionResponseV2> getAllSessionsOfUserV2(Integer userId);
+
+    List<DailyCalendarResponse> getWeeklyCalendar(LocalDateTime dateTime);
+
 }
