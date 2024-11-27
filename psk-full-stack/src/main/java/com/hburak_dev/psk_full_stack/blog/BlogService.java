@@ -16,6 +16,7 @@ public interface BlogService {
 
     ResponseEntity<Boolean> removeSelectedBlog(Integer id);
 
-
     Integer updateShareableStatus(Integer id, Authentication connectedUser);
+
+    BlogResponse findBlogById(Integer id);
 }

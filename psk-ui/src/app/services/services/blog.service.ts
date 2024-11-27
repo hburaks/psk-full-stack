@@ -11,12 +11,15 @@ import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 
+import { BlogResponse } from '../models/blog-response';
 import { deleteBlog } from '../fn/blog/delete-blog';
 import { DeleteBlog$Params } from '../fn/blog/delete-blog';
 import { findAllBlogs } from '../fn/blog/find-all-blogs';
 import { FindAllBlogs$Params } from '../fn/blog/find-all-blogs';
 import { findAllBlogsShareable } from '../fn/blog/find-all-blogs-shareable';
 import { FindAllBlogsShareable$Params } from '../fn/blog/find-all-blogs-shareable';
+import { findBlogById } from '../fn/blog/find-blog-by-id';
+import { FindBlogById$Params } from '../fn/blog/find-blog-by-id';
 import { PageResponseBlogResponse } from '../models/page-response-blog-response';
 import { saveBlog } from '../fn/blog/save-blog';
 import { SaveBlog$Params } from '../fn/blog/save-blog';
@@ -103,6 +106,31 @@ export class BlogService extends BaseService {
   saveBlog(params?: SaveBlog$Params, context?: HttpContext): Observable<number> {
     return this.saveBlog$Response(params, context).pipe(
       map((r: StrictHttpResponse<number>): number => r.body)
+    );
+  }
+
+  /** Path part for operation `findBlogById()` */
+  static readonly FindBlogByIdPath = '/v3/blogs/get-blog-by-id/{id}';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `findBlogById()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  findBlogById$Response(params: FindBlogById$Params, context?: HttpContext): Observable<StrictHttpResponse<BlogResponse>> {
+    return findBlogById(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `findBlogById$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  findBlogById(params: FindBlogById$Params, context?: HttpContext): Observable<BlogResponse> {
+    return this.findBlogById$Response(params, context).pipe(
+      map((r: StrictHttpResponse<BlogResponse>): BlogResponse => r.body)
     );
   }
 

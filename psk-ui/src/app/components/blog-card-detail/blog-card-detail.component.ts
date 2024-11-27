@@ -6,7 +6,6 @@ import {
   PageResponseBlogResponse,
 } from 'src/app/services/models';
 import { BlogService } from 'src/app/services/services';
-
 @Component({
   selector: 'app-blog-card-detail',
   templateUrl: './blog-card-detail.component.html',
