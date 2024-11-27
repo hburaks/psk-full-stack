@@ -10,6 +10,7 @@ import {
   DailyCalendarResponse,
   HourlySessionResponse,
 } from 'src/app/services/models';
+import { CommonService } from 'src/app/custom-services/common.service';
 
 @Component({
   selector: 'app-main-page',
@@ -62,7 +63,8 @@ export class MainPageComponent implements OnInit {
   constructor(
     private blogService: BlogService,
     private testServiceV3: TestService,
-    private sessionControllerV3Service: SessionControllerV3Service
+    private sessionControllerV3Service: SessionControllerV3Service,
+    private commonService: CommonService
   ) {}
 
   ngOnInit(): void {
@@ -95,6 +97,7 @@ export class MainPageComponent implements OnInit {
     this.blogService.findAllBlogsShareable().subscribe({
       next: (blogs: PageResponseBlogResponse) => {
         this.fetchedBlogList = blogs.content || [];
+        this.commonService.fetchedBlogList = this.fetchedBlogList;
         if (this.fetchedBlogList.length != 0) {
           this.blogCardList = [];
           for (let i = 0; i < 3; i++) {
@@ -271,21 +274,24 @@ export class MainPageComponent implements OnInit {
 
   private updateTestListBasedOnScreenSize() {
     if (this.fetchedTestList.length === 0) {
+      console.log('No tests found');
       return;
     }
     if (this.isScreenMedium) {
       this.testCardList = [];
-      for (let i = 0; i < 2; i++) {
+      const numTests = Math.min(2, this.fetchedTestList.length);
+      for (let i = 0; i < numTests; i++) {
         this.testCardList.push(this.fetchedTestList[i]);
       }
     } else if (this.isScreenSmall) {
       this.testCardList = [];
-      for (let i = 0; i < 3; i++) {
+      for (let i = 0; i < this.fetchedTestList.length; i++) {
         this.testCardList.push(this.fetchedTestList[i]);
       }
     } else if (this.isScreenLarge) {
+      const numTests = Math.min(2, this.fetchedTestList.length);
       this.testCardList = [];
-      for (let i = 0; i < 3; i++) {
+      for (let i = 0; i < numTests; i++) {
         this.testCardList.push(this.fetchedTestList[i]);
       }
     }

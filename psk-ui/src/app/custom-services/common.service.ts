@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { TokenService } from './token/token.service';
+import { BlogResponse } from '../services/models';
 
 @Injectable({
   providedIn: 'root',
@@ -8,6 +9,8 @@ import { TokenService } from './token/token.service';
 export class CommonService {
   isUserRegistered: boolean = false;
   isAdminRegistered: boolean = false;
+
+  fetchedBlogList: BlogResponse[] = [];
 
   private userStatusSubject = new BehaviorSubject<boolean>(
     this.checkInitialUserStatus()
@@ -29,5 +32,12 @@ export class CommonService {
       this.isAdminRegistered = roles.includes('ROLE_ADMIN');
     }
     return isLoggedIn;
+  }
+
+  getBlogCardDetail(id: number): BlogResponse | undefined {
+    console.log('getBlogCardDetail: ' + this.fetchedBlogList + 'fetchedBlogList');
+    console.log('getBlogCardDetail: ' + id + 'id');
+    console.log('getBlogCardDetail: ' + this.fetchedBlogList.find((blog) => blog.id == id) + 'find');
+    return this.fetchedBlogList.find((blog) => blog.id == id);
   }
 }

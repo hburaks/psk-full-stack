@@ -65,43 +65,14 @@
   cursor: default;
 }
 .test-card-body {
-  height: 230px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  margin: 1rem;
   text-align: center;
 }
-
-.blog-card {
-  height: 200px;
-
-  @media screen and (max-width: 900px) {
-    height: 230px;
-  }
+.test-card-body-large {
+  height: 180px;
 }
 
-.image-gradient-container {
-  position: relative;
-  display: inline-block; /* or block depending on your layout */
-  width: 100%; /* Adjust as needed */
-}
-
-.image-gradient-container::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(to bottom, rgba(119, 73, 248, 0), rgba(119, 73, 248, 0.7));
-}
-
-.blog-card-image {
-  display: block;
-  width: 100%;
-  height: auto;
-  z-index: -1;
-}

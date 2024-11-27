@@ -14,6 +14,9 @@ import {BlogComponent} from './pages/blog/blog.component';
 import {UserPanelComponent} from './modules/user/pages/user-panel/user-panel.component';
 import { CommonService } from './custom-services/common.service';
 import { AboutComponent } from './pages/about/about.component';
+import { BlogCardComponent } from './components/blog-card/blog-card.component';
+import { BlogCardDetailComponent } from './components/blog-card-detail/blog-card-detail.component';
+import { GenericCardDetailComponent } from './components/generic-card-detail/generic-card-detail.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +27,10 @@ import { AboutComponent } from './pages/about/about.component';
     FooterComponent,
     BlogComponent,
     UserPanelComponent,
-    AboutComponent
+    AboutComponent,
+    BlogCardComponent,
+    BlogCardDetailComponent,
+    GenericCardDetailComponent
   ],
   imports: [
     BrowserModule,
