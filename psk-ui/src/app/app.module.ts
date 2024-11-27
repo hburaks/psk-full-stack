@@ -13,6 +13,7 @@ import {FooterComponent} from './pages/footer/footer.component';
 import {BlogComponent} from './pages/blog/blog.component';
 import {UserPanelComponent} from './modules/user/pages/user-panel/user-panel.component';
 import { CommonService } from './custom-services/common.service';
+import { AboutComponent } from './pages/about/about.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { CommonService } from './custom-services/common.service';
     HeaderComponent,
     FooterComponent,
     BlogComponent,
-    UserPanelComponent
+    UserPanelComponent,
+    AboutComponent
   ],
   imports: [
     BrowserModule,

@@ -4,12 +4,14 @@ import {AuthComponent} from "./pages/auth/auth.component";
 import {MainPageComponent} from "./pages/main-page/main-page.component";
 import {BlogComponent} from "./pages/blog/blog.component";
 import { adminGuard, userGuard } from './custom-services/guard/auth.guard';
+import { AboutComponent } from './pages/about/about.component';
 
 const routes: Routes = [
   {path: 'register', component: AuthComponent},
   {path: 'login', component: AuthComponent},
   {path: 'activate-account', component: AuthComponent},
   {path: 'main', component: MainPageComponent},
+  {path: 'about', component: AboutComponent},
   {path: '', component: MainPageComponent},
   {path: 'blog', component: BlogComponent},
   {
