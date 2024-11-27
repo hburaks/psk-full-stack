@@ -22,10 +22,13 @@
     </div>
     <div class="col-12" *ngIf="!isScreenSmall">
       <div class="row g-3">
-        <div class=" col-md-4 col-sm-6" *ngFor="let blogCard of blogCardList">
-          <div class="card ">
-            <img src="https://i.ibb.co/qj44W4n/Auth-bg.jpg" class="card-img-top card-image">
-            <div class="card-body">
+        <div class=" col-md-4 col-sm-6 " *ngFor="let blogCard of blogCardList">
+          <div class="card">
+            <div class="image-gradient-container">
+              <img src="https://i.ibb.co/qj44W4n/Auth-bg.jpg" class="blog-card-image card-img-top card-image">
+              <!-- TODO:change with real data <img src="{{blogCard.cover}}"  class="blog-card-image card-img-top card-image"> -->
+            </div>
+            <div class="card-body blog-card">
               <h5 class="card-title">{{blogCard.title}}</h5>
               <p class="card-text text-secondary">{{blogCard.subTitle}}</p>
               <a href="/blog/{{blogCard.id}}" class="btn btn-outline-primary">Devamı..</a>
@@ -36,16 +39,19 @@
     </div>
     <div *ngIf="isScreenSmall" id="carouselBlogIndicators" class="carousel slide">
       <div class="carousel-inner">
-        <div class="carousel-item card " [ngClass]="{ 'active': i === 0 }"
+        <div class="carousel-item card blog-card-carousel" [ngClass]="{ 'active': i === 0 }"
           *ngFor="let blogCard of blogCardList; let i = index">
-          <img src="{{blogCard.cover}}" class="d-block w-100">
+          <div class="image-gradient-container">
+            <img src="https://i.ibb.co/qj44W4n/Auth-bg.jpg" class="d-block w-100 blog-card-image">
+            <!-- TODO:change with real data <img src="{{blogCard.cover}}" class="d-block w-100 blog-card-image"> -->
+          </div>
           <div class="card-body">
             <h5 class="card-title">{{blogCard.title}}</h5>
             <p class="card-text text-secondary">{{blogCard.subTitle}}</p>
             <a href="/blog/{{blogCard.id}}" class="btn btn-outline-primary">Devamı..</a>
-            </div>
-            </div>
-            </div>
+          </div>
+        </div>
+      </div>
       <button class="carousel-control-prev" type="button" data-bs-target="#carouselBlogIndicators" data-bs-slide="prev">
         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
         <span class="visually-hidden">Previous</span>
@@ -54,8 +60,8 @@
         <span class="carousel-control-next-icon" aria-hidden="true"></span>
         <span class="visually-hidden">Next</span>
       </button>
-      </div>
-      <div class="col-12 mt-3 text-end">
+    </div>
+    <div class="col-12 mt-3 text-end">
       <a class="btn btn-primary" href="/blog">Daha Fazlası..</a>
     </div>
   </div>
@@ -64,13 +70,13 @@
       <h2>Testler</h2>
     </div>
     <div class="col-12" *ngIf="!isScreenSmall">
-      <div class="row g-3">
-        <div class="col-md-4 col-sm-6" *ngFor="let testCard of testCardList; let i = index">
+      <div class="row g-3 test-list-container">
+        <div class="col-md-4 col-sm-6 test-card-container" *ngFor="let testCard of testCardList; let i = index">
           <div class="test-circle mx-auto"></div>
           <!-- TODO:change with real data <img src="{{testCard.cover}}" class="card-img-top card-image"> -->
           <div class="card  test-card">
-            <div class="card-body text-center">
-              <h5 class="card-title">{{testCard.title}}</h5>
+            <div class="card-body test-card-body">
+              <h5 class="card-title text-center">{{testCard.title}}</h5>
               <p class="card-text text-secondary">{{testCard.subTitle}}</p>
               <a href="test/{{testCard.testId}}" class="btn btn-outline-primary btn-test">Teste Başla</a>
             </div>
@@ -80,72 +86,79 @@
     </div>
     <div *ngIf="isScreenSmall" id="carouselTestIndicators" class="carousel carousel-dark slide">
       <div class="carousel-inner">
-        <div class="carousel-item" [ngClass]="{ 'active': i === 0 }" *ngFor="let testCard of testCardList; let i = index">
-          <img src="{{testCard.cover}}" class="d-block w-100">
+        <div class="carousel-item" [ngClass]="{ 'active': i === 0 }"
+          *ngFor="let testCard of testCardList; let i = index">
+          <div class="test-circle mx-auto"> </div>
+          <!--           <img src="{{testCard.cover}}" class="d-block w-100"> -->
           <div class="card border-0 test-card">
-            <div class="card-body">
-              <h5 class="card-title">{{testCard.title}}</h5>
-              <p class="card-text text-secondary">{{testCard.subTitle}}</p>
+            <div class="card-body ">
+              <div>
+                <h5 class="card-title">{{testCard.title}}</h5>
+                <p class="card-text text-secondary">{{testCard.subTitle}}</p>
+              </div>
               <a href="test/{{testCard.testId}}" class="btn btn-outline-primary btn-test">Teste Başla</a>
             </div>
 
           </div>
-          </div>
+        </div>
       </div>
-      <button class="carousel-control-prev" type="button" data-bs-target="#carouselTestIndicators" data-bs-slide="prev">
+      <button class="carousel-control-prev test-carousel-btn" type="button" data-bs-target="#carouselTestIndicators"
+        data-bs-slide="prev">
         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
         <span class="visually-hidden">Previous</span>
       </button>
-      <button class="carousel-control-next" type="button" data-bs-target="#carouselTestIndicators" data-bs-slide="next">
+      <button class="carousel-control-next test-carousel-btn" type="button" data-bs-target="#carouselTestIndicators"
+        data-bs-slide="next">
         <span class="carousel-control-next-icon" aria-hidden="true"></span>
         <span class="visually-hidden">Next</span>
       </button>
-      </div>
-      <div class="col-12 mt-3 text-end">
-        <a class="btn btn-primary" href="/test">Daha Fazlası..</a>
-      </div>
-      </div>
-      <div class="row mx-0 my-5 px-md-3 px-sm-1">
-        <div class="col-12">
-          <h2>Seans Takvimi</h2>
-        </div>
-        <div class="col-12 card">
-          <div class="row">
-            <div class="col-2 text-center text-secondary p-3 table-header border-end border-bottom"
-              *ngFor="let day of weeklySessionCalendar; let i = index" [ngClass]="{'border-end': i !== 5}">
-              <p *ngIf="isScreenLarge" class="text-primary mb-0">{{ getFormattedDate(day) }}</p>
-              <p *ngIf="!isScreenLarge" class="text-primary mb-0">{{ getFormattedShortDate(day) }}</p>
-
+    </div>
+    <div class="col-12 mt-3 text-end">
+      <a class="btn btn-primary" href="/test">Daha Fazlası..</a>
+    </div>
+  </div>
+  <div class="row mx-0 my-5 px-md-3 px-sm-1">
+    <div class="col-12">
+      <h2>Seans Takvimi</h2>
+    </div>
+    <div class="col-12 card">
+      <div class="row">
+        <div class="col-2 text-center text-secondary p-3 table-header border-end border-bottom"
+          *ngFor="let day of weeklySessionCalendar; let i = index" [ngClass]="{'border-end': i !== 5}">
+          <p *ngIf="isScreenLarge" class="text-primary mb-0">{{ getFormattedDate(day) }}</p>
+          <p *ngIf="!isScreenLarge" class="text-primary mb-0">{{ getFormattedShortDate(day) }}</p>
           <p *ngIf="isScreenLarge" class="mb-0">{{ getFormattedLongDayName(day.dayOfWeek || '') }}</p>
           <p *ngIf="!isScreenLarge" class="mb-0">{{ getFormattedShortDayName(day.dayOfWeek || '') }}</p>
-
         </div>
-        </div>
-        <div class="row">
-          <div class="col-2 text-center text-primary fw-light pb-4" *ngFor="let day of weeklySessionCalendar; let i = index"
-            [ngClass]="{ 'border-end': i !== 5}">
-            <div class="mt-3 time-container" *ngFor="let session of day.sessions"
-              [ngClass]="{'unavailable text-secondary': !session?.available, 'available': session?.available}">
-              {{ formatSessionDate(session.date || '') }}
-            </div>
+      </div>
+      <div class="row">
+        <div class="col-2 text-center text-primary fw-light pb-4"
+          *ngFor="let day of weeklySessionCalendar; let i = index" [ngClass]="{ 'border-end': i !== 5}">
+          <div class="mt-3 time-container" *ngFor="let session of day.sessions"
+            [ngClass]="{'unavailable text-secondary': !session?.available, 'available': session?.available}">
+            {{ formatSessionDate(session.date || '') }}
           </div>
         </div>
-        </div>
-        <div class="col-12 mt-3 d-flex justify-content-between">
-          <p class="text-secondary me-3">*Seans randevusu oluşturmak için müsait saatler renkli gösterilmiştir.</p>
-          <nav class="pagination-container">
-            <ul class="pagination">
-              <li class="page-item" [ngClass]="{'disabled': !previousWeekAvailable}">
-                <a class="page-link" (click)="previousWeek()" aria-label="Previous">
-                  <span aria-hidden="true">&laquo;</span>
-                </a>
-              </li>
-              <li class="page-item" [ngClass]="{'disabled': !nextWeekAvailable}">
-                <a class="page-link" (click)="nextWeek()" aria-label="Next">
-                  <span aria-hidden="true">&raquo;</span>
-                </a>
-              </li>
-            </ul>
-          </nav>
-        </div>
-        </div>
+      </div>
+    </div>
+    <div class="col-12 mt-3 d-flex justify-content-between">
+      <div>
+        <p class="text-secondary mb-1">* Müsait saatler renkli şekilde gösterilmiştir.</p>
+        <p class="text-secondary ">** Seans randevusu oluşturmak için giriş yapınız veya kayıt olunuz.</p>
+      </div>
+      <nav class="pagination-container">
+        <ul class="pagination">
+          <li class="page-item" [ngClass]="{'disabled': !previousWeekAvailable}">
+            <a class="page-link" (click)="previousWeek()" aria-label="Previous">
+              <span aria-hidden="true">&laquo;</span>
+            </a>
+          </li>
+          <li class="page-item" [ngClass]="{'disabled': !nextWeekAvailable}">
+            <a class="page-link" (click)="nextWeek()" aria-label="Next">
+              <span aria-hidden="true">&raquo;</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>

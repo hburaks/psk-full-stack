@@ -1,5 +1,7 @@
 package com.hburak_dev.psk_full_stack;
 
+import com.hburak_dev.psk_full_stack.blog.Blog;
+import com.hburak_dev.psk_full_stack.blog.BlogRepository;
 import com.hburak_dev.psk_full_stack.choice.Choice;
 import com.hburak_dev.psk_full_stack.question.AnswerType;
 import com.hburak_dev.psk_full_stack.question.Question;
@@ -39,7 +41,8 @@ public class PskFullStackApplication {
 			SessionRepository sessionRepository,
 			UserRepository userRepository,
 			RoleRepository roleRepository,
-			TestRepository testRepository) {
+			TestRepository testRepository,
+			BlogRepository blogRepository) {
 		return args -> {
 			if (roleRepository.findByName("ROLE_USER").isEmpty()) {
 				roleRepository.save(Role.builder().name("ROLE_USER").build());
@@ -52,6 +55,31 @@ public class PskFullStackApplication {
 					.stream()
 					.findFirst()
 					.orElseThrow(() -> new RuntimeException("No users found"));
+			if (blogRepository.count() == 0) {
+				List<Blog> mockBlogs = new ArrayList<>();	
+				mockBlogs.add(Blog.builder()
+					.title("Psikolojik Sağlık ve İyi Oluş")
+					.subTitle("Modern yaşamda psikolojik sağlığımızı korumak için önemli ipuçları")
+					.text("Günümüzün hızlı tempolu yaşam tarzında, psikolojik sağlığımızı korumak her zamankinden daha önemli hale gelmiştir. Stres, kaygı ve depresyon gibi psikolojik sorunlarla başa çıkabilmek için düzenli egzersiz yapmak, sağlıklı beslenmek ve yeterli uyku almak oldukça önemlidir. Ayrıca, sosyal ilişkilerimizi güçlendirmek, hobiler edinmek ve düzenli olarak meditasyon yapmak da psikolojik sağlığımızı destekleyen önemli faktörlerdir. Bu yazıda, günlük yaşamda uygulayabileceğiniz pratik öneriler ve yaşam tarzı değişiklikleri hakkında detaylı bilgiler bulacaksınız.")
+					.shareable(true)
+					.createdBy(mockUser.getId())
+					.build());
+				mockBlogs.add(Blog.builder()
+					.title("Stres Yönetimi ve Başa Çıkma Teknikleri")
+					.subTitle("Günlük hayatta stresi yönetmenin etkili yolları")
+					.text("Stres, modern yaşamın kaçınılmaz bir parçası haline gelmiştir. İş hayatı, aile sorumlulukları ve sosyal ilişkiler gibi faktörler stres seviyemizi artırabilir. Ancak, doğru teknikler ve yaklaşımlarla stresi etkili bir şekilde yönetmek mümkündür. Nefes egzersizleri, progresif kas gevşetme teknikleri ve mindfulness uygulamaları, stres yönetiminde kullanabileceğimiz etkili araçlardır. Bu yazıda, stres yönetimi konusunda bilimsel olarak kanıtlanmış yöntemler ve günlük hayatta uygulayabileceğiniz pratik öneriler yer almaktadır.")
+					.shareable(true)
+					.createdBy(mockUser.getId())
+					.build());
+				mockBlogs.add(Blog.builder()
+					.title("İlişkilerde Duygusal Zeka")
+					.subTitle("Sağlıklı ilişkiler kurmanın anahtarı: Duygusal zeka")
+					.text("Duygusal zeka, hem kendimizin hem de başkalarının duygularını anlama ve yönetme becerisidir. İlişkilerimizde duygusal zekanın rolü büyüktür. Empati kurabilmek, etkili iletişim becerilerine sahip olmak ve duygusal farkındalık geliştirmek, sağlıklı ve uzun ömürlü ilişkiler kurmanın temel taşlarıdır. Bu makalede, duygusal zekanın beş temel bileşeni olan öz farkındalık, öz düzenleme, motivasyon, empati ve sosyal beceriler hakkında detaylı bilgiler ve bu becerileri geliştirmek için pratik öneriler bulacaksınız.")
+					.shareable(true)
+					.createdBy(mockUser.getId())
+					.build());
+				blogRepository.saveAll(mockBlogs);
+			}
 
 			if (testRepository.count() == 0) {
 				List<Test> mockTests = new ArrayList<>();

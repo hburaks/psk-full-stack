@@ -98,6 +98,9 @@ export class MainPageComponent implements OnInit {
         if (this.fetchedBlogList.length != 0) {
           this.blogCardList = [];
           for (let i = 0; i < 3; i++) {
+            if (this.fetchedBlogList[i]) {
+              //TODO test base64 conversion: this.fetchedBlogList[i].cover = this.fetchedBlogList[i].cover.map(cover => `data:image/jpeg;base64,${cover}`);
+            }
             this.blogCardList.push(this.fetchedBlogList[i]);
           }
         }
@@ -245,6 +248,9 @@ export class MainPageComponent implements OnInit {
   }
 
   private updateBlogListBasedOnScreenSize() {
+    if (this.fetchedBlogList.length === 0) {
+      return;
+    }
     if (this.isScreenMedium) {
       this.blogCardList = [];
       for (let i = 0; i < 2; i++) {
@@ -264,6 +270,9 @@ export class MainPageComponent implements OnInit {
   }
 
   private updateTestListBasedOnScreenSize() {
+    if (this.fetchedTestList.length === 0) {
+      return;
+    }
     if (this.isScreenMedium) {
       this.testCardList = [];
       for (let i = 0; i < 2; i++) {
