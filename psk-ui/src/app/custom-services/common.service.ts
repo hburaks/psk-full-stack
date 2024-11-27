@@ -35,9 +35,6 @@ export class CommonService {
   }
 
   getBlogCardDetail(id: number): BlogResponse | undefined {
-    console.log('getBlogCardDetail: ' + this.fetchedBlogList + 'fetchedBlogList');
-    console.log('getBlogCardDetail: ' + id + 'id');
-    console.log('getBlogCardDetail: ' + this.fetchedBlogList.find((blog) => blog.id == id) + 'find');
     return this.fetchedBlogList.find((blog) => blog.id == id);
   }
 }

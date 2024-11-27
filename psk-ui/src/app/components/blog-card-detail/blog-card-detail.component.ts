@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CommonService } from 'src/app/custom-services/common.service';
+import { FindBlogById$Params } from 'src/app/services/fn/blog/find-blog-by-id';
 import {
   BlogResponse,
   PageResponseBlogResponse,
@@ -24,24 +25,21 @@ export class BlogCardDetailComponent {
     this.cardId = this.route.snapshot.params['id'];
 
     if (this.commonService.fetchedBlogList.length == 0) {
-      this.getBlogList();
+      this.getBlogDetail();
     } else {
-      const blogDetail = this.commonService.getBlogCardDetail(this.cardId);
-      this.blogCard = blogDetail !== undefined ? blogDetail : null;
+      this.getBlogDetailFromList();
     }
   }
 
-  getBlogList() {
-    this.blogService.findAllBlogsShareable().subscribe({
-      next: (blogs: PageResponseBlogResponse) => {
-        this.fetchedBlogList = blogs.content || [];
-        this.commonService.fetchedBlogList = this.fetchedBlogList;
-        const blogDetail = this.commonService.getBlogCardDetail(this.cardId);
-        this.blogCard = blogDetail !== undefined ? blogDetail : null;
-        //TODO test base64 conversion: this.fetchedBlogList[i].cover = this.fetchedBlogList[i].cover.map(cover => `data:image/jpeg;base64,${cover}`);
-      },
-      error: (error) => {
-        console.error('Error fetching blogs', error);
+  getBlogDetailFromList() {
+    const blogDetail = this.commonService.getBlogCardDetail(this.cardId);
+    this.blogCard = blogDetail !== undefined ? blogDetail : null;
+  }
+  getBlogDetail() {
+    const params: FindBlogById$Params = { id: this.cardId };
+    this.blogService.findBlogById(params).subscribe({
+      next: (blog: BlogResponse) => {
+        this.blogCard = blog;
       },
     });
   }
