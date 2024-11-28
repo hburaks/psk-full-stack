@@ -19,7 +19,12 @@
           </div>
         </div>
       </div>
+      
     </div>
+    <app-empty-card class="col-4 empty-card-container"
+      *ngIf="isScreenLarge && blogCardList.length % 3 == 1"></app-empty-card>
+    <app-empty-card class="col-4 empty-card-container" *ngIf="isScreenLarge && blogCardList.length % 3 == 2"></app-empty-card>
+    <app-empty-card class="col-4 empty-card-container" *ngIf="isScreenLarge && blogCardList.length % 3 == 1"></app-empty-card>
   </div>
 </div>
 

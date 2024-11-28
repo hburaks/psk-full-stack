@@ -17,6 +17,7 @@ import { AboutComponent } from './pages/about/about.component';
 import { BlogCardComponent } from './components/blog-card/blog-card.component';
 import { BlogCardDetailComponent } from './components/blog-card-detail/blog-card-detail.component';
 import { GenericCardDetailComponent } from './components/generic-card-detail/generic-card-detail.component';
+import { EmptyCardComponent } from './components/empty-card/empty-card.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { GenericCardDetailComponent } from './components/generic-card-detail/gen
     AboutComponent,
     BlogCardComponent,
     BlogCardDetailComponent,
-    GenericCardDetailComponent
+    GenericCardDetailComponent,
+    EmptyCardComponent
   ],
   imports: [
     BrowserModule,

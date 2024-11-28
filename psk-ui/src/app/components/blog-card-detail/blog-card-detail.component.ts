@@ -35,6 +35,7 @@ export class BlogCardDetailComponent {
     const blogDetail = this.commonService.getBlogCardDetail(this.cardId);
     this.blogCard = blogDetail !== undefined ? blogDetail : null;
   }
+
   getBlogDetail() {
     const params: FindBlogById$Params = { id: this.cardId };
     this.blogService.findBlogById(params).subscribe({
@@ -43,4 +44,5 @@ export class BlogCardDetailComponent {
       },
     });
   }
+  
 }
