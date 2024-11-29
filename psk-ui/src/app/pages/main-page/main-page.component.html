@@ -1,0 +1,94 @@
+<div class="page-content container ">
+  <div class="row mx-0 card mb-5 py-4 px-md-5 px-sm-2">
+    <div class="col">
+      <div class="card-body about-card-body my-1 row row-about align-items-center g-5">
+        <div class="about-logo mt-0 col-4">
+          <div class="logo-circle mx-auto"></div>
+        </div>
+        <div class="col-8 mt-0 about-text">
+          <p class="fs-5 mb-0 fw-bold">Klinik Psikolog Ecem Doğan Songur</p>
+          <p class="fw-light mt-2 text-secondary">Foundations are the visual elements needed to create engaging
+            end-to-end user experiences.
+            This includes guidance on iconography, typography, layout and structure.
+          </p>
+          <a class="btn btn-primary" href="/about">Hakkında..</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="mx-0 row justify-content-center">
+    <app-blog-card *ngIf="!isScreenSmall" [blogCardList]="blogCardList"></app-blog-card>
+    <div *ngIf="isScreenSmall" id="carouselBlogIndicators" class="carousel slide">
+      <div class="col-12 mb-4">
+        <h2>Blog Yazıları</h2>
+      </div>
+      <div class="carousel-inner">
+        <div class="carousel-item card " [ngClass]="{ 'active': i === 0 }"
+          *ngFor="let blogCard of blogCardList; let i = index">
+          <div class="image-gradient-container">
+            <img src="https://i.ibb.co/qj44W4n/Auth-bg.jpg" class="d-block w-100 blog-card-image">
+            <!-- TODO:change with real data <img src="{{blogCard.cover}}" class="d-block w-100 blog-card-image"> -->
+          </div>
+          <div class="card-body">
+            <h5 class="card-title">{{blogCard.title}}</h5>
+            <p class="card-text text-secondary">{{blogCard.subTitle}}</p>
+            <a href="/blog/{{blogCard.id}}" class="btn btn-outline-primary">Devamı..</a>
+          </div>
+        </div>
+      </div>
+      <button class="carousel-control-prev" type="button" data-bs-target="#carouselBlogIndicators" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#carouselBlogIndicators" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+    <div class="col-12 mt-3 text-end">
+      <a class="btn btn-primary" href="/blog">Daha Fazlası..</a>
+    </div>
+  </div>
+  <div class="mx-0 row justify-content-center">
+    <div class="col-12">
+      <app-test-card *ngIf="!isScreenSmall" [testCardList]="testCardList" [isMainPage]="true"></app-test-card>
+      <div *ngIf="isScreenSmall" id="carouselTestIndicators" class="carousel carousel-dark slide">
+        <div class="col-12 mb-4">
+          <h2>Testler</h2>
+          </div>
+        <div class="carousel-inner">
+          <div class="carousel-item" [ngClass]="{ 'active': i === 0 }"
+            *ngFor="let testCard of testCardList; let i = index">
+            <div class="test-circle mx-auto"> </div>
+            <!--           <img src="{{testCard.cover}}" class="d-block w-100"> -->
+            <div class="card border-0 test-card">
+              <div class="card-body test-card-body">
+                <div>
+                  <h5 class="card-title">{{testCard.title}}</h5>
+                  <p class="card-text text-secondary">{{testCard.subTitle}}</p>
+                </div>
+                <a href="test/{{testCard.id}}" class="btn btn-outline-primary btn-test">Teste Başla</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button class="carousel-control-prev test-carousel-btn" type="button" data-bs-target="#carouselTestIndicators"
+          data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next test-carousel-btn" type="button" data-bs-target="#carouselTestIndicators"
+          data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      </div>
+      <div class="col-12 mt-3 text-end">
+        <a class="btn btn-primary" href="/test">Daha Fazlası..</a>
+      </div>
+    </div>
+  </div>
+  <div class="row mx-0 ">
+    <app-weekly-session-calendar></app-weekly-session-calendar>
+  </div>
+  </div>

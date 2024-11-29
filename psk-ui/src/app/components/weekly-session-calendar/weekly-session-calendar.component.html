@@ -1,0 +1,51 @@
+<div class="col-12">
+  <h2>Seans Takvimi</h2>
+</div>
+<div class="col-12 card">
+  <div class="row mx-0">
+    <div class="col-2 text-center text-secondary py-3 px-0 table-header border-end border-bottom"
+      *ngFor="let day of weeklySessionCalendar; let i = index" [ngClass]="{'border-end': i !== 5}">
+      <p *ngIf="isScreenLarge" class="text-primary mb-0">{{ getFormattedDate(day) }}</p>
+      <p *ngIf="!isScreenLarge" class="text-primary mb-0 text-nowrap">{{ getFormattedShortDate(day) }}</p>
+      <p *ngIf="isScreenLarge" class="mb-0">{{ getFormattedLongDayName(day.dayOfWeek || '') }}</p>
+      <p *ngIf="!isScreenLarge" class="mb-0 text-nowrap">{{ getFormattedShortDayName(day.dayOfWeek || '') }}</p>
+    </div>
+  </div>
+  <div class="row mx-0">
+    <div class="col-2 text-center text-primary fw-light pb-4 text-nowrap px-0" *ngFor="let day of weeklySessionCalendar; let i = index"
+      [ngClass]="{ 'border-end': i !== 5}">
+      <div class="mt-3 time-container no-pointer-cursor" *ngFor="let session of day.sessions"
+        [ngClass]="{'unavailable text-secondary': !session?.available, 'available': session?.available, 'smaller-font': !isScreenLarge}">
+        {{ formatSessionDate(session.date || '') }}
+      </div>
+    </div>
+  </div>
+</div>
+<div class="col-12 mt-3 d-flex justify-content-between">
+  <div>
+    <p class="text-secondary mb-1">* Müsait saatler renkli şekilde gösterilmiştir.</p>
+    <p class="text-secondary ">** Seans randevusu oluşturmak için giriş yapınız veya kayıt olunuz.</p>
+  </div>
+  <nav class="pagination-container">
+    <ul class="pagination">
+      <li class="page-item" [ngClass]="{'disabled': !previousWeekAvailable}">
+        <a class="page-link pointer-cursor" (click)="previousWeek()" aria-label="Previous">
+          <span aria-hidden="true">&laquo;</span>
+        </a>
+      </li>
+      <li class="page-item" [ngClass]="{'disabled': !nextWeekAvailable}">
+        <a class="page-link pointer-cursor" (click)="nextWeek()" aria-label="Next">
+          <span aria-hidden="true">&raquo;</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+</div>
+
+<div class="col-12">
+  <div class="row">
+    <div class="col-12 text-end">
+      <button class="btn btn-primary" routerLink="/register">Kayıt Ol ve Randevu Al</button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,30 @@
+<div class="mx-0 row justify-content-center">
+  <div class="col-12 mb-4">
+    <h2>Testler</h2>
+  </div>
+</div>
+<div class="row g-3">
+  <div class="col-md-4 col-sm-6 test-card-container mb-4" *ngFor="let testCard of testCardList; let i = index">
+    <div class="test-circle mx-auto"></div>
+    <!-- TODO:change with real data <img src="{{testCard.cover}}" class="card-img-top card-image"> -->
+    <div class="card test-card">
+      <div class="card-body test-card-body test-card-body-large d-flex flex-column justify-content-between">
+        <div>
+          <h5 class="card-title text-center">{{testCard.title}}</h5>
+          <p class="card-text text-secondary">{{testCard.subTitle}}</p>
+        </div>
+        <div>
+          <a href="test/{{testCard.id}}" class="btn btn-outline-primary btn-test">Teste Başla</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <app-empty-card class="col-4 empty-card-container"
+    *ngIf="isScreenLarge && testCardList.length % 3 == 1"></app-empty-card>
+  <app-empty-card class="col-4 empty-card-container"
+    *ngIf="isScreenLarge && testCardList.length % 3 == 2"></app-empty-card>
+  <app-empty-card class="col-4 empty-card-container"
+    *ngIf="isScreenLarge && testCardList.length % 3 == 1"></app-empty-card>
+  <app-empty-card class="col-sm-6 empty-card-container"
+    *ngIf="isScreenMedium && testCardList.length % 2 == 1"></app-empty-card>
+</div>

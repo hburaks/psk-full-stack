@@ -290,4 +290,11 @@ public class TestServiceImpl implements TestService {
                 .choices(question.getChoices())
                 .build();
     }
+
+    @Override
+    public PublicTestResponse getPublicTestById(Integer id) {
+        Test test = testRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Test bulunamadı"));
+        return testMapper.toPublicTestResponse(test);
+    }
 }

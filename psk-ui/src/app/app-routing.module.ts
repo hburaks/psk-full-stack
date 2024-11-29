@@ -1,16 +1,45 @@
-import {NgModule} from '@angular/core';
-import {RouterModule, Routes} from '@angular/router';
-import {AuthComponent} from "./auth/auth.component";
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { AuthComponent } from './pages/auth/auth.component';
+import { MainPageComponent } from './pages/main-page/main-page.component';
+import { BlogComponent } from './pages/blog/blog.component';
+import { adminGuard, userGuard } from './custom-services/guard/auth.guard';
+import { AboutComponent } from './pages/about/about.component';
+import { BlogCardDetailComponent } from './components/blog-card-detail/blog-card-detail.component';
+import { TestComponent } from './pages/test/test.component';
+import { TestCardDetailComponent } from './components/test-card-detail/test-card-detail.component';
+import { TestResultComponent } from './components/test-result/test-result.component';
+import { SessionsComponent } from './pages/sessions/sessions.component';
 
 const routes: Routes = [
-  {path: 'register', component: AuthComponent},
-  {path: 'login', component: AuthComponent},
-  {path: 'activate-account', component: AuthComponent}
+  { path: 'register', component: AuthComponent },
+  { path: 'login', component: AuthComponent },
+  { path: 'activate-account', component: AuthComponent },
+  { path: 'main', component: MainPageComponent },
+  { path: 'about', component: AboutComponent },
+  { path: '', component: MainPageComponent },
+  { path: 'blog', component: BlogComponent },
+  { path: 'blog/:id', component: BlogCardDetailComponent },
+  { path: 'test', component: TestComponent },
+  { path: 'test/:id', component: TestCardDetailComponent },
+  { path: 'test-result', component: TestResultComponent },
+  { path: 'session', component: SessionsComponent },
+  {
+    path: 'user',
+    loadChildren: () =>
+      import('./modules/user/user.module').then((m) => m.UserModule),
+    canActivate: [userGuard],
+  },
+  {
+    path: 'admin',
+    loadChildren: () =>
+      import('./modules/admin/admin.module').then((m) => m.AdminModule),
+    canActivate: [adminGuard],
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule {
-}
+export class AppRoutingModule {}

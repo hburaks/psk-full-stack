@@ -1,0 +1,31 @@
+.logo-circle {
+  width: 360px;
+  height: 180px;
+  background-color: pink;
+  margin-bottom: 1rem;
+  border-top-left-radius: 90px;
+  border-bottom-right-radius: 90px;
+}
+
+.row-about {
+  flex-direction: column;
+  text-align: center;
+}
+
+.about-text,
+.about-logo {
+  width: 100%;
+}
+
+.about-text p:first-child {
+  text-align: center;
+}
+
+.about-text p:not(:first-child) {
+  text-align: justify;
+}
+
+.about-text {
+  margin: 0 auto;
+  max-width: 800px;
+}

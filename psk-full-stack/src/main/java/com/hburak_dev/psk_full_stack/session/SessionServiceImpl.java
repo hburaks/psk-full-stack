@@ -19,8 +19,11 @@ import org.springframework.stereotype.Service;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -33,8 +36,7 @@ public class SessionServiceImpl implements SessionService {
 
     private final SessionMapper sessionMapper;
 
-    @Override
-    public List<PublicSessionResponse> getAllSessionsWeekly(LocalDateTime dateTime) {
+    private List<PublicSessionResponse> getAllSessionsWeekly(LocalDateTime dateTime) {
 
         LocalDateTime startOfWeek = dateTime.with(DayOfWeek.MONDAY).with(LocalTime.MIN);
         LocalDateTime endOfWeek = dateTime.with(DayOfWeek.SUNDAY).with(LocalTime.MAX);
@@ -45,7 +47,6 @@ public class SessionServiceImpl implements SessionService {
                 .filter(session -> session.getSessionStatus() != SessionStatusType.CANCELED)
                 .map(sessionMapper::toPublicSessionResponse).toList();
     }
-
 
     @Override
     public List<SessionResponse> getMySessions(Authentication connectedUser) {
@@ -88,12 +89,14 @@ public class SessionServiceImpl implements SessionService {
             throw new SessionNotFoundException("Pazar günü seans oluşturulamaz: " + fullHour);
         }
         if (fullHour.getHour() >= 20 || fullHour.getHour() < 10) {
-            throw new SessionNotFoundException("Sabah 10'dan önce veya akşam 20'den sonra seans oluşturulamaz: " + fullHour);
+            throw new SessionNotFoundException(
+                    "Sabah 10'dan önce veya akşam 20'den sonra seans oluşturulamaz: " + fullHour);
         }
         if (fullHour.isAfter(LocalDateTime.now().plusDays(60))) {
             throw new SessionNotFoundException("60 günden daha ileri bir tarih için seans oluşturulamaz: " + fullHour);
         }
     }
+
     @Override
     public Integer createSessionForUserV2(LocalDateTime date, Integer userId) {
         User user = userRepository.findById(userId)
@@ -101,7 +104,6 @@ public class SessionServiceImpl implements SessionService {
 
         return createSessionWithIdAndDate(user, date);
     }
-
 
     @Override
     public ResponseEntity<Boolean> cancelUserSession(Integer id, Authentication connectedUser) {
@@ -142,8 +144,7 @@ public class SessionServiceImpl implements SessionService {
                 sessions.getTotalElements(),
                 sessions.getTotalPages(),
                 sessions.isFirst(),
-                sessions.isLast()
-        );
+                sessions.isLast());
     }
 
     @Override
@@ -216,7 +217,6 @@ public class SessionServiceImpl implements SessionService {
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
         Page<User> usersWithSessions = userRepository.findAllUsersWithSessions(pageable);
 
-
         List<UserWithSessionResponse> responseList = usersWithSessions
                 .stream()
                 .map(user -> UserWithSessionResponse.builder()
@@ -234,8 +234,7 @@ public class SessionServiceImpl implements SessionService {
                 usersWithSessions.getTotalElements(),
                 usersWithSessions.getTotalPages(),
                 usersWithSessions.isFirst(),
-                usersWithSessions.isLast()
-        );
+                usersWithSessions.isLast());
     }
 
     @Override
@@ -274,7 +273,6 @@ public class SessionServiceImpl implements SessionService {
         return getAllSessionsWeekly(fullHoursAvailable.get(0));
     }
 
-
     @Override
     public SessionResponseV2 updateSessionPaidStatusV2(Boolean isPaid, Integer sessionId) {
         Session session = sessionRepository.findById(sessionId)
@@ -286,7 +284,6 @@ public class SessionServiceImpl implements SessionService {
         return sessionMapper.toSessionResponseV2(savedSession);
     }
 
-
     @Override
     public List<SessionResponseV2> getAllSessionsOfUserV2(Integer userId) {
         List<Session> sessions = sessionRepository.findByUserId(userId);
@@ -296,5 +293,73 @@ public class SessionServiceImpl implements SessionService {
                 .toList();
     }
 
+    @Override
+    public List<DailyCalendarResponse> getWeeklyCalendar(LocalDateTime weekDate) {
 
+        List<Session> sessions = getAllFilteredSessionsWeekly(weekDate);
+
+        Map<DayOfWeek, List<Session>> sessionsByDayOfWeek = sessions.stream()
+                .collect(Collectors.groupingBy(session -> session.getDate().getDayOfWeek()));
+
+        List<DailyCalendarResponse> dailyCalendarResponses = new java.util.ArrayList<>();
+
+        for (DayOfWeek day : Arrays.stream(DayOfWeek.values())
+                .filter(d -> d != DayOfWeek.SUNDAY)
+                .toList()) {
+
+            List<HourlySessionResponse> dayResponses = new java.util.ArrayList<>();
+            List<Session> existingSessions = sessionsByDayOfWeek.getOrDefault(day,
+                    new java.util.ArrayList<>());
+
+            LocalDateTime currentDate = weekDate.with(day);
+            for (int hour = 10; hour <= 19; hour++) {
+                LocalDateTime timeSlot = currentDate.withHour(hour).withMinute(0).withSecond(0).withNano(0);
+
+                boolean isAvailable = existingSessions.stream()
+                        .noneMatch(session -> session.getDate().equals(timeSlot));
+
+                if (day == DayOfWeek.SATURDAY && timeSlot.getHour() >= 18) {
+                    isAvailable = false;
+                }
+
+                dayResponses.add(HourlySessionResponse.builder()
+                        .date(timeSlot)
+                        .isAvailable(isAvailable)
+                        .build());
+            }
+
+            dailyCalendarResponses.add(DailyCalendarResponse.builder()
+                    .dayOfWeek(day)
+                    .sessions(dayResponses)
+                    .build());
+        }
+
+        return dailyCalendarResponses;
+    }
+
+    private List<Session> getAllFilteredSessionsWeekly(LocalDateTime weekDate) {
+        LocalDateTime now = LocalDateTime.now().with(DayOfWeek.MONDAY).withHour(0).withMinute(0).withSecond(0)
+                .withNano(0);
+        LocalDateTime fourWeeksFromNow = now.plusWeeks(5);
+
+        if (weekDate.isBefore(now)) {
+            throw new IllegalArgumentException("Geçmiş haftalardaki seanslar görüntülenemez");
+        }
+
+        if (weekDate.isAfter(fourWeeksFromNow)) {
+            throw new IllegalArgumentException("5 haftadan daha ileri tarihli seanslar görüntülenemez");
+        }
+
+        LocalDateTime startOfWeek = weekDate.with(DayOfWeek.MONDAY).with(LocalTime.MIN);
+        LocalDateTime endOfWeek = weekDate.with(DayOfWeek.SUNDAY).with(LocalTime.MAX);
+        List<Session> sessions = sessionRepository.findByDateBetween(startOfWeek, endOfWeek);
+        return sessions.stream()
+                .filter(session -> session.getSessionStatus() != SessionStatusType.CANCELED)
+                .map(session -> {
+                    LocalDateTime date = session.getDate();
+                    session.setDate(date.withMinute(0).withSecond(0).withNano(0));
+                    return session;
+                })
+                .toList();
+    }
 }

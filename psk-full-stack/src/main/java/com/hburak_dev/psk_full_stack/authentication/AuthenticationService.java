@@ -3,6 +3,7 @@ package com.hburak_dev.psk_full_stack.authentication;
 import com.hburak_dev.psk_full_stack.email.EmailService;
 import com.hburak_dev.psk_full_stack.email.EmailTemplateName;
 import com.hburak_dev.psk_full_stack.exception.ActivationTokenException;
+import com.hburak_dev.psk_full_stack.exception.EmailAlreadyUsedException;
 import com.hburak_dev.psk_full_stack.role.RoleRepository;
 import com.hburak_dev.psk_full_stack.security.JwtService;
 import com.hburak_dev.psk_full_stack.user.Token;
@@ -17,6 +18,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
@@ -38,23 +40,31 @@ public class AuthenticationService {
     @Value("${application.mailing.frontend.activation-url}")
     private String activationUrl;
 
-    public void register(RegistrationRequest request) throws MessagingException {
-        var userRole = roleRepository.findByName("USER")
-                // todo - better exception handling
-                .orElseThrow(() -> new IllegalStateException("ROLE USER was not initiated"));
-        var user = User.builder()
-                .firstname(request.getFirstname())
-                .lastname(request.getLastname())
-                .email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .phoneNumber(request.getPhoneNumber())
-                .birthYear(request.getBirthYear())
-                .accountLocked(false)
-                .enabled(false)
-                .roles(List.of(userRole))
-                .build();
-        userRepository.save(user);
-        sendValidationEmail(user);
+    @Transactional
+    public void register(RegistrationRequest request) {
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw new EmailAlreadyUsedException("Bu e-posta adresi zaten kullanılıyor.");
+        }
+        try {
+            var userRole = roleRepository.findByName("ROLE_USER")
+                    // todo - better exception handling
+                    .orElseThrow(() -> new IllegalStateException("Sistemsel bir hata oluştu. Lütfen daha sonra tekrar deneyin."));
+            var user = User.builder()
+                    .firstname(request.getFirstname())
+                    .lastname(request.getLastname())
+                    .email(request.getEmail())
+                    .password(passwordEncoder.encode(request.getPassword()))
+                    .phoneNumber(request.getPhoneNumber())
+                    .birthYear(request.getBirthYear())
+                    .accountLocked(false)
+                    .enabled(false)
+                    .roles(List.of(userRole))
+                    .build();
+            userRepository.save(user);
+            sendValidationEmail(user);
+        } catch (Exception e) {
+            throw new IllegalStateException("Sistemsel bir hata oluştu. Lütfen daha sonra tekrar deneyin.");
+        }
     }
 
 

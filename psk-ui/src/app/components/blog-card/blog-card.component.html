@@ -1,0 +1,32 @@
+<div class="col-12 mb-4">
+  <h2>Blog Yazıları</h2>
+</div>
+<div class="col-12">
+  
+  <div class="row g-3">
+    <div class=" col-md-4 col-sm-6 " *ngFor="let blogCard of blogCardList">
+      <div class="card">
+        <div class="image-gradient-container">
+          <img src="https://i.ibb.co/qj44W4n/Auth-bg.jpg" class="blog-card-image card-img-top card-image">
+          <!-- TODO:change with real data <img src="{{blogCard.cover}}"  class="blog-card-image card-img-top card-image"> -->
+        </div>
+        <div class="card-body blog-card d-flex flex-column justify-content-between">
+          <div>
+            <h5 class="card-title">{{blogCard.title}}</h5>
+            <p class="card-text text-secondary">{{blogCard.subTitle}}</p>
+          </div>
+          <div>
+            <a href="/blog/{{blogCard.id}}" class="btn btn-outline-primary">Devamı..</a>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+    <app-empty-card class="col-md-4 col-sm-6 empty-card-container"
+      *ngIf="isScreenLarge && blogCardList.length % 3 == 1"></app-empty-card>
+    <app-empty-card class="col-md-4 col-sm-6 empty-card-container" *ngIf="isScreenLarge && blogCardList.length % 3 == 2"></app-empty-card>
+    <app-empty-card class="col-md-4 col-sm-6 empty-card-container" *ngIf="isScreenLarge && blogCardList.length % 3 == 1"></app-empty-card>
+    <app-empty-card class="col-md-4 col-sm-6 empty-card-container" *ngIf="isScreenMedium && blogCardList.length % 2 == 1"></app-empty-card>
+  </div>
+</div>
+

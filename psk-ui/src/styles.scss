@@ -4,3 +4,12 @@
 $primary: #7749F8;
 
 @import "bootstrap";
+
+.page-content {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.pointer-cursor {
+  cursor: pointer;
+}

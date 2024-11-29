@@ -1,0 +1,80 @@
+.description-text {
+  color: #6c757d;
+  max-width: 300px;
+  margin: 1rem auto 2rem;
+}
+
+.auth-container {
+  background-color: #ffffff;
+  padding-top: 1rem;
+  padding-bottom: 2rem;
+  max-width: 600px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+  padding-inline: 3rem;
+
+  @media (max-width: 460px) {
+    padding-inline: 1rem
+  }
+}
+
+img {
+  height: auto;
+}
+
+.activation-token {
+  margin: 0 auto;
+}
+code-input {
+  @media (max-width: 460px) {
+    --item-height: 3em;
+  }
+}
+
+.auth-bg {
+  /*background-color: #7749F8;*/
+  position: relative;
+  padding: 6rem;
+  margin: 0 auto 0 auto;
+  max-width: 900px;
+  background-image: url('https://i.ibb.co/qj44W4n/Auth-bg.jpg');
+  background-size: cover;
+  background-position: center;
+  @media (max-width: 1200px) {
+    padding: 6rem;
+  }
+
+  @media (max-width: 992px) {
+    padding: 6rem 4rem;
+  }
+
+  @media (max-width: 768px) {
+    padding: 4rem 2rem;
+  }
+
+  @media (max-width: 576px) {
+    padding: 1rem 1rem;
+  }
+}
+
+.auth-wrap {
+  @media (max-width: 992px) {
+    padding-inline: 1rem;
+  }
+  @media (max-width: 576px) {
+    padding-inline: 0.5rem;
+  }
+}
+
+.alert-danger {
+  padding: 0;
+}
+
+.single-error {
+  margin-top: 1rem;
+}
+
+.multiple-errors:first-child {
+  margin-top: 1rem;
+}
