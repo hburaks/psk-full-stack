@@ -8,6 +8,7 @@ import {
   PublicTestResponse,
 } from 'src/app/services/models';
 import { TestService } from 'src/app/services/services';
+declare var bootstrap: any;
 
 @Component({
   selector: 'app-test-card-detail',
@@ -84,7 +85,7 @@ export class TestCardDetailComponent {
       this.questions?.length === 0 ||
       this.questions?.length !== this.testCard?.questions?.length
     ) {
-      this.commonService.showErrorToast('Lütfen testi tamamlayınız.');
+      this.showToast();
       return;
     }
     this.testService
@@ -97,5 +98,13 @@ export class TestCardDetailComponent {
           console.log(result);
         },
       });
+  }
+
+  showToast() {
+    const toastElement = document.querySelector('.toast');
+    if (toastElement) {
+      const bsToast = new bootstrap.Toast(toastElement);
+      bsToast.show();
+    }
   }
 }

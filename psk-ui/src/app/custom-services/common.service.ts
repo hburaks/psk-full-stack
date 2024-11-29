@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { TokenService } from './token/token.service';
 import { BlogResponse } from '../services/models';
-import { ToastService } from './toast/toast.service';
 
 @Injectable({
   providedIn: 'root',
@@ -19,8 +18,7 @@ export class CommonService {
   userStatus$ = this.userStatusSubject.asObservable();
 
   constructor(
-    private tokenService: TokenService,
-    private toastService: ToastService
+    private tokenService: TokenService
   ) {}
 
   updateUserStatus(isLoggedIn: boolean) {
@@ -42,7 +40,4 @@ export class CommonService {
     return this.fetchedBlogList.find((blog) => blog.id == id);
   }
 
-  showErrorToast(message: string) {
-    this.toastService.showErrorToast(message);
-  }
 }
