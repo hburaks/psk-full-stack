@@ -1,0 +1,48 @@
+.test-circle {
+  width: 180px;
+  height: 180px;
+  border: 0.4rem solid #7749f8;
+  border-radius: 50%;
+  margin-bottom: 1rem;
+}
+
+.test-card {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.test-card-container {
+  cursor: default;
+}
+
+.test-card-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  text-align: center;
+}
+
+.test-card-body-large {
+  height: 180px;
+}
+
+.btn-test {
+  opacity: 0.55;
+}
+
+.logo-circle {
+  width: 200px;
+  height: 100px;
+  background-color: pink;
+  margin-bottom: 1rem;
+  border-top-left-radius: 90px;
+  border-bottom-right-radius: 90px;
+}
+
+.test-logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;  
+}

@@ -1,0 +1,31 @@
+.test-circle {
+  width: 180px;
+  height: 180px;
+  border: 0.4rem solid #7749f8;
+  border-radius: 50%;
+}
+
+
+.test-logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;  
+}
+
+
+.logo-circle {
+  width: 200px;
+  height: 100px;
+  background-color: pink;
+  border-top-left-radius: 90px;
+  border-bottom-right-radius: 90px;
+}
+
+.simple.alert {
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #e0e0e0; // Change this color to whatever you prefer for hover
+  }
+}
