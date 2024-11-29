@@ -8,4 +8,6 @@ import { Component, Input } from '@angular/core';
 export class GenericCardDetailComponent {
   @Input() text: string = '';
   @Input() title: string = '';
+  @Input() cover: string[] = [];
+  @Input() isTextCenter: boolean = false;
 }
