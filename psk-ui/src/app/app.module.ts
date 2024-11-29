@@ -18,6 +18,12 @@ import { BlogCardComponent } from './components/blog-card/blog-card.component';
 import { BlogCardDetailComponent } from './components/blog-card-detail/blog-card-detail.component';
 import { GenericCardDetailComponent } from './components/generic-card-detail/generic-card-detail.component';
 import { EmptyCardComponent } from './components/empty-card/empty-card.component';
+import { TestComponent } from './pages/test/test.component';
+import { TestCardComponent } from './components/test-card/test-card.component';
+import { TestCardDetailComponent } from './components/test-card-detail/test-card-detail.component';
+import { TestResultComponent } from './components/test-result/test-result.component';
+import { WeeklySessionCalendarComponent } from './components/weekly-session-calendar/weekly-session-calendar.component';
+import { SessionsComponent } from './pages/sessions/sessions.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +38,13 @@ import { EmptyCardComponent } from './components/empty-card/empty-card.component
     BlogCardComponent,
     BlogCardDetailComponent,
     GenericCardDetailComponent,
-    EmptyCardComponent
+    EmptyCardComponent,
+    TestComponent,
+    TestCardComponent,
+    TestCardDetailComponent,
+    TestResultComponent,
+    WeeklySessionCalendarComponent,
+    SessionsComponent
   ],
   imports: [
     BrowserModule,
