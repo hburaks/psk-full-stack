@@ -23,6 +23,8 @@ import { getAllPublicTests } from '../fn/test/get-all-public-tests';
 import { GetAllPublicTests$Params } from '../fn/test/get-all-public-tests';
 import { getAllTestsAssignedToUserV2 } from '../fn/test/get-all-tests-assigned-to-user-v-2';
 import { GetAllTestsAssignedToUserV2$Params } from '../fn/test/get-all-tests-assigned-to-user-v-2';
+import { getPublicTestById } from '../fn/test/get-public-test-by-id';
+import { GetPublicTestById$Params } from '../fn/test/get-public-test-by-id';
 import { MyTestResponse } from '../models/my-test-response';
 import { PublicTestAdminResponse } from '../models/public-test-admin-response';
 import { PublicTestAnswerCommentResponse } from '../models/public-test-answer-comment-response';
@@ -213,6 +215,31 @@ export class TestService extends BaseService {
   getAllPublicTests(params?: GetAllPublicTests$Params, context?: HttpContext): Observable<Array<PublicTestResponse>> {
     return this.getAllPublicTests$Response(params, context).pipe(
       map((r: StrictHttpResponse<Array<PublicTestResponse>>): Array<PublicTestResponse> => r.body)
+    );
+  }
+
+  /** Path part for operation `getPublicTestById()` */
+  static readonly GetPublicTestByIdPath = '/v3/test/{id}';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getPublicTestById()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getPublicTestById$Response(params: GetPublicTestById$Params, context?: HttpContext): Observable<StrictHttpResponse<PublicTestResponse>> {
+    return getPublicTestById(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getPublicTestById$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getPublicTestById(params: GetPublicTestById$Params, context?: HttpContext): Observable<PublicTestResponse> {
+    return this.getPublicTestById$Response(params, context).pipe(
+      map((r: StrictHttpResponse<PublicTestResponse>): PublicTestResponse => r.body)
     );
   }
 

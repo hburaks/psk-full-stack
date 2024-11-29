@@ -23,8 +23,14 @@ public class TestControllerV3 {
     }
 
     @PostMapping("/check-answer")
-    public ResponseEntity<PublicTestAnswerCommentResponse> checkPublicTestAnswer(@RequestBody PublicTestAnswerRequest publicTestAnswerRequest) {
+    public ResponseEntity<PublicTestAnswerCommentResponse> checkPublicTestAnswer(
+            @RequestBody PublicTestAnswerRequest publicTestAnswerRequest) {
         return ResponseEntity.ok(testService.checkPublicTestAnswer(publicTestAnswerRequest));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<PublicTestResponse> getPublicTestById(@PathVariable Integer id) {
+        return ResponseEntity.ok(testService.getPublicTestById(id));
     }
 
 }

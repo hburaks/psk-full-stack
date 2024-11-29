@@ -56,4 +56,9 @@ public interface TestService {
      */
     ResponseEntity<Boolean> assignTestToUserV2(Integer testId, Integer userId);
 
+    /**
+     * Gets public test by id
+     */
+    PublicTestResponse getPublicTestById(Integer id);
+
 }
