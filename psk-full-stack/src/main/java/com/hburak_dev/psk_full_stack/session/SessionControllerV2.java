@@ -78,5 +78,10 @@ public class SessionControllerV2 {
         return sessionService.createSessionForUserV2(localDateTime, userId);
     }
 
+    @GetMapping("/upcoming-session")
+    public SessionResponseV2 getUpcomingSessionsV2() {
+        return sessionService.getUpcomingSessionsV2();
+    }
+
 
 }

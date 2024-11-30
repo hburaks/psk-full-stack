@@ -129,7 +129,7 @@ public class SessionServiceImpl implements SessionService {
     @Override
     public PageResponse<SessionResponseV2> getAllSessionsV2(int page, int size) {
 
-        Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
+        Pageable pageable = PageRequest.of(page, size, Sort.by("date").descending());
         Page<Session> sessions = sessionRepository.findAll(pageable);
 
         List<SessionResponseV2> sessionResponseList = sessions
@@ -361,5 +361,12 @@ public class SessionServiceImpl implements SessionService {
                     return session;
                 })
                 .toList();
+    }
+
+    @Override
+    public SessionResponseV2 getUpcomingSessionsV2() {
+        Session sessions = sessionRepository.findByDateAfter(LocalDateTime.now());
+
+        return sessionMapper.toSessionResponseV2(sessions);
     }
 }

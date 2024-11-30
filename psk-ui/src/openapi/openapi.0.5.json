@@ -961,24 +961,6 @@
         }
       }
     },
-    "/v2/sessions/upcoming-session": {
-      "get": {
-        "tags": ["session-controller-v-2"],
-        "operationId": "getUpcomingSessionsV2",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SessionResponseV2"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/v2/sessions/all": {
       "get": {
         "tags": ["session-controller-v-2"],

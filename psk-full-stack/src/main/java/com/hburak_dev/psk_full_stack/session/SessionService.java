@@ -40,4 +40,6 @@ public interface SessionService {
 
     List<DailyCalendarResponse> getWeeklyCalendar(LocalDateTime dateTime);
 
+    SessionResponseV2 getUpcomingSessionsV2();
+
 }

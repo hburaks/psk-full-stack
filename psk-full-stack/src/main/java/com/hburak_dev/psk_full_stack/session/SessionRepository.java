@@ -15,5 +15,7 @@ public interface SessionRepository extends JpaRepository<Session, Integer> {
 
     Session findByDate(LocalDateTime date);
 
+    Session findByDateAfter(LocalDateTime date);
+
 
 }

@@ -23,6 +23,8 @@ import { getAllSessionsV2 } from '../fn/session-controller-v-2/get-all-sessions-
 import { GetAllSessionsV2$Params } from '../fn/session-controller-v-2/get-all-sessions-v-2';
 import { getAllUsersWithSessionV2 } from '../fn/session-controller-v-2/get-all-users-with-session-v-2';
 import { GetAllUsersWithSessionV2$Params } from '../fn/session-controller-v-2/get-all-users-with-session-v-2';
+import { getUpcomingSessionsV2 } from '../fn/session-controller-v-2/get-upcoming-sessions-v-2';
+import { GetUpcomingSessionsV2$Params } from '../fn/session-controller-v-2/get-upcoming-sessions-v-2';
 import { makeAvailableV2 } from '../fn/session-controller-v-2/make-available-v-2';
 import { MakeAvailableV2$Params } from '../fn/session-controller-v-2/make-available-v-2';
 import { makeUnavailableV2 } from '../fn/session-controller-v-2/make-unavailable-v-2';
@@ -291,6 +293,31 @@ export class SessionControllerV2Service extends BaseService {
   getAllSessionsOfUserV2(params: GetAllSessionsOfUserV2$Params, context?: HttpContext): Observable<Array<SessionResponseV2>> {
     return this.getAllSessionsOfUserV2$Response(params, context).pipe(
       map((r: StrictHttpResponse<Array<SessionResponseV2>>): Array<SessionResponseV2> => r.body)
+    );
+  }
+
+  /** Path part for operation `getUpcomingSessionsV2()` */
+  static readonly GetUpcomingSessionsV2Path = '/v2/sessions/upcoming-session';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getUpcomingSessionsV2()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getUpcomingSessionsV2$Response(params?: GetUpcomingSessionsV2$Params, context?: HttpContext): Observable<StrictHttpResponse<SessionResponseV2>> {
+    return getUpcomingSessionsV2(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getUpcomingSessionsV2$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getUpcomingSessionsV2(params?: GetUpcomingSessionsV2$Params, context?: HttpContext): Observable<SessionResponseV2> {
+    return this.getUpcomingSessionsV2$Response(params, context).pipe(
+      map((r: StrictHttpResponse<SessionResponseV2>): SessionResponseV2 => r.body)
     );
   }
 
