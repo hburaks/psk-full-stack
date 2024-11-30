@@ -1,1 +1,6 @@
-<p>admin-panel works!</p>
+<div class="page-content container">
+  <app-user-nav-underline (selectedNavItemEvent)="onSelectedNavItem($event)"></app-user-nav-underline>
+  <div *ngIf="selectedNavItem === AdminNavItems.UPCOMING_SESSIONS">
+    <app-upcoming-session></app-upcoming-session>
+  </div>
+</div>

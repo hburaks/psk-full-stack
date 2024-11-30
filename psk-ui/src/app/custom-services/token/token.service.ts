@@ -48,5 +48,13 @@ export class TokenService {
     return [];
   }
 
+  isAdmin() {
+    return this.userRoles.includes('ROLE_ADMIN');
+  }
+
+  isUser() {
+    return this.userRoles.includes('ROLE_USER');
+  }
+
 
 }
