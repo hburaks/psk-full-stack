@@ -56,5 +56,15 @@ export class TokenService {
     return this.userRoles.includes('ROLE_USER');
   }
 
+  getUserId() {
+    const token = this.token;
+    if (token) {
+      const jwtHelper = new JwtHelperService();
+      const decodedToken = jwtHelper.decodeToken(token);
+      console.log(decodedToken);
+      return decodedToken.userId;
+    }
+    return null;
+  }
 
 }

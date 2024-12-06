@@ -54,11 +54,16 @@ public interface TestService {
     /**
      * Admin assigns test to the user
      */
-    ResponseEntity<Boolean> assignTestToUserV2(Integer testId, Integer userId);
+    ResponseEntity<Boolean> assignTestToUserV2(Integer testId, Integer userId, Authentication connectedUser);
 
     /**
      * Gets public test by id
      */
     PublicTestResponse getPublicTestById(Integer id);
+
+    /**
+     * Removes test from user
+     */
+    ResponseEntity<Boolean> removeTestFromUserV2(Integer testId);
 
 }

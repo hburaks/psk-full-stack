@@ -28,7 +28,7 @@ public interface SessionService {
 
     Integer updateSessionDateV2(SessionDateRequest sessionStatusRequest);
 
-    PageResponse<UserWithSessionResponse> getAllUsersWithSessionV2(int page, int size);
+    PageResponse<UserWithIncomingSessionResponse> getAllUsersWithSessionV2(int page, int size);
 
     List<PublicSessionResponse> makeUnavailableV2(List<LocalDateTime> unavailableTimes);
 

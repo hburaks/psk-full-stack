@@ -921,7 +921,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PageResponseUserWithIncomingSessionResponse"
+                  "$ref": "#/components/schemas/PageResponseUserWithSessionResponse"
                 }
               }
             }
@@ -1877,13 +1877,13 @@
           }
         }
       },
-      "PageResponseUserWithIncomingSessionResponse": {
+      "PageResponseUserWithSessionResponse": {
         "type": "object",
         "properties": {
           "content": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/UserWithIncomingSessionResponse"
+              "$ref": "#/components/schemas/UserWithSessionResponse"
             }
           },
           "number": {
@@ -1910,7 +1910,7 @@
           }
         }
       },
-      "UserWithIncomingSessionResponse": {
+      "UserWithSessionResponse": {
         "type": "object",
         "properties": {
           "id": {
@@ -1923,8 +1923,12 @@
           "lastname": {
             "type": "string"
           },
-          "sessionResponse": {
-            "$ref": "#/components/schemas/SessionResponseV2"
+          "sessionIds": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
           }
         }
       },

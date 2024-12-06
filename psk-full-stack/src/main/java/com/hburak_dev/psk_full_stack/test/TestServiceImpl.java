@@ -238,14 +238,19 @@ public class TestServiceImpl implements TestService {
 
         List<Test> userTests = user.getTests();
         List<UserTestForAdminResponse> userTestForAdminResponses = new ArrayList<>();
-        for (Test answeredTest : userTests) {
-            if (answeredTest.getQuestions().get(0).getUserAnswer() != null) {
-                Map<AnswerType, Long> answerFreq = calculateAnswerFrequencyFromTest(answeredTest.getQuestions());
-                UserTestForAdminResponse userTestForAdminResponse = testMapper.toUserTestForAdminResponse(answeredTest);
+        if (userTests.isEmpty()) {
+            return userTestForAdminResponses;
+        }
+        for (Test test : userTests) {
+            if (test.getQuestions() != null && !test.getQuestions().isEmpty()
+                    && test.getQuestions().get(0).getUserAnswer() != null) {
+
+                Map<AnswerType, Long> answerFreq = calculateAnswerFrequencyFromTest(test.getQuestions());
+                UserTestForAdminResponse userTestForAdminResponse = testMapper.toUserTestForAdminResponse(test);
                 userTestForAdminResponse.setAnswerDistribution(answerFreq);
                 userTestForAdminResponses.add(userTestForAdminResponse);
             } else {
-                userTestForAdminResponses.add(testMapper.toUserTestForAdminResponse(answeredTest));
+                userTestForAdminResponses.add(testMapper.toUserTestForAdminResponse(test));
             }
         }
         return userTestForAdminResponses;
@@ -257,37 +262,61 @@ public class TestServiceImpl implements TestService {
     }
 
     @Override
-    public ResponseEntity<Boolean> assignTestToUserV2(Integer testId, Integer userId) {
+    public ResponseEntity<Boolean> assignTestToUserV2(Integer testId, Integer userId, Authentication connectedUser) {
+        User user = (User) connectedUser.getPrincipal();
+
         Test test = testRepository.findById(testId)
                 .orElseThrow(() -> new RuntimeException("Test bulunamadı"));
-        User user = userRepository.findById(userId)
+        User userToAssign = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("Kullanıcı bulunamadı"));
-        Test testForUser = createTestForUser(test);
-        testForUser.setUser(user);
+        Test testForUser = createTestForUser(test, user.getId());
+        testForUser.setUser(userToAssign);
+        testForUser.setCreatedBy(user.getId());
         testRepository.save(testForUser);
         return ResponseEntity.ok(true);
     }
 
-    private Test createTestForUser(Test test) {
+    private Test createTestForUser(Test test, Integer userId) {
 
         return Test.builder()
                 .title(test.getTitle())
                 .subTitle(test.getSubTitle())
                 .cover(test.getCover())
-                .isActive(test.getIsActive())
+                .isActive(false)
                 .questions(
                         test.getQuestions().stream()
-                                .map(this::createQuestionForUser)
+                                .map(question -> createQuestionForUser(question, userId))
                                 .collect(Collectors.toList())
                 )
-                .comments(test.getComments())
+                .comments(test.getComments().stream()
+                        .map(comment -> createCommentForUser(comment, userId))
+                        .collect(Collectors.toList()))
                 .build();
     }
 
-    private Question createQuestionForUser(Question question) {
+    private Question createQuestionForUser(Question question, Integer userId) {
         return Question.builder()
                 .text(question.getText())
-                .choices(question.getChoices())
+                .choices(createChoicesForUser(question.getChoices(), userId))
+                .createdBy(userId)
+                .build();
+    }
+
+    private List<Choice> createChoicesForUser(List<Choice> choices, Integer userId) {
+        return choices.stream()
+                .map(choice -> Choice.builder()
+                        .text(choice.getText())
+                        .answerType(choice.getAnswerType())
+                        .createdBy(userId)
+                        .build())
+                .collect(Collectors.toList());
+    }
+
+    private Comment createCommentForUser(Comment comment, Integer userId) {
+        return Comment.builder()
+                .text(comment.getText())
+                .score(comment.getScore())
+                .createdBy(userId)
                 .build();
     }
 
@@ -296,5 +325,13 @@ public class TestServiceImpl implements TestService {
         Test test = testRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Test bulunamadı"));
         return testMapper.toPublicTestResponse(test);
+    }
+
+    @Override
+    public ResponseEntity<Boolean> removeTestFromUserV2(Integer testId) {
+        Test test = testRepository.findById(testId)
+                .orElseThrow(() -> new RuntimeException("Test bulunamadı"));
+        testRepository.delete(test);
+        return ResponseEntity.ok(true);
     }
 }

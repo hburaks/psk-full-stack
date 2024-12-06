@@ -29,6 +29,8 @@ import { MyTestResponse } from '../models/my-test-response';
 import { PublicTestAdminResponse } from '../models/public-test-admin-response';
 import { PublicTestAnswerCommentResponse } from '../models/public-test-answer-comment-response';
 import { PublicTestResponse } from '../models/public-test-response';
+import { removeTestFromUserV2 } from '../fn/test/remove-test-from-user-v-2';
+import { RemoveTestFromUserV2$Params } from '../fn/test/remove-test-from-user-v-2';
 import { saveMyTestAnswer } from '../fn/test/save-my-test-answer';
 import { SaveMyTestAnswer$Params } from '../fn/test/save-my-test-answer';
 import { updatePublicTestAvailabilityV2 } from '../fn/test/update-public-test-availability-v-2';
@@ -290,6 +292,31 @@ export class TestService extends BaseService {
   getAllMyTests(params?: GetAllMyTests$Params, context?: HttpContext): Observable<Array<MyTestResponse>> {
     return this.getAllMyTests$Response(params, context).pipe(
       map((r: StrictHttpResponse<Array<MyTestResponse>>): Array<MyTestResponse> => r.body)
+    );
+  }
+
+  /** Path part for operation `removeTestFromUserV2()` */
+  static readonly RemoveTestFromUserV2Path = '/v2/test/remove-test-from-user';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `removeTestFromUserV2()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  removeTestFromUserV2$Response(params: RemoveTestFromUserV2$Params, context?: HttpContext): Observable<StrictHttpResponse<boolean>> {
+    return removeTestFromUserV2(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `removeTestFromUserV2$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  removeTestFromUserV2(params: RemoveTestFromUserV2$Params, context?: HttpContext): Observable<boolean> {
+    return this.removeTestFromUserV2$Response(params, context).pipe(
+      map((r: StrictHttpResponse<boolean>): boolean => r.body)
     );
   }
 

@@ -30,7 +30,7 @@ import { MakeAvailableV2$Params } from '../fn/session-controller-v-2/make-availa
 import { makeUnavailableV2 } from '../fn/session-controller-v-2/make-unavailable-v-2';
 import { MakeUnavailableV2$Params } from '../fn/session-controller-v-2/make-unavailable-v-2';
 import { PageResponseSessionResponseV2 } from '../models/page-response-session-response-v-2';
-import { PageResponseUserWithSessionResponse } from '../models/page-response-user-with-session-response';
+import { PageResponseUserWithIncomingSessionResponse } from '../models/page-response-user-with-incoming-session-response';
 import { PublicSessionResponse } from '../models/public-session-response';
 import { SessionResponseV2 } from '../models/session-response-v-2';
 import { updateSessionDateV2 } from '../fn/session-controller-v-2/update-session-date-v-2';
@@ -255,7 +255,7 @@ export class SessionControllerV2Service extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getAllUsersWithSessionV2$Response(params: GetAllUsersWithSessionV2$Params, context?: HttpContext): Observable<StrictHttpResponse<PageResponseUserWithSessionResponse>> {
+  getAllUsersWithSessionV2$Response(params: GetAllUsersWithSessionV2$Params, context?: HttpContext): Observable<StrictHttpResponse<PageResponseUserWithIncomingSessionResponse>> {
     return getAllUsersWithSessionV2(this.http, this.rootUrl, params, context);
   }
 
@@ -265,9 +265,9 @@ export class SessionControllerV2Service extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getAllUsersWithSessionV2(params: GetAllUsersWithSessionV2$Params, context?: HttpContext): Observable<PageResponseUserWithSessionResponse> {
+  getAllUsersWithSessionV2(params: GetAllUsersWithSessionV2$Params, context?: HttpContext): Observable<PageResponseUserWithIncomingSessionResponse> {
     return this.getAllUsersWithSessionV2$Response(params, context).pipe(
-      map((r: StrictHttpResponse<PageResponseUserWithSessionResponse>): PageResponseUserWithSessionResponse => r.body)
+      map((r: StrictHttpResponse<PageResponseUserWithIncomingSessionResponse>): PageResponseUserWithIncomingSessionResponse => r.body)
     );
   }
 

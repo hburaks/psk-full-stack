@@ -42,7 +42,7 @@ public class SessionControllerV2 {
     }
 
     @GetMapping("/users-with-sessions")
-    public PageResponse<UserWithSessionResponse> getAllUsersWithSessionV2(@RequestParam int page, @RequestParam int size) {
+    public PageResponse<UserWithIncomingSessionResponse> getAllUsersWithSessionV2(@RequestParam int page, @RequestParam int size) {
         return sessionService.getAllUsersWithSessionV2(page, size);
     }
 

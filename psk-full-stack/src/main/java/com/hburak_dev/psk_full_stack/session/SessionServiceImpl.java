@@ -20,6 +20,8 @@ import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -213,20 +215,41 @@ public class SessionServiceImpl implements SessionService {
     }
 
     @Override
-    public PageResponse<UserWithSessionResponse> getAllUsersWithSessionV2(int page, int size) {
+    public PageResponse<UserWithIncomingSessionResponse> getAllUsersWithSessionV2(int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
         Page<User> usersWithSessions = userRepository.findAllUsersWithSessions(pageable);
 
-        List<UserWithSessionResponse> responseList = usersWithSessions
-                .stream()
-                .map(user -> UserWithSessionResponse.builder()
-                        .id(user.getId())
-                        .firstname(user.getFirstname())
-                        .lastname(user.getLastname())
-                        .sessionIds(sessionMapper.toSessionIdList(user.getSessions()))
-                        .build())
-                .toList();
+        for (User user : usersWithSessions) {
+            Session session = user.getSessions().stream()
+                    .filter(s -> !s.getSessionStatus().equals(SessionStatusType.UNAVAILABLE)
+                            && !s.getSessionStatus().equals(SessionStatusType.CANCELED))
+                    .filter(s -> s.getDate().isAfter(LocalDateTime.now()))
+                    .min(Comparator.comparing(Session::getDate))
+                    .orElse(null);
+            if (session != null) {
+                System.out.println(session);
+                user.setSessions(Collections.singletonList(session));
+            } else {
+                user.setSessions(Collections.emptyList());
+            }
+        }
 
+        List<UserWithIncomingSessionResponse> responseList = usersWithSessions
+                .stream()
+                .map(user -> {
+                    UserWithIncomingSessionResponse userWithIncomingSessionResponse = UserWithIncomingSessionResponse
+                            .builder()
+                            .id(user.getId())
+                            .firstname(user.getFirstname())
+                            .lastname(user.getLastname())
+                            .build();
+                    if (!user.getSessions().isEmpty()) {
+                        userWithIncomingSessionResponse.setSessionResponse(
+                                sessionMapper.toSessionResponseV2(user.getSessions().get(0)));
+                    }
+                    return userWithIncomingSessionResponse;
+                })
+                .toList();
         return new PageResponse<>(
                 responseList,
                 usersWithSessions.getNumber(),
@@ -365,7 +388,13 @@ public class SessionServiceImpl implements SessionService {
 
     @Override
     public SessionResponseV2 getUpcomingSessionsV2() {
-        Session sessions = sessionRepository.findByDateAfter(LocalDateTime.now());
+        Session sessions = sessionRepository.findFirstByDateAfterAndSessionStatusNotOrderByDateAsc(LocalDateTime.now(),
+                SessionStatusType.CANCELED);
+
+        if (sessions == null) {
+            System.out.println("session not found");
+            return null;
+        }
 
         return sessionMapper.toSessionResponseV2(sessions);
     }

@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.Authentication;
 
 import java.util.List;
 
@@ -36,7 +37,12 @@ public class TestControllerV2 {
     }
 
     @PostMapping("/assign-test")
-    public ResponseEntity<Boolean> assignTestToUserV2(@RequestParam Integer testId, @RequestParam Integer userId) {
-        return testService.assignTestToUserV2(testId, userId);
+    public ResponseEntity<Boolean> assignTestToUserV2(@RequestParam Integer testId, @RequestParam Integer userId, Authentication connectedUser) {
+        return testService.assignTestToUserV2(testId, userId, connectedUser);
+    }
+
+    @DeleteMapping("/remove-test-from-user")
+    public ResponseEntity<Boolean> removeTestFromUserV2(@RequestParam Integer testId) {
+        return testService.removeTestFromUserV2(testId);
     }
 }
