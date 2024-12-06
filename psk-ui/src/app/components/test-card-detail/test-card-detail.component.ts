@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { CommonService } from 'src/app/custom-services/common.service';
+import { CommonService } from 'src/app/custom-services/common-service/common.service';
 import { FindBlogById$Params } from 'src/app/services/fn/blog/find-blog-by-id';
 import {
   PublicTestAnswerCommentResponse,
@@ -95,7 +95,6 @@ export class TestCardDetailComponent {
       .subscribe({
         next: (result: PublicTestAnswerCommentResponse) => {
           this.testResult = result;
-          console.log(result);
         },
       });
   }

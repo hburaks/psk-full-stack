@@ -2,7 +2,7 @@ import { Component, HostListener, Input } from '@angular/core';
 import { BlogResponse } from '../../services/models/blog-response';
 import { BlogService } from 'src/app/services/services/blog.service';
 import { PageResponseBlogResponse } from 'src/app/services/models/page-response-blog-response';
-import { CommonService } from 'src/app/custom-services/common.service';
+import { CommonService } from 'src/app/custom-services/common-service/common.service';
 
 @Component({
   selector: 'app-blog-card',

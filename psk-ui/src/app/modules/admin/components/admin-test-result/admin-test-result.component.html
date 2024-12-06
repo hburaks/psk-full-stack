@@ -1,0 +1,21 @@
+<div class="test-circle mx-auto"></div>
+<!-- TODO:change with real data <img src="{{testCard.cover}}" class="card-img-top card-image"> -->
+<div class="test-result-card">
+  <div class="card-body test-card-body test-card-body-large d-flex flex-column justify-content-between">
+    <h5 class="card-title text-center">{{testResult?.title}}</h5>
+    <div *ngIf="testResult?.answerDistribution">
+      <p class="card-text text-center text-secondary">{{formatAnswerDistribution(testResult?.answerDistribution)}}</p>
+    </div>
+  </div>
+</div>
+<div class="row mx-0 my-2 py-4 px-md-5 px-sm-2" *ngFor="let question of testResult?.questions; let i = index">
+  <div class="col">
+    <p><span class="fw-bold">{{i + 1}}- </span>{{question.text}}</p>
+    <div class="simple alert" [ngClass]="{
+          'alert-primary': question.userAnswer === getAnswerType(j),
+          'alert-dark': question.userAnswer !== getAnswerType(j)
+        }" *ngFor="let choice of question.choices; let j = index">
+      {{j === 0 ? 'A) ' : j === 1 ? 'B) ' : j === 2 ? 'C) ' : j === 3 ? 'D) ' : 'E) '}}{{choice.text}}
+    </div>
+  </div>
+</div>

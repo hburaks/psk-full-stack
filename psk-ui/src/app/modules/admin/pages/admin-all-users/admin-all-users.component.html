@@ -1,0 +1,33 @@
+<div *ngIf="selectedUser" class="mt-4 mb-2 row">
+  <div class="d-flex justify-content-between col-12">
+    <h4 class="text-secondary my-auto">Seçilen Kullanıcı</h4>
+    <button (click)="closeUpcomingSession()" class="btn btn-primary">Kullanıcıyı Kapat</button>
+  </div>
+</div>
+<app-upcoming-session *ngIf="selectedUser" [selectedUser]="selectedUser"></app-upcoming-session>
+
+<div class="row mx-0 card mb-5 py-4 px-md-3 px-sm-1">
+  <div class="col-12">
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">İsim</th>
+          <th scope="col">Gelecek Seans</th>
+          <th scope="col">Gelecek Seans Statüsü</th>
+          <th scope="col"></th>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of users; let i = index">
+          <td scope="row" class="text-secondary">{{ user.firstname }} {{
+            user.lastname }}
+          </td>
+          <td>{{ user.sessionResponse?.date ?? 'Planlanmış Seans Yok' | date: 'dd.MM.yyyy' }}</td>
+          <td>{{ getStatusText(user.sessionResponse?.sessionStatus ?? '') }}</td>
+          <td>
+            <button class="btn btn-primary btn-primary-custom" (click)="selectUser(user)">Detay</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

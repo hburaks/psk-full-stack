@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { CommonService } from 'src/app/custom-services/common.service';
+import { CommonService } from 'src/app/custom-services/common-service/common.service';
 import { FindBlogById$Params } from 'src/app/services/fn/blog/find-blog-by-id';
 import {
   BlogResponse,

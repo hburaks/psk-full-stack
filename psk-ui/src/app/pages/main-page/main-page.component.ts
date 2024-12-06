@@ -9,7 +9,7 @@ import {
   DailyCalendarResponse,
   HourlySessionResponse,
 } from 'src/app/services/models';
-import { CommonService } from 'src/app/custom-services/common.service';
+import { CommonService } from 'src/app/custom-services/common-service/common.service';
 import { TokenService } from 'src/app/custom-services/token/token.service';
 
 @Component({

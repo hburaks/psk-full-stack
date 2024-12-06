@@ -3,6 +3,8 @@
 
 $primary: #7749F8;
 
+$primary-hovered: #6339e6;
+
 @import "bootstrap";
 
 .page-content {
@@ -13,3 +15,15 @@ $primary: #7749F8;
 .pointer-cursor {
   cursor: pointer;
 }
+
+.btn-primary-custom {
+  background-color: #EBE5FC;
+  color: $primary;
+  border: none;
+}
+
+.btn-primary-outline-custom {
+  opacity: 0.8;
+}
+
+

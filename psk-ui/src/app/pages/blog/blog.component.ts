@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import { CommonService } from 'src/app/custom-services/common.service';
+import { CommonService } from 'src/app/custom-services/common-service/common.service';
 import { BlogResponse, PageResponseBlogResponse } from 'src/app/services/models';
 import { BlogService } from 'src/app/services/services';
 

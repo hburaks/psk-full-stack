@@ -1,6 +1,9 @@
 import { Component, HostListener, Input } from '@angular/core';
+import { UpdateSessionDateV2$Params } from 'src/app/services/fn/session-controller-v-2/update-session-date-v-2';
+import { SessionResponseV2 } from 'src/app/services/models';
 import { DailyCalendarResponse } from 'src/app/services/models/daily-calendar-response';
 import { HourlySessionResponse } from 'src/app/services/models/hourly-session-response';
+import { SessionControllerV2Service } from 'src/app/services/services/session-controller-v-2.service';
 import { SessionControllerV3Service } from 'src/app/services/services/session-controller-v-3.service';
 
 @Component({
@@ -17,9 +20,13 @@ export class WeeklySessionCalendarComponent {
   previousWeekAvailable: boolean = false;
   nextWeekAvailable: boolean = true;
 
+  @Input() isEdit: boolean = false;
+
   weeklySessionCalendar: DailyCalendarResponse[] = [];
 
-  constructor(private sessionControllerV3Service: SessionControllerV3Service) {
+  @Input() selectedSession: SessionResponseV2 | null = null;
+
+  constructor(private sessionControllerV2Service: SessionControllerV2Service, private sessionControllerV3Service: SessionControllerV3Service) {
     this.updateScreenSize();
     this.getWeeklySessions();
   }
@@ -27,6 +34,25 @@ export class WeeklySessionCalendarComponent {
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
     this.updateScreenSize();
+  }
+
+  editSession(session: HourlySessionResponse) {
+    const updateRequest: UpdateSessionDateV2$Params = {
+      body: {
+        date: session.date,
+        sessionId: this.selectedSession!.sessionId,
+      },
+    };
+
+    this.sessionControllerV2Service
+      .updateSessionDateV2(updateRequest)
+      .subscribe({
+        next: () => {
+          console.log('Session date updated');
+          window.location.reload();
+        },
+      });
+    console.log(session);
   }
 
   getFormattedDate(day: DailyCalendarResponse): string {

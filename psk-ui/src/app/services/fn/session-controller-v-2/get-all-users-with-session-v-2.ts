@@ -8,14 +8,14 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { PageResponseUserWithSessionResponse } from '../../models/page-response-user-with-session-response';
+import { PageResponseUserWithIncomingSessionResponse } from '../../models/page-response-user-with-incoming-session-response';
 
 export interface GetAllUsersWithSessionV2$Params {
   page: number;
   size: number;
 }
 
-export function getAllUsersWithSessionV2(http: HttpClient, rootUrl: string, params: GetAllUsersWithSessionV2$Params, context?: HttpContext): Observable<StrictHttpResponse<PageResponseUserWithSessionResponse>> {
+export function getAllUsersWithSessionV2(http: HttpClient, rootUrl: string, params: GetAllUsersWithSessionV2$Params, context?: HttpContext): Observable<StrictHttpResponse<PageResponseUserWithIncomingSessionResponse>> {
   const rb = new RequestBuilder(rootUrl, getAllUsersWithSessionV2.PATH, 'get');
   if (params) {
     rb.query('page', params.page, {});
@@ -27,7 +27,7 @@ export function getAllUsersWithSessionV2(http: HttpClient, rootUrl: string, para
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<PageResponseUserWithSessionResponse>;
+      return r as StrictHttpResponse<PageResponseUserWithIncomingSessionResponse>;
     })
   );
 }

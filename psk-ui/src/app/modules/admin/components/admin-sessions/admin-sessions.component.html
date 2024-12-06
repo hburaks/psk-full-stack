@@ -1,0 +1,22 @@
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">İsim</th>
+      <th scope="col">Tarih</th>
+      <th scope="col">Randevu Statüsü</th>
+      <th scope="col"></th>
+  </thead>
+  <tbody>
+    <tr *ngFor="let session of sessions; let i = index">
+      <td scope="row" class="text-secondary">{{ session.userForSessionResponse?.firstname }} {{
+        session.userForSessionResponse?.lastname }}
+      </td>
+      <td>{{ session.date | date: 'dd.MM.yyyy' }}</td>
+      <td>{{ getStatusText(session.sessionStatus ?? '') }}</td>
+      <td>
+        <button class="btn btn-primary btn-primary-custom"
+          (click)="editSession(session.sessionId ?? 0)">Düzenle</button>
+      </td>
+    </tr>
+  </tbody>
+</table>

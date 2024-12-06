@@ -1,0 +1,60 @@
+<div class="mt-4 mb-2 row">
+  <div class="d-flex justify-content-between col-12">
+    <h4 class="text-secondary my-auto">Seçilen Seansı Düzenle</h4>
+    <button (click)="closeModal()" class="btn btn-primary">Düzenlemeyi Kapat</button>
+  </div>
+</div>
+
+<div class="row mx-0 mb-5">
+  <div class="col px-0">
+    <div class="my-1 row row-about align-items-center g-5 mx-0">
+      <div class="col-md-8 col-12 mt-0 about-text px-0">
+        <p class="fs-5 mb-0 fw-bold">{{session?.userForSessionResponse?.firstname}}
+          {{session?.userForSessionResponse?.lastname}}</p>
+        <p class="fs-5 mb-0 fw-bold">Gelecek Seans: {{session?.date | date:'dd.MM.yyyy / HH:mm'}}</p>
+        <p class=" mt-2 text-primary mb-0">Danışanın Seans Notu:
+        </p>
+        <p class="fw-light text-secondary mb-2">
+          {{session?.noteForUser}}
+        </p>
+        <button *ngIf="!isEditingNoteForUser" (click)="editNoteForUser()" class="btn btn-outline-primary mt-0"
+          type="button">Düzenle</button>
+        <div *ngIf="isEditingNoteForUser">
+          <button (click)="addNotForUser()" class="btn btn-outline-primary mb-2" type="button"
+            id="button-addon-user">Notu
+            Kaydet</button>
+          <input type="text" class="form-control" placeholder="" aria-label="Example text with button addon"
+            [(ngModel)]="bindingNoteForUser" aria-describedby="button-addon-user">
+        </div>
+        <p class=" mt-2 text-primary mb-0 mt-4">Terapistin Kendine Notu:
+        </p>
+        <p class="fw-light text-secondary mb-2">
+          {{session?.noteForPsychologist}}
+        </p>
+        <button *ngIf="!isEditingNoteForPsychologist" (click)="editNoteForPsychologist()"
+          class="btn btn-outline-primary" type="button">Düzenle</button>
+        <div *ngIf="isEditingNoteForPsychologist">
+          <button (click)="addNoteForPsychologist()" class="btn btn-outline-primary mb-2" type="button"
+            id="button-addon-psyc">Notu Kaydet</button>
+          <input type="text" class="form-control" [(ngModel)]="bindingNoteForPsychologist"
+            aria-describedby="button-addon-psyc">
+        </div>
+      </div>
+      <div class="about-logo mt-0 col-md-4 col-12 order-md-2 order-first">
+        <div class="logo-circle mx-auto"></div>
+      </div>
+    </div>
+    <div class="row mx-1 g-2 mt-4">
+      <app-weekly-session-calendar [selectedSession]="session" [isEdit]="true"></app-weekly-session-calendar>
+    </div>
+    <div class="row mx-1 g-2 mt-4">
+      <div class="btn-group">
+        <a *ngFor="let status of statusList" [class.active]="status === session?.sessionStatus"
+          [class.btn-primary]="status === session?.sessionStatus"
+          [class.btn-primary-hovered]="status === session?.sessionStatus"
+          [class.btn-primary]="status !== session?.sessionStatus" (click)="changeStatus(status)" class="btn sm-f py-auto d-flex align-items-center justify-content-center"
+          aria-current="page">{{statusMap[status]}}</a>
+      </div>
+    </div>
+  </div>
+</div>

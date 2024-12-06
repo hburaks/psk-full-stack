@@ -1,6 +1,8 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { TokenService } from 'src/app/custom-services/token/token.service';
 import { AdminNavItems, UserNavItems } from './user-nav-underline-enum';
+import { SessionControllerV2Service } from 'src/app/services/services/session-controller-v-2.service';
+import { SessionResponseV2 } from 'src/app/services/models/session-response-v-2';
 
 @Component({
   selector: 'app-user-nav-underline',
@@ -18,7 +20,8 @@ export class UserNavUnderlineComponent {
     return this.selectedNavItem === item;
   }
 
-  constructor(private tokenService: TokenService) {
+  constructor(
+    private tokenService: TokenService ) {
     this.createNavItems();
     if (this.navItems.length > 0) {
       this.selectNavItem(this.navItems[0]);
@@ -36,7 +39,6 @@ export class UserNavUnderlineComponent {
   createAdminNavItems() {
     Object.values(AdminNavItems).map((name) => {
       this.navItems.push(name);
-      console.log(this.navItems);
     });
   }
 

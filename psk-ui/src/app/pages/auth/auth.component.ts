@@ -5,7 +5,7 @@ import {AuthenticationResponse} from "../../services/models/authentication-respo
 import {ActivatedRoute, Router} from "@angular/router";
 import { TokenService } from '../../custom-services/token/token.service';
 import {RegistrationRequest} from "../../services/models/registration-request";
-import { CommonService } from 'src/app/custom-services/common.service';
+import { CommonService } from 'src/app/custom-services/common-service/common.service';
 
 @Component({
   selector: 'app-register',
@@ -109,13 +109,11 @@ export class AuthComponent {
         next: (res: AuthenticationResponse) => {
           this.tokenService.token = res.token as string;
           const authorities: string[] = this.tokenService.userRoles;
-          console.log(authorities + ' authorities');
           // TODO:test const decodedToken: DecodedToken = JSON.parse(atob(this.tokenService.token.split('.')[1]));
           if (authorities.includes('ROLE_ADMIN')) {
             this.commonService.isAdminRegistered = true;
             this.router.navigate(['admin/panel']);
           } else {
-            console.log('user panel');
             this.commonService.isUserRegistered = true;
             this.router.navigate(['user/panel']);
           }
@@ -127,7 +125,6 @@ export class AuthComponent {
             this.errorMsg = err.error.validationErrors;
           } else {
             this.errorMsg.push(err.error.error);
-            this.errorMsg.push('Sistem hatası oluştu.');
           }
         },
       });
