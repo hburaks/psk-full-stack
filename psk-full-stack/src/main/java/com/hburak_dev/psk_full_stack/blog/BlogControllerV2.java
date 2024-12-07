@@ -21,19 +21,9 @@ public class BlogControllerV2 {
 
     @PostMapping("/save")
     public ResponseEntity<Integer> saveBlog(
-            @RequestPart("blog") BlogRequest request,
-            @RequestPart(value = "cover", required = false) MultipartFile cover,
+            @RequestBody BlogRequest request,
             Authentication connectedUser
     ) {
-        if (cover != null && !cover.isEmpty()) {
-            try {
-                request.setCover(cover.getBytes());
-            } catch (IOException e) {
-                e.printStackTrace();
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-            }
-        }
-
         return ResponseEntity.ok(service.saveBlog(request, connectedUser));
     }
 
@@ -48,17 +38,8 @@ public class BlogControllerV2 {
     @PutMapping("/update/{id}")
     public ResponseEntity<Integer> updateBlog(
             @PathVariable Integer id,
-            @RequestPart("blog") BlogRequest request,
-            @RequestPart(required = false) MultipartFile cover,
+            @RequestBody BlogRequest request,
             Authentication authentication) {
-        if (cover != null && !cover.isEmpty()) {
-            try {
-                request.setCover(cover.getBytes());
-            } catch (IOException e) {
-                e.printStackTrace();
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-            }
-        }
         return ResponseEntity.ok(service.updateSelectedBlog(id, request, authentication));
     }
 

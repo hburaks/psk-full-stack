@@ -18,10 +18,6 @@ import { BlogComponent } from './pages/blog/blog.component';
 import { UserPanelComponent } from './modules/user/pages/user-panel/user-panel.component';
 import { CommonService } from './custom-services/common-service/common.service';
 import { AboutComponent } from './pages/about/about.component';
-import { BlogCardComponent } from './components/blog-card/blog-card.component';
-import { BlogCardDetailComponent } from './components/blog-card-detail/blog-card-detail.component';
-import { GenericCardDetailComponent } from './components/generic-card-detail/generic-card-detail.component';
-import { EmptyCardComponent } from './components/empty-card/empty-card.component';
 import { TestComponent } from './pages/test/test.component';
 import { TestCardComponent } from './components/test-card/test-card.component';
 import { TestCardDetailComponent } from './components/test-card-detail/test-card-detail.component';
@@ -41,10 +37,6 @@ import { SharedModule } from './modules/shared/shared.module';
     BlogComponent,
     UserPanelComponent,
     AboutComponent,
-    BlogCardComponent,
-    BlogCardDetailComponent,
-    GenericCardDetailComponent,
-    EmptyCardComponent,
     TestComponent,
     TestCardComponent,
     TestCardDetailComponent,

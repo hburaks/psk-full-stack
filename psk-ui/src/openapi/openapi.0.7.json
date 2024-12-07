@@ -115,20 +115,11 @@
           "content": {
             "application/json": {
               "schema": {
-                "required": ["blog"],
-                "type": "object",
-                "properties": {
-                  "blog": {
-                    "$ref": "#/components/schemas/BlogRequest"
-                  },
-                  "cover": {
-                    "type": "string",
-                    "format": "binary"
-                  }
-                }
+                "$ref": "#/components/schemas/BlogRequest"
               }
             }
-          }
+          },
+          "required": true
         },
         "responses": {
           "200": {
@@ -536,20 +527,11 @@
           "content": {
             "application/json": {
               "schema": {
-                "required": ["blog"],
-                "type": "object",
-                "properties": {
-                  "blog": {
-                    "$ref": "#/components/schemas/BlogRequest"
-                  },
-                  "cover": {
-                    "type": "string",
-                    "format": "binary"
-                  }
-                }
+                "$ref": "#/components/schemas/BlogRequest"
               }
             }
-          }
+          },
+          "required": true
         },
         "responses": {
           "200": {

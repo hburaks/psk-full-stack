@@ -11,7 +11,6 @@ import { PublicTestResponse, UserWithIncomingSessionResponse } from 'src/app/ser
   styleUrls: ['./upcoming-session.component.scss'],
 })
 export class UpcomingSessionComponent {
-
   @Input() selectedUser: UserWithIncomingSessionResponse | null = null;
 
   upcomingSession: SessionResponseV2 | null = null;
@@ -38,11 +37,8 @@ export class UpcomingSessionComponent {
   }
 
   receiveAddedTest(test: UserTestForAdminResponse | null) {
-    console.log('receiveAddedTest', test);
     if (test) {
-      console.log('testResults', this.testResults);
       this.testResults = [...this.testResults, test];
-      console.log('testResults', this.testResults);
     }
   }
 

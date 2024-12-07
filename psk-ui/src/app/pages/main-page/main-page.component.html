@@ -17,7 +17,7 @@
     </div>
   </div>
   <div class="mx-0 row justify-content-center">
-    <app-blog-card *ngIf="!isScreenSmall" [blogCardList]="blogCardList"></app-blog-card>
+    <app-blog-card-list *ngIf="!isScreenSmall" [blogCardList]="blogCardList"></app-blog-card-list>
     <div *ngIf="isScreenSmall" id="carouselBlogIndicators" class="carousel slide">
       <div class="col-12 mb-4">
         <h2>Blog Yazıları</h2>

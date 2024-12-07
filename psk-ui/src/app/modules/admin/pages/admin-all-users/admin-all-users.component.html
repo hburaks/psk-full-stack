@@ -21,7 +21,7 @@
           <td scope="row" class="text-secondary">{{ user.firstname }} {{
             user.lastname }}
           </td>
-          <td>{{ user.sessionResponse?.date ?? 'Planlanmış Seans Yok' | date: 'dd.MM.yyyy' }}</td>
+          <td>{{ (user.sessionResponse?.date | date: 'dd.MM.yyyy') ?? 'Planlanmış Seans Yok' }}</td>
           <td>{{ getStatusText(user.sessionResponse?.sessionStatus ?? '') }}</td>
           <td>
             <button class="btn btn-primary btn-primary-custom" (click)="selectUser(user)">Detay</button>

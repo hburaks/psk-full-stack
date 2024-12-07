@@ -24,8 +24,6 @@ export class AdminTestCardComponent {
   @Output() testAddedEvent =
     new EventEmitter<UserTestForAdminResponse | null>();
 
-
-
   isResultOpen: boolean = false;
 
   selectedTest: UserTestForAdminResponse | null = null;
@@ -73,7 +71,6 @@ export class AdminTestCardComponent {
   }
 
   addTestToTestResults(testId: number) {
-    console.log('addTestToTestResults', testId);
     const test = this.publicTests.find((test) => test.id === testId);
     if (test) {
       const mappedTest: UserTestForAdminResponse = {

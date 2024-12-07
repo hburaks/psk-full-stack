@@ -121,7 +121,6 @@ export class AuthComponent {
         },
         error: (err) => {
           if (err.error.validationErrors) {
-            console.log('validationErrors');
             this.errorMsg = err.error.validationErrors;
           } else {
             this.errorMsg.push(err.error.error);
@@ -169,7 +168,6 @@ export class AuthComponent {
             'Hesabınız başarıyla aktive edildi.\nGiriş yapabilirsiniz.'
           );
           this.isActivationSubmitted = true;
-          console.log(res.toString());
         },
         error: (err) => {
           this.activationMessage.push('Sistem hatası oluştu.');

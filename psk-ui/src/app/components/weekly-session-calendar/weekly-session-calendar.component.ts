@@ -48,11 +48,9 @@ export class WeeklySessionCalendarComponent {
       .updateSessionDateV2(updateRequest)
       .subscribe({
         next: () => {
-          console.log('Session date updated');
           window.location.reload();
         },
       });
-    console.log(session);
   }
 
   getFormattedDate(day: DailyCalendarResponse): string {
