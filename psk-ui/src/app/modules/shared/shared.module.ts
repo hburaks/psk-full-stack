@@ -7,6 +7,12 @@ import { EmptyCardComponent } from 'src/app/components/empty-card/empty-card.com
 import { GenericCardDetailComponent } from 'src/app/components/generic-card-detail/generic-card-detail.component';
 import { BlogCardListComponent } from 'src/app/components/blog-card-list/blog-card-list.component';
 import { BlogCardComponent } from 'src/app/components/blog-card/blog-card.component';
+import { TestCardListComponent } from 'src/app/components/test-card-list/test-card-list.component';
+import { TestCardComponent } from 'src/app/components/test-card/test-card.component';
+import { TestCardDetailComponent } from 'src/app/components/test-card-detail/test-card-detail.component';
+import { TestResultComponent } from 'src/app/components/test-result/test-result.component';
+import { EditCommentComponent } from '../admin/components/edit-comment/edit-comment.component';
+import { EditUserComponent } from 'src/app/components/edit-user/edit-user.component';
 @NgModule({
   declarations: [
     WeeklySessionCalendarComponent,
@@ -15,6 +21,12 @@ import { BlogCardComponent } from 'src/app/components/blog-card/blog-card.compon
     EmptyCardComponent,
     GenericCardDetailComponent,
     BlogCardComponent,
+    TestCardListComponent,
+    TestCardComponent,
+    TestCardDetailComponent,
+    TestResultComponent,
+    EditCommentComponent,
+    EditUserComponent,
   ],
   imports: [CommonModule, FormsModule],
   exports: [
@@ -23,6 +35,13 @@ import { BlogCardComponent } from 'src/app/components/blog-card/blog-card.compon
     BlogCardDetailComponent,
     EmptyCardComponent,
     GenericCardDetailComponent,
+    BlogCardComponent,
+    TestCardListComponent,
+    TestCardComponent,
+    TestCardDetailComponent,
+    TestResultComponent,
+    EditCommentComponent,
+    EditUserComponent,
   ],
 })
 export class SharedModule {}

@@ -14,6 +14,7 @@ import { SharedModule } from '../shared/shared.module';
 import { AdminAllSessionsComponent } from './pages/admin-all-sessions/admin-all-sessions.component';
 import { AdminAllUsersComponent } from './pages/admin-all-users/admin-all-users.component';
 import { EditBlogComponent } from './pages/edit-blog/edit-blog.component';
+import { EditTestComponent } from './pages/edit-test/edit-test.component';
 
 @NgModule({
   declarations: [
@@ -28,6 +29,7 @@ import { EditBlogComponent } from './pages/edit-blog/edit-blog.component';
     AdminAllSessionsComponent,
     AdminAllUsersComponent,
     EditBlogComponent,
+    EditTestComponent,
   ],
   imports: [CommonModule, AdminRoutingModule, FormsModule, SharedModule],
 })

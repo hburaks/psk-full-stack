@@ -51,7 +51,7 @@
   </div>
   <div class="mx-0 row justify-content-center">
     <div class="col-12">
-      <app-test-card *ngIf="!isScreenSmall" [testCardList]="testCardList" [isMainPage]="true"></app-test-card>
+      <app-test-card-list *ngIf="!isScreenSmall" [testCardList]="fetchedTestList" [isMainPage]="true"></app-test-card-list>
       <div *ngIf="isScreenSmall" id="carouselTestIndicators" class="carousel carousel-dark slide">
         <div class="col-12 mb-4">
           <h2>Testler</h2>

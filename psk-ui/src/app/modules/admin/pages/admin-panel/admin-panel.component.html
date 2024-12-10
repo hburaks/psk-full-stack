@@ -12,4 +12,10 @@
   <div *ngIf="selectedNavItem === AdminNavItems.EDIT_BLOG">
     <app-edit-blog></app-edit-blog>
   </div>
+  <div *ngIf="selectedNavItem === AdminNavItems.EDIT_TESTS">
+    <app-edit-test></app-edit-test>
+  </div>
+  <div *ngIf="selectedNavItem === AdminNavItems.ACCOUNT_SETTINGS">
+    <app-edit-user></app-edit-user>
+  </div>
 </div>

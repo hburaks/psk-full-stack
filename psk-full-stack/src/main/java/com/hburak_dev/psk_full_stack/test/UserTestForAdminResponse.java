@@ -21,7 +21,7 @@ public class UserTestForAdminResponse {
 
     private String subTitle;
 
-    byte[] cover;
+    private String[] cover;
 
     private Integer userId;
 

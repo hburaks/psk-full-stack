@@ -7,7 +7,7 @@ import lombok.Setter;
 @Builder
 @Getter
 @Setter
-public class PublicTestCommentRequest {
+public class AdminTestCommentRequest {
 
     private Integer commentId;
 

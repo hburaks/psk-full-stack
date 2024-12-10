@@ -26,8 +26,7 @@ public class Test extends BaseEntity {
 
     private String subTitle;
 
-    @Lob
-    byte[] cover;
+    private String[] cover;
 
     private Boolean isActive;
 

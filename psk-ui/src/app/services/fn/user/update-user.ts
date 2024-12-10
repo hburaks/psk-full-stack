@@ -8,15 +8,15 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { PublicTestAdminResponse } from '../../models/public-test-admin-response';
-import { PublicTestRequest } from '../../models/public-test-request';
+import { UserRequest } from '../../models/user-request';
+import { UserResponse } from '../../models/user-response';
 
-export interface UpdatePublicTestV2$Params {
-      body: PublicTestRequest
+export interface UpdateUser$Params {
+      body: UserRequest
 }
 
-export function updatePublicTestV2(http: HttpClient, rootUrl: string, params: UpdatePublicTestV2$Params, context?: HttpContext): Observable<StrictHttpResponse<PublicTestAdminResponse>> {
-  const rb = new RequestBuilder(rootUrl, updatePublicTestV2.PATH, 'put');
+export function updateUser(http: HttpClient, rootUrl: string, params: UpdateUser$Params, context?: HttpContext): Observable<StrictHttpResponse<UserResponse>> {
+  const rb = new RequestBuilder(rootUrl, updateUser.PATH, 'put');
   if (params) {
     rb.body(params.body, 'application/json');
   }
@@ -26,9 +26,9 @@ export function updatePublicTestV2(http: HttpClient, rootUrl: string, params: Up
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<PublicTestAdminResponse>;
+      return r as StrictHttpResponse<UserResponse>;
     })
   );
 }
 
-updatePublicTestV2.PATH = '/v2/test/update';
+updateUser.PATH = '/user/user';

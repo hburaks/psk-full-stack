@@ -1,0 +1,33 @@
+<div *ngIf="!isEditPage" class="col-12 mb-4">
+  <h2>Testler</h2>
+</div>
+<div *ngIf="isEditPage" class="col-12 mb-4">
+  <h4 class="text-secondary">Test Düzenle</h4>
+</div>
+<div class="col-12">
+  <div class="row g-3">
+    <ng-container *ngIf="!isEditPage">
+      <div *ngFor="let testCard of testCardList; let i = index" class="col-md-4 col-sm-6">
+        <app-test-card [testCard]="testCard"></app-test-card>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="isEditPage">
+      <div *ngFor="let testCard of adminTestList; let i = index" class="col-md-4 col-sm-6">
+        <app-test-card [testCard]="testCard" [isEditPage]="isEditPage" (editTestEvent)="editTest($event)"
+          (deleteTestEvent)="deleteTest($event)">
+        </app-test-card>
+      </div>
+    </ng-container>
+    <app-empty-card class="col-md-4 col-sm-6 empty-card-container "
+      *ngIf="isScreenLarge && testCardList.length % 3 == 1"></app-empty-card>
+    <app-empty-card class="col-md-4 col-sm-6 empty-card-container"
+      *ngIf="isScreenLarge && testCardList.length % 3 == 2"></app-empty-card>
+    <app-empty-card class="col-md-4 col-sm-6 empty-card-container"
+      *ngIf="isScreenLarge && testCardList.length % 3 == 1 && !isEditPage"></app-empty-card>
+    <app-empty-card class="col-md-4 col-sm-6 empty-card-container"
+      *ngIf="isScreenMedium && testCardList.length % 2 == 1 && !isEditPage"></app-empty-card>
+    <app-empty-card (addBlogEvent)="addTest()" class="col-md-4 col-sm-6 empty-card-container"
+      *ngIf="isEditPage"
+      [isBlogEditable]="isEditPage"></app-empty-card>
+  </div>
+</div>

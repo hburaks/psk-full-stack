@@ -1,4 +1,12 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  OnInit,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
 import { SaveBlog$Params } from 'src/app/services/fn/blog/save-blog';
 import { BlogResponse } from 'src/app/services/models';
 import { BlogService } from 'src/app/services/services';
@@ -8,7 +16,7 @@ import { BlogService } from 'src/app/services/services';
   templateUrl: './generic-card-detail.component.html',
   styleUrls: ['./generic-card-detail.component.scss'],
 })
-export class GenericCardDetailComponent {
+export class GenericCardDetailComponent implements OnInit, OnChanges {
   @Input() blogId: number | null = null;
   @Input() text: string = '';
   @Input() title: string = '';
@@ -29,6 +37,34 @@ export class GenericCardDetailComponent {
   blob: Blob | null = null;
 
   constructor(private blogService: BlogService) {}
+
+  ngOnInit() {
+    this.initializeBlogCard();
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (
+      changes['blogId'] ||
+      changes['title'] ||
+      changes['text'] ||
+      changes['cover'] ||
+      changes['subTitle'] ||
+      changes['shareable']
+    ) {
+      this.initializeBlogCard();
+    }
+  }
+
+  private initializeBlogCard() {
+    this.blogCard = {
+      id: this.blogId ?? undefined,
+      cover: this.cover?? undefined,
+      shareable: this.shareable,
+      subTitle: this.subTitle,
+      text: this.text,
+      title: this.title,
+    };
+  }
 
   uploadImage() {
     // TODO: Implement image upload
@@ -100,13 +136,6 @@ export class GenericCardDetailComponent {
   }
 
   updateBlogCard() {
-    this.blogCard = {
-      id: this.blogId ?? undefined,
-      cover: this.cover,
-      shareable: this.shareable,
-      subTitle: this.subTitle,
-      text: this.text,
-      title: this.title,
-    };
+    this.initializeBlogCard();
   }
 }

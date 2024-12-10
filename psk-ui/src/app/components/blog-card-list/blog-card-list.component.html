@@ -10,7 +10,6 @@
       <app-blog-card (editBlogEvent)="editBlog(blogCard.id!)" (deleteBlogEvent)="deleteBlog(blogCard.id!)" [blogCard]="blogCard"
         [isBlogEditable]="isBlogEditable"></app-blog-card>
     </div>
-
     <app-empty-card class="col-md-4 col-sm-6 empty-card-container"
       *ngIf="isScreenLarge && blogCardList.length % 3 == 1"></app-empty-card>
     <app-empty-card (addBlogEvent)="addBlog()" [isBlogEditable]="isBlogEditable"
@@ -24,9 +23,9 @@
       *ngIf="isScreenMedium && blogCardList.length % 2 == 1"></app-empty-card>
     <app-empty-card (addBlogEvent)="addBlog()" [isBlogEditable]="isBlogEditable"
       class="col-md-4 col-sm-6 empty-card-container"
-      *ngIf="isScreenMedium && blogCardList.length % 2 == 0 && isBlogEditable"></app-empty-card>
+      *ngIf="blogCardList.length % 2 == 0 && isBlogEditable"></app-empty-card>
     <app-empty-card (addBlogEvent)="addBlog()" [isBlogEditable]="isBlogEditable"
       class="col-md-4 col-sm-6 empty-card-container"
-      *ngIf="isScreenLarge && blogCardList.length % 3 == 0 && isBlogEditable"></app-empty-card>
+      *ngIf="blogCardList.length % 3 == 0 && isBlogEditable"></app-empty-card>
   </div>
 </div>

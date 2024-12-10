@@ -32,12 +32,8 @@ public interface TestService {
     /**
      * Creates public test
      */
-    PublicTestAdminResponse createPublicTestV2(PublicTestRequest publicTestRequest);
+    AdminTestResponse createPublicTestV2(PublicTestRequest publicTestRequest, Authentication connectedUser);
 
-    /**
-     * Update public test
-     */
-    PublicTestAdminResponse updatePublicTestV2(PublicTestRequest publicTestRequest);
 
     /**
      * Update public test availability value
@@ -65,5 +61,15 @@ public interface TestService {
      * Removes test from user
      */
     ResponseEntity<Boolean> removeTestFromUserV2(Integer testId);
+
+    /**
+     * Deletes test
+     */
+    ResponseEntity<Boolean> deleteTestV2(Integer testId);
+
+    /**
+     * Gets all tests
+     */
+    List<AdminTestResponse> getAllTest();
 
 }

@@ -1,8 +1,8 @@
-import {NgModule} from '@angular/core';
-import {BrowserModule} from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
 
-import {AppRoutingModule} from './app-routing.module';
-import {AppComponent} from './app.component';
+import { AppRoutingModule } from './app-routing.module';
+import { AppComponent } from './app.component';
 import {
   HTTP_INTERCEPTORS,
   HttpClient,
@@ -19,9 +19,6 @@ import { UserPanelComponent } from './modules/user/pages/user-panel/user-panel.c
 import { CommonService } from './custom-services/common-service/common.service';
 import { AboutComponent } from './pages/about/about.component';
 import { TestComponent } from './pages/test/test.component';
-import { TestCardComponent } from './components/test-card/test-card.component';
-import { TestCardDetailComponent } from './components/test-card-detail/test-card-detail.component';
-import { TestResultComponent } from './components/test-result/test-result.component';
 import { SessionsComponent } from './pages/sessions/sessions.component';
 import { HttpTokenInterceptor } from './custom-services/interceptor/http-token.interceptor';
 import { TestService } from './custom-services/test/test.service';
@@ -38,9 +35,6 @@ import { SharedModule } from './modules/shared/shared.module';
     UserPanelComponent,
     AboutComponent,
     TestComponent,
-    TestCardComponent,
-    TestCardDetailComponent,
-    TestResultComponent,
     SessionsComponent,
   ],
   imports: [
@@ -50,7 +44,7 @@ import { SharedModule } from './modules/shared/shared.module';
     FormsModule,
     ReactiveFormsModule,
     CodeInputModule,
-    SharedModule
+    SharedModule,
   ],
   providers: [
     HttpClient,

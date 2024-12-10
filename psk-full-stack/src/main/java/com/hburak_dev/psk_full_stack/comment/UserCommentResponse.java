@@ -16,7 +16,6 @@ public class UserCommentResponse {
 
     private String text;
 
-    @Lob
     byte[] cover;
 
 }

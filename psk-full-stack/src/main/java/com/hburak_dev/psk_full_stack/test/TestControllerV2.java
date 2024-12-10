@@ -17,13 +17,9 @@ public class TestControllerV2 {
     private final TestService testService;
 
     @PostMapping("/create")
-    public ResponseEntity<PublicTestAdminResponse> createPublicTestV2(@RequestBody PublicTestRequest publicTestRequest) {
-        return ResponseEntity.ok(testService.createPublicTestV2(publicTestRequest));
-    }
-
-    @PutMapping("/update")
-    public ResponseEntity<PublicTestAdminResponse> updatePublicTestV2(@RequestBody PublicTestRequest publicTestRequest) {
-        return ResponseEntity.ok(testService.updatePublicTestV2(publicTestRequest));
+    public ResponseEntity<AdminTestResponse> createPublicTestV2(@RequestBody PublicTestRequest publicTestRequest,
+            Authentication connectedUser) {
+        return ResponseEntity.ok(testService.createPublicTestV2(publicTestRequest, connectedUser));
     }
 
     @PutMapping("/update-availability")
@@ -44,5 +40,15 @@ public class TestControllerV2 {
     @DeleteMapping("/remove-test-from-user")
     public ResponseEntity<Boolean> removeTestFromUserV2(@RequestParam Integer testId) {
         return testService.removeTestFromUserV2(testId);
+    }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<Boolean> deleteTestV2(@RequestParam Integer testId) {
+        return testService.deleteTestV2(testId);
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<AdminTestResponse>> getAllTest() {
+        return ResponseEntity.ok(testService.getAllTest());
     }
 }

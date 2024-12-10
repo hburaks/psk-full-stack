@@ -3,7 +3,10 @@ package com.hburak_dev.psk_full_stack.comment;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hburak_dev.psk_full_stack.common.BaseEntity;
 import com.hburak_dev.psk_full_stack.test.Test;
+
+import jakarta.persistence.Basic;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToMany;
 import lombok.AllArgsConstructor;
@@ -29,8 +32,7 @@ public class Comment extends BaseEntity {
 
     private String text;
 
-    @Lob
-    byte[] cover;
+    private byte[] cover;
 
     @ManyToMany(mappedBy = "comments")
     @JsonIgnore

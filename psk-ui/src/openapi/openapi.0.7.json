@@ -31,34 +31,6 @@
     }
   ],
   "paths": {
-    "/v2/test/update": {
-      "put": {
-        "tags": ["Test"],
-        "operationId": "updatePublicTestV2",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/PublicTestRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PublicTestAdminResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/v2/test/update-availability": {
       "put": {
         "tags": ["Test"],
@@ -136,6 +108,50 @@
         }
       }
     },
+    "/user/user": {
+      "get": {
+        "tags": ["User"],
+        "operationId": "getUser",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["User"],
+        "operationId": "updateUser",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v3/test/check-answer": {
       "post": {
         "tags": ["Test"],
@@ -184,7 +200,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PublicTestAdminResponse"
+                  "$ref": "#/components/schemas/AdminTestResponse"
                 }
               }
             }
@@ -873,6 +889,27 @@
         }
       }
     },
+    "/v2/test/all": {
+      "get": {
+        "tags": ["Test"],
+        "operationId": "getAllTest",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AdminTestResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v2/sessions/users-with-sessions": {
       "get": {
         "tags": ["session-controller-v-2"],
@@ -1131,6 +1168,35 @@
         }
       }
     },
+    "/v2/test/delete": {
+      "delete": {
+        "tags": ["Test"],
+        "operationId": "deleteTestV2",
+        "parameters": [
+          {
+            "name": "testId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v2/blogs/delete/{id}": {
       "delete": {
         "tags": ["Blog"],
@@ -1163,103 +1229,6 @@
   },
   "components": {
     "schemas": {
-      "PublicChoiceRequest": {
-        "type": "object",
-        "properties": {
-          "choiceId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "answerType": {
-            "type": "string",
-            "enum": ["ANSWER_A", "ANSWER_B", "ANSWER_C", "ANSWER_D", "ANSWER_E"]
-          },
-          "text": {
-            "type": "string"
-          }
-        }
-      },
-      "PublicTestCommentRequest": {
-        "type": "object",
-        "properties": {
-          "commentId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "score": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "title": {
-            "type": "string"
-          },
-          "text": {
-            "type": "string"
-          },
-          "cover": {
-            "type": "array",
-            "items": {
-              "type": "string",
-              "format": "byte"
-            }
-          }
-        }
-      },
-      "PublicTestQuestionRequest": {
-        "type": "object",
-        "properties": {
-          "questionId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "text": {
-            "type": "string"
-          },
-          "publicChoiceRequestList": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/PublicChoiceRequest"
-            }
-          }
-        }
-      },
-      "PublicTestRequest": {
-        "type": "object",
-        "properties": {
-          "testId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "title": {
-            "type": "string"
-          },
-          "subTitle": {
-            "type": "string"
-          },
-          "cover": {
-            "type": "array",
-            "items": {
-              "type": "string",
-              "format": "byte"
-            }
-          },
-          "publicTestQuestionRequestList": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/PublicTestQuestionRequest"
-            }
-          },
-          "comments": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/PublicTestCommentRequest"
-            }
-          },
-          "isActive": {
-            "type": "boolean"
-          }
-        }
-      },
       "PublicChoiceAdminResponse": {
         "type": "object",
         "properties": {
@@ -1304,8 +1273,7 @@
           "cover": {
             "type": "array",
             "items": {
-              "type": "string",
-              "format": "byte"
+              "type": "string"
             }
           },
           "title": {
@@ -1346,6 +1314,51 @@
           },
           "shareable": {
             "type": "boolean"
+          }
+        }
+      },
+      "UserRequest": {
+        "type": "object",
+        "properties": {
+          "firstname": {
+            "type": "string"
+          },
+          "lastname": {
+            "type": "string"
+          },
+          "phoneNumber": {
+            "maxLength": 10,
+            "minLength": 10,
+            "type": "string"
+          },
+          "birthYear": {
+            "maxLength": 4,
+            "minLength": 4,
+            "type": "string"
+          }
+        }
+      },
+      "UserResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "firstname": {
+            "type": "string"
+          },
+          "lastname": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "phoneNumber": {
+            "type": "string"
+          },
+          "birthYear": {
+            "type": "string"
           }
         }
       },
@@ -1391,6 +1404,164 @@
             "items": {
               "type": "string",
               "format": "byte"
+            }
+          }
+        }
+      },
+      "AdminTestCommentRequest": {
+        "type": "object",
+        "properties": {
+          "commentId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "score": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "title": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "cover": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "byte"
+            }
+          }
+        }
+      },
+      "PublicChoiceRequest": {
+        "type": "object",
+        "properties": {
+          "choiceId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "answerType": {
+            "type": "string",
+            "enum": ["ANSWER_A", "ANSWER_B", "ANSWER_C", "ANSWER_D", "ANSWER_E"]
+          },
+          "text": {
+            "type": "string"
+          }
+        }
+      },
+      "PublicTestQuestionRequest": {
+        "type": "object",
+        "properties": {
+          "questionId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "text": {
+            "type": "string"
+          },
+          "publicChoiceRequestList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PublicChoiceRequest"
+            }
+          }
+        }
+      },
+      "PublicTestRequest": {
+        "type": "object",
+        "properties": {
+          "testId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "title": {
+            "type": "string"
+          },
+          "subTitle": {
+            "type": "string"
+          },
+          "cover": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "publicTestQuestionRequestList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PublicTestQuestionRequest"
+            }
+          },
+          "comments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AdminTestCommentRequest"
+            }
+          },
+          "isActive": {
+            "type": "boolean"
+          }
+        }
+      },
+      "AdminTestCommentResponse": {
+        "type": "object",
+        "properties": {
+          "commentId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "score": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "title": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "cover": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "byte"
+            }
+          }
+        }
+      },
+      "AdminTestResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "title": {
+            "type": "string"
+          },
+          "subTitle": {
+            "type": "string"
+          },
+          "cover": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "questions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PublicQuestionAdminResponse"
+            }
+          },
+          "comments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AdminTestCommentResponse"
             }
           }
         }
@@ -1644,8 +1815,7 @@
           "cover": {
             "type": "array",
             "items": {
-              "type": "string",
-              "format": "byte"
+              "type": "string"
             }
           },
           "title": {
@@ -1830,8 +2000,7 @@
           "cover": {
             "type": "array",
             "items": {
-              "type": "string",
-              "format": "byte"
+              "type": "string"
             }
           },
           "userId": {
@@ -1993,8 +2162,7 @@
           "cover": {
             "type": "array",
             "items": {
-              "type": "string",
-              "format": "byte"
+              "type": "string"
             }
           },
           "questions": {

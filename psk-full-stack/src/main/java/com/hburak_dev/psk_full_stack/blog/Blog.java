@@ -4,7 +4,6 @@ import com.hburak_dev.psk_full_stack.common.BaseEntity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Lob;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,7 +27,6 @@ public class Blog extends BaseEntity {
     @Column(length = 3000)
     private String text;
 
-    @Lob
     byte[] cover;
 
     private boolean shareable;

@@ -8,6 +8,7 @@ import { ApiConfiguration, ApiConfigurationParams } from './api-configuration';
 
 import { TestService } from './services/test.service';
 import { BlogService } from './services/blog.service';
+import { UserService } from './services/user.service';
 import { SessionControllerV2Service } from './services/session-controller-v-2.service';
 import { SessionControllerService } from './services/session-controller.service';
 import { AuthenticationService } from './services/authentication.service';
@@ -23,6 +24,7 @@ import { SessionControllerV3Service } from './services/session-controller-v-3.se
   providers: [
     TestService,
     BlogService,
+    UserService,
     SessionControllerV2Service,
     SessionControllerService,
     AuthenticationService,

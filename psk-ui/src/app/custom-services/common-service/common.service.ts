@@ -51,4 +51,13 @@ export class CommonService {
   getStatusText(status: string): string {
     return this.sessionStatusMap[status] || status;
   }
+
+  async fileToBase64(file: File): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = (error) => reject(error);
+    });
+  }
 }
