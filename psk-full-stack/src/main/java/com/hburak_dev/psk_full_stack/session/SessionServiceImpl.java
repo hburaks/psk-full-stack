@@ -217,9 +217,10 @@ public class SessionServiceImpl implements SessionService {
     @Override
     public PageResponse<UserWithIncomingSessionResponse> getAllUsersWithSessionV2(int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
-        Page<User> usersWithSessions = userRepository.findAllUsersWithSessions(pageable);
 
-        for (User user : usersWithSessions) {
+        Page<User> allUsers = userRepository.findAll(pageable);
+
+        for (User user : allUsers) {
             Session session = user.getSessions().stream()
                     .filter(s -> !s.getSessionStatus().equals(SessionStatusType.UNAVAILABLE)
                             && !s.getSessionStatus().equals(SessionStatusType.CANCELED))
@@ -234,7 +235,7 @@ public class SessionServiceImpl implements SessionService {
             }
         }
 
-        List<UserWithIncomingSessionResponse> responseList = usersWithSessions
+        List<UserWithIncomingSessionResponse> responseList = allUsers
                 .stream()
                 .map(user -> {
                     UserWithIncomingSessionResponse userWithIncomingSessionResponse = UserWithIncomingSessionResponse
@@ -252,12 +253,12 @@ public class SessionServiceImpl implements SessionService {
                 .toList();
         return new PageResponse<>(
                 responseList,
-                usersWithSessions.getNumber(),
-                usersWithSessions.getSize(),
-                usersWithSessions.getTotalElements(),
-                usersWithSessions.getTotalPages(),
-                usersWithSessions.isFirst(),
-                usersWithSessions.isLast());
+                allUsers.getNumber(),
+                allUsers.getSize(),
+                allUsers.getTotalElements(),
+                allUsers.getTotalPages(),
+                allUsers.isFirst(),
+                allUsers.isLast());
     }
 
     @Override
@@ -397,5 +398,17 @@ public class SessionServiceImpl implements SessionService {
         }
 
         return sessionMapper.toSessionResponseV2(sessions);
+    }
+
+    @Override
+    public SessionResponse getUpcomingSession(Authentication connectedUser) {
+        User user = (User) connectedUser.getPrincipal();
+        Session session = sessionRepository.findFirstByDateAfterAndSessionStatusNotAndUserIdOrderByDateAsc(
+                LocalDateTime.now(),
+                SessionStatusType.CANCELED, user.getId());
+        if (session == null) {
+            return null;
+        }
+        return sessionMapper.toSessionResponse(session);
     }
 }

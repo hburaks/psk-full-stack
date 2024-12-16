@@ -42,5 +42,13 @@ public class SessionController {
         return sessionService.cancelUserSession(id, connectedUser);
     }
 
+    @GetMapping("/upcoming-session")
+    public ResponseEntity<SessionResponse> getUpcomingSession(Authentication connectedUser) {
+        SessionResponse sessionResponse = sessionService.getUpcomingSession(connectedUser);
+        if (sessionResponse == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(sessionResponse);
+    }
 
 }

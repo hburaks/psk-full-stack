@@ -35,12 +35,11 @@ export class EditCommentComponent {
   }
 
   onFileChange(event: any, index: number) {
-    console.log('onFileChange', event);
+    //TODO console.log('onFileChange', event);
     this.updateModal();
   }
 
   onCommentChange(index: number) {
-    console.log('Comment changed:', this.comments?.[index]);
     this.updateModal();
   }
 }

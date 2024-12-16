@@ -16,4 +16,10 @@ export class AdminPanelComponent {
     this.selectedNavItem = item;
   }
   AdminNavItems = AdminNavItems;
+
+  selectedUser: UserWithIncomingSessionResponse | null = null;
+
+  onSelectedUser(user: UserWithIncomingSessionResponse | null) {
+    this.selectedUser = user;
+  }
 }

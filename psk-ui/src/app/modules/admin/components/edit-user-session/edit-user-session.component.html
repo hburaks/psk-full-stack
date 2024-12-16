@@ -1,13 +1,20 @@
-<div class="mt-4 mb-2 row">
+<div *ngIf="!isAddSession"  class="mt-4 mb-2 row">
   <div class="d-flex justify-content-between col-12">
     <h4 class="text-secondary my-auto">Seçilen Seansı Düzenle</h4>
     <button (click)="closeModal()" class="btn btn-primary">Düzenlemeyi Kapat</button>
   </div>
 </div>
 
+<div *ngIf="isAddSession" class="mt-4 mb-2 row">
+  <div class="d-flex justify-content-between col-12">
+    <h4 class="text-secondary my-auto">Seans Ekle</h4>
+    <button (click)="closeModal()" class="btn btn-primary">Kapat</button>
+  </div>
+</div>
+
 <div class="row mx-0 mb-5">
   <div class="col px-0">
-    <div class="my-1 row row-about align-items-center g-5 mx-0">
+    <div *ngIf="!isAddSession" class="my-1 row row-about align-items-center g-5 mx-0">
       <div class="col-md-8 col-12 mt-0 about-text px-0">
         <p class="fs-5 mb-0 fw-bold">{{session?.userForSessionResponse?.firstname}}
           {{session?.userForSessionResponse?.lastname}}</p>
@@ -20,7 +27,7 @@
         <button *ngIf="!isEditingNoteForUser" (click)="editNoteForUser()" class="btn btn-outline-primary mt-0"
           type="button">Düzenle</button>
         <div *ngIf="isEditingNoteForUser">
-          <button (click)="addNotForUser()" class="btn btn-outline-primary mb-2" type="button"
+          <button (click)="addNoteForUser()" class="btn btn-outline-primary mb-2" type="button"
             id="button-addon-user">Notu
             Kaydet</button>
           <input type="text" class="form-control" placeholder="" aria-label="Example text with button addon"
@@ -45,9 +52,9 @@
       </div>
     </div>
     <div class="row mx-1 g-2 mt-4">
-      <app-weekly-session-calendar [selectedSession]="session" [isEdit]="true"></app-weekly-session-calendar>
+      <app-weekly-session-calendar [isEdit]="true" (dateToUpdateSession)="updateDateToUpdateSession($event)"></app-weekly-session-calendar>
     </div>
-    <div class="row mx-1 g-2 mt-4">
+    <div *ngIf="!isAddSession" class="row mx-1 g-2 mt-4">
       <div class="btn-group">
         <a *ngFor="let status of statusList" [class.active]="status === session?.sessionStatus"
           [class.btn-primary]="status === session?.sessionStatus"

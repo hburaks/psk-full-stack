@@ -13,8 +13,12 @@ import { SessionControllerV2Service } from 'src/app/services/services/session-co
 })
 export class EditUserSessionComponent {
   @Input() session: SessionResponseV2 | null = null;
+  @Input() userId: number | null = null;
   @Output() showEditSessionModal = new EventEmitter<boolean>();
 
+  isAddSession: boolean = false;
+
+  dateToUpdateSession: string | null = null;
   statusMap: { [key: string]: string } = {};
   statusList: string[] = [];
 
@@ -35,7 +39,23 @@ export class EditUserSessionComponent {
     this.statusList = Object.keys(this.statusMap).filter(
       (status) =>
         status !== 'UNAVAILABLE' && status !== 'AWAITING_PSYCHOLOGIST_APPROVAL'
-    );  
+    );
+  }
+
+  updateDateToUpdateSession(date: string | null) {
+    this.dateToUpdateSession = date;
+
+    if (this.dateToUpdateSession) {
+      if (this.isAddSession) {
+        this.addSession();
+      } else {
+        this.updateSessionDate();
+      }
+    }
+  }
+
+  ngAfterViewInit() {
+    this.isAddSession = this.session?.sessionId === undefined;
   }
 
   closeModal() {
@@ -50,7 +70,7 @@ export class EditUserSessionComponent {
     this.isEditingNoteForPsychologist = true;
   }
 
-  addNotForUser() {
+  addNoteForUser() {
     if (this.session) {
       const requestBody: SessionUserNoteRequest = {
         sessionId: this.session.sessionId,
@@ -62,6 +82,46 @@ export class EditUserSessionComponent {
           next: (response: SessionResponseV2) => {
             this.session = response;
             this.isEditingNoteForUser = false;
+          },
+        });
+    }
+  }
+
+  addSession() {
+    if (this.isAddSession && this.userId && this.dateToUpdateSession) {
+      this.sessionControllerV2Service
+        .createSessionForUserV2({
+          date: this.dateToUpdateSession,
+          userId: this.userId,
+        })
+        .subscribe({
+          next: (response: number) => {
+            window.location.reload();
+          },
+          error: (error) => {
+            this.toastErrorMessage = 'Seans oluşturulurken bir hata oluştu';
+            this.showToast = true;
+          },
+        });
+    }
+  }
+
+  updateSessionDate() {
+    if (this.dateToUpdateSession && this.session) {
+      this.sessionControllerV2Service
+        .updateSessionDateV2({
+          body: {
+            date: this.dateToUpdateSession,
+            sessionId: this.session!.sessionId,
+          },
+        })
+        .subscribe({
+          next: () => {
+            window.location.reload();
+          },
+          error: (error) => {
+            this.toastErrorMessage = 'Seans tarihi güncellenirken bir hata oluştu';
+            this.showToast = true;
           },
         });
     }
@@ -91,15 +151,31 @@ export class EditUserSessionComponent {
   }
 
   changeStatus(status: string) {
-    this.session!.sessionStatus = status as 'AWAITING_PSYCHOLOGIST_APPROVAL' | 'AWAITING_PAYMENT' | 'AWAITING_PAYMENT_CONFIRMATION' | 'APPOINTMENT_SCHEDULED' | 'COMPLETED' | 'CANCELED' | 'UNAVAILABLE';
+    this.session!.sessionStatus = status as
+      | 'AWAITING_PSYCHOLOGIST_APPROVAL'
+      | 'AWAITING_PAYMENT'
+      | 'AWAITING_PAYMENT_CONFIRMATION'
+      | 'APPOINTMENT_SCHEDULED'
+      | 'COMPLETED'
+      | 'CANCELED'
+      | 'UNAVAILABLE';
     const sessionStatusRequest: SessionStatusRequest = {
       sessionId: this.session!.sessionId,
-      sessionStatusType: status as 'AWAITING_PSYCHOLOGIST_APPROVAL' | 'AWAITING_PAYMENT' | 'AWAITING_PAYMENT_CONFIRMATION' | 'APPOINTMENT_SCHEDULED' | 'COMPLETED' | 'CANCELED' | 'UNAVAILABLE',
+      sessionStatusType: status as
+        | 'AWAITING_PSYCHOLOGIST_APPROVAL'
+        | 'AWAITING_PAYMENT'
+        | 'AWAITING_PAYMENT_CONFIRMATION'
+        | 'APPOINTMENT_SCHEDULED'
+        | 'COMPLETED'
+        | 'CANCELED'
+        | 'UNAVAILABLE',
     };
 
-    this.sessionControllerV2Service.updateSessionStatusV2({ body: sessionStatusRequest }).subscribe({
-      next: (response: number) => {
-        console.log(response);
+    this.sessionControllerV2Service
+      .updateSessionStatusV2({ body: sessionStatusRequest })
+      .subscribe({
+        next: (response: number) => {
+          console.log(response);
         },
         error: (error) => {
           this.toastErrorMessage = 'Durum değiştirirken bir hata oluştu';

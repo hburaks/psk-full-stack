@@ -42,4 +42,6 @@ public interface SessionService {
 
     SessionResponseV2 getUpcomingSessionsV2();
 
+    SessionResponse getUpcomingSession(Authentication connectedUser);
+
 }

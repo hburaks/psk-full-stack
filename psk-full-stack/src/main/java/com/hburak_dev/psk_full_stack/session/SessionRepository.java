@@ -26,5 +26,7 @@ public interface SessionRepository extends JpaRepository<Session, Integer> {
      */
     Session findFirstByDateAfterAndSessionStatusNotOrderByDateAsc(LocalDateTime date, SessionStatusType sessionStatus);
 
+    Session findFirstByDateAfterAndSessionStatusNotAndUserIdOrderByDateAsc(LocalDateTime date,
+            SessionStatusType sessionStatus, Integer userId);
 
 }

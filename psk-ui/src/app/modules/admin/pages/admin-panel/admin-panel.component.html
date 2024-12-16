@@ -1,13 +1,13 @@
 <div class="page-content container">
   <app-user-nav-underline (selectedNavItemEvent)="onSelectedNavItem($event)"></app-user-nav-underline>
   <div *ngIf="selectedNavItem === AdminNavItems.UPCOMING_SESSIONS">
-    <app-upcoming-session></app-upcoming-session>
+    <app-upcoming-session [selectedUser]="selectedUser"></app-upcoming-session>
   </div>
   <div *ngIf="selectedNavItem === AdminNavItems.ALL_SESSIONS">
     <app-admin-all-sessions></app-admin-all-sessions>
   </div>
   <div *ngIf="selectedNavItem === AdminNavItems.ALL_USERS">
-    <app-admin-all-users></app-admin-all-users>
+    <app-admin-all-users (selectedUserEvent)="onSelectedUser($event)"></app-admin-all-users>
   </div>
   <div *ngIf="selectedNavItem === AdminNavItems.EDIT_BLOG">
     <app-edit-blog></app-edit-blog>

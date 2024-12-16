@@ -68,14 +68,9 @@ public class SessionControllerV2 {
 
     @PostMapping("/create")
     public Integer createSessionForUserV2(
-            @RequestParam("date")
-            @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH") String date, @RequestParam Integer userId) {
+            @RequestParam("date") LocalDateTime date, @RequestParam Integer userId) {
 
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH");
-
-        LocalDateTime localDateTime = LocalDateTime.parse(date, dateTimeFormatter);
-
-        return sessionService.createSessionForUserV2(localDateTime, userId);
+        return sessionService.createSessionForUserV2(date, userId);
     }
 
     @GetMapping("/upcoming-session")

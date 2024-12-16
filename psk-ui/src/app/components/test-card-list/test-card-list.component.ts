@@ -58,11 +58,12 @@ export class TestCardListComponent {
   }
 
   deleteTest(test: AdminTestResponse) {
-    console.log(test);
     if (this.isEditPage) {
       this.testService.deleteTestV2({ testId: test.id! }).subscribe({
         next: () => {
-          this.adminTestList = this.adminTestList.filter((t) => t.id !== test.id);
+          this.adminTestList = this.adminTestList.filter(
+            (t) => t.id !== test.id
+          );
         },
         error: (err: any) => {
           console.error('Error deleting test', err);

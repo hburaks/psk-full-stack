@@ -1,6 +1,7 @@
-<div class="col-12">
+<div *ngIf="!isEdit" class="col-12">
   <h2>Seans Takvimi</h2>
 </div>
+
 <div class="col-12 card">
   <div class="row mx-0">
     <div class="col-2 text-center text-secondary py-3 px-0 table-header border-end border-bottom"
@@ -16,7 +17,7 @@
       [ngClass]="{ 'border-end': i !== 5}">
       <div class="mt-3 time-container no-pointer-cursor" *ngFor="let session of day.sessions"
         [ngClass]="{'unavailable text-secondary': !session?.available, 'available': session?.available, 'smaller-font': !isScreenLarge}">
-        <p (click)="isEdit && session?.available ? editSession(session) : null" [ngClass]="{'edit': isEdit && session?.available}">{{ formatSessionDate(session.date ||
+        <p (click)="isEdit && session?.available ? editSession(session.date || null) : null" [ngClass]="{'edit': isEdit && session?.available}">{{ formatSessionDate(session.date ||
           '') }}</p>
       </div>
     </div>
@@ -47,6 +48,26 @@
   <div class="row">
     <div class="col-12 text-end">
       <button class="btn btn-primary" routerLink="/register">Kayıt Ol ve Randevu Al</button>
+    </div>
+  </div>
+</div>
+<div *ngIf="showAddSessionModal"> hi iti s a try</div>
+<div *ngIf="showAddSessionModal" class="modal fade" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5">Seans Ekle</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Seansınızı eklemek istediğinize emin misiniz?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+          (click)="showAddSessionModal = false">Vazgeç</button>
+        <button data-bs-dismiss="modal" (click)="addSessionToUser()" type="button"
+          class="btn btn-primary">Kaldır</button>
+      </div>
     </div>
   </div>
 </div>

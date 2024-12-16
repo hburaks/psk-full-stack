@@ -17,6 +17,8 @@ import { createSessionForUserV21 } from '../fn/session-controller/create-session
 import { CreateSessionForUserV21$Params } from '../fn/session-controller/create-session-for-user-v-21';
 import { getMySessions } from '../fn/session-controller/get-my-sessions';
 import { GetMySessions$Params } from '../fn/session-controller/get-my-sessions';
+import { getUpcomingSession } from '../fn/session-controller/get-upcoming-session';
+import { GetUpcomingSession$Params } from '../fn/session-controller/get-upcoming-session';
 import { SessionResponse } from '../models/session-response';
 
 @Injectable({ providedIn: 'root' })
@@ -72,6 +74,31 @@ export class SessionControllerService extends BaseService {
   createSessionForUserV21(params: CreateSessionForUserV21$Params, context?: HttpContext): Observable<number> {
     return this.createSessionForUserV21$Response(params, context).pipe(
       map((r: StrictHttpResponse<number>): number => r.body)
+    );
+  }
+
+  /** Path part for operation `getUpcomingSession()` */
+  static readonly GetUpcomingSessionPath = '/sessions/upcoming-session';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getUpcomingSession()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getUpcomingSession$Response(params?: GetUpcomingSession$Params, context?: HttpContext): Observable<StrictHttpResponse<SessionResponse>> {
+    return getUpcomingSession(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getUpcomingSession$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getUpcomingSession(params?: GetUpcomingSession$Params, context?: HttpContext): Observable<SessionResponse> {
+    return this.getUpcomingSession$Response(params, context).pipe(
+      map((r: StrictHttpResponse<SessionResponse>): SessionResponse => r.body)
     );
   }
 

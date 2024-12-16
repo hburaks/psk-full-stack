@@ -28,7 +28,7 @@
     </div>
     <div *ngIf="showEditSessionModal">
       <app-edit-user-session [session]="selectedSession"
-        (showEditSessionModal)="showEditSessionModal = $event"></app-edit-user-session>
+        (showEditSessionModal)="showEditSessionModal = $event" [userId]="upcomingSession?.userForSessionResponse?.id ?? selectedUser?.id ?? null"></app-edit-user-session>
     </div>
     <div class="border-top">
       <app-admin-test-card [testResults]="testResults"></app-admin-test-card>
@@ -36,7 +36,9 @@
     <div class="row mx-1 g-2">
       <button (click)="goToSession()" class="btn btn-primary">Seansa Git</button>
       <button (click)="addTestToUser()" class="btn btn-primary">Danışana Test Ata</button>
+      <button (click)="addSessionToUser()" class="btn btn-primary">Danışan İçin Seans Oluştur</button>
       <button (click)="editSession()" class="btn btn-primary btn-primary-custom">Seansı Düzenle</button>
+      
     </div>
     
     <div *ngIf="isAddingTestToUser" class="row mx-1 g-2">

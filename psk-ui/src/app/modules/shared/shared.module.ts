@@ -13,6 +13,8 @@ import { TestCardDetailComponent } from 'src/app/components/test-card-detail/tes
 import { TestResultComponent } from 'src/app/components/test-result/test-result.component';
 import { EditCommentComponent } from '../admin/components/edit-comment/edit-comment.component';
 import { EditUserComponent } from 'src/app/components/edit-user/edit-user.component';
+import { UserNavUnderlineComponent } from 'src/app/components/user-nav-underline/user-nav-underline.component';
+import { ToastComponent } from 'src/app/components/toast/toast.component';
 @NgModule({
   declarations: [
     WeeklySessionCalendarComponent,
@@ -27,6 +29,8 @@ import { EditUserComponent } from 'src/app/components/edit-user/edit-user.compon
     TestResultComponent,
     EditCommentComponent,
     EditUserComponent,
+    UserNavUnderlineComponent,
+    ToastComponent
   ],
   imports: [CommonModule, FormsModule],
   exports: [
@@ -42,6 +46,8 @@ import { EditUserComponent } from 'src/app/components/edit-user/edit-user.compon
     TestResultComponent,
     EditCommentComponent,
     EditUserComponent,
+    UserNavUnderlineComponent,
+    ToastComponent
   ],
 })
 export class SharedModule {}

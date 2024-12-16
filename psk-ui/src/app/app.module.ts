@@ -15,7 +15,6 @@ import { MainPageComponent } from './pages/main-page/main-page.component';
 import { HeaderComponent } from './pages/header/header.component';
 import { FooterComponent } from './pages/footer/footer.component';
 import { BlogComponent } from './pages/blog/blog.component';
-import { UserPanelComponent } from './modules/user/pages/user-panel/user-panel.component';
 import { CommonService } from './custom-services/common-service/common.service';
 import { AboutComponent } from './pages/about/about.component';
 import { TestComponent } from './pages/test/test.component';
@@ -23,6 +22,7 @@ import { SessionsComponent } from './pages/sessions/sessions.component';
 import { HttpTokenInterceptor } from './custom-services/interceptor/http-token.interceptor';
 import { TestService } from './custom-services/test/test.service';
 import { SharedModule } from './modules/shared/shared.module';
+import { CustomUserService } from './custom-services/custom-user/custom-user.service';
 
 @NgModule({
   declarations: [
@@ -32,7 +32,6 @@ import { SharedModule } from './modules/shared/shared.module';
     HeaderComponent,
     FooterComponent,
     BlogComponent,
-    UserPanelComponent,
     AboutComponent,
     TestComponent,
     SessionsComponent,
@@ -55,6 +54,7 @@ import { SharedModule } from './modules/shared/shared.module';
       useClass: HttpTokenInterceptor,
       multi: true,
     },
+    CustomUserService,
   ],
   bootstrap: [AppComponent],
 })

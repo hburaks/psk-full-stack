@@ -1,1 +1,6 @@
-<p>user-panel works!</p>
+<div class="page-content container">
+  <app-user-nav-underline (selectedNavItemEvent)="onSelectedNavItem($event)"></app-user-nav-underline>
+  <div *ngIf="selectedNavItem === UserNavItems.MY_UPCOMING_SESSION">
+    <app-my-upcoming-session></app-my-upcoming-session>
+  </div>
+</div>

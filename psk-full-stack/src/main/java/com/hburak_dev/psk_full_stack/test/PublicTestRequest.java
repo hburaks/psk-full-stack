@@ -3,7 +3,6 @@ package com.hburak_dev.psk_full_stack.test;
 
 import com.hburak_dev.psk_full_stack.comment.AdminTestCommentRequest;
 import com.hburak_dev.psk_full_stack.question.PublicTestQuestionRequest;
-import jakarta.persistence.Lob;
 import jakarta.persistence.OneToMany;
 import lombok.Builder;
 import lombok.Getter;

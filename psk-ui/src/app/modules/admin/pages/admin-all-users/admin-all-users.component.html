@@ -6,7 +6,7 @@
 </div>
 <app-upcoming-session *ngIf="selectedUser" [selectedUser]="selectedUser"></app-upcoming-session>
 
-<div class="row mx-0 card mb-5 py-4 px-md-3 px-sm-1">
+<div *ngIf="!selectedUser"  class="row mx-0 card mb-5 py-4 px-md-3 px-sm-1">
   <div class="col-12">
     <table class="table">
       <thead>

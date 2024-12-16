@@ -46,9 +46,20 @@ export class UpcomingSessionComponent {
     private sessionControllerV2Service: SessionControllerV2Service,
     private testService: TestService
   ) {
+    
+  }
+
+  ngAfterViewInit() {
     if (!this.selectedUser) {
       this.getUpcomingSession();
+    } else {
+      this.getUserData(this.selectedUser.id!);
     }
+  }
+
+  getUserData(userId: number) {
+    this.getAllSessionsOfUser(userId);
+    this.getTestResultOfUser(userId);
   }
 
   getUpcomingSession() {
@@ -130,5 +141,11 @@ export class UpcomingSessionComponent {
           this.showToast = true;
         },
       });
+  }
+
+  addSessionToUser() {
+    const session: SessionResponseV2 = {
+    } as SessionResponseV2;
+    this.receiveSelectedSession(session);
   }
 }
