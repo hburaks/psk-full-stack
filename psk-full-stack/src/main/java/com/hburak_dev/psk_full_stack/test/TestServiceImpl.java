@@ -90,8 +90,7 @@ public class TestServiceImpl implements TestService {
     @Override
     public List<MyTestResponse> getAllMyTests(Authentication connectedUser) {
         User user = (User) connectedUser.getPrincipal();
-        List<Test> tests = user.getTests();
-
+        List<Test> tests = testRepository.findAllByUserId(user.getId());
         return tests.stream()
                 .map(testMapper::toMyTestResponse)
                 .collect(Collectors.toList());
@@ -252,15 +251,15 @@ public class TestServiceImpl implements TestService {
             if (test.getQuestions() != null && test.getQuestions().size() > 0) {
                 if (test.getQuestions().get(0).getUserAnswer() != null) {
 
-                Map<AnswerType, Long> answerFreq = calculateAnswerFrequencyFromTest(test.getQuestions());
-                UserTestForAdminResponse userTestForAdminResponse = testMapper.toUserTestForAdminResponse(test);
-                userTestForAdminResponse.setAnswerDistribution(answerFreq);
-                userTestForAdminResponses.add(userTestForAdminResponse);
-            } else {
-                userTestForAdminResponses.add(testMapper.toUserTestForAdminResponse(test));
+                    Map<AnswerType, Long> answerFreq = calculateAnswerFrequencyFromTest(test.getQuestions());
+                    UserTestForAdminResponse userTestForAdminResponse = testMapper.toUserTestForAdminResponse(test);
+                    userTestForAdminResponse.setAnswerDistribution(answerFreq);
+                    userTestForAdminResponses.add(userTestForAdminResponse);
+                } else {
+                    userTestForAdminResponses.add(testMapper.toUserTestForAdminResponse(test));
+                }
             }
         }
-    }
         return userTestForAdminResponses;
     }
 
@@ -285,8 +284,7 @@ public class TestServiceImpl implements TestService {
     }
 
     private Test createTestForUser(Test test, Integer userId) {
-
-        return Test.builder()
+        Test newTest = Test.builder()
                 .title(test.getTitle())
                 .subTitle(test.getSubTitle())
                 .cover(test.getCover())
@@ -295,36 +293,22 @@ public class TestServiceImpl implements TestService {
                         test.getQuestions().stream()
                                 .map(question -> createQuestionForUser(question, userId))
                                 .collect(Collectors.toList()))
-                .comments(test.getComments().stream()
-                        .map(comment -> createCommentForUser(comment, userId))
-                        .collect(Collectors.toList()))
+                .comments(new ArrayList<>(test.getComments()))
                 .build();
+
+        newTest.getQuestions().forEach(q -> q.setTest(newTest));
+
+        return newTest;
     }
 
     private Question createQuestionForUser(Question question, Integer userId) {
-        return Question.builder()
+        Question newQuestion = Question.builder()
                 .text(question.getText())
-                .choices(createChoicesForUser(question.getChoices(), userId))
+                .choices(new ArrayList<>(question.getChoices()))
                 .createdBy(userId)
                 .build();
-    }
 
-    private List<Choice> createChoicesForUser(List<Choice> choices, Integer userId) {
-        return choices.stream()
-                .map(choice -> Choice.builder()
-                        .text(choice.getText())
-                        .answerType(choice.getAnswerType())
-                        .createdBy(userId)
-                        .build())
-                .collect(Collectors.toList());
-    }
-
-    private Comment createCommentForUser(Comment comment, Integer userId) {
-        return Comment.builder()
-                .text(comment.getText())
-                .score(comment.getScore())
-                .createdBy(userId)
-                .build();
+        return newQuestion;
     }
 
     @Override
@@ -359,7 +343,7 @@ public class TestServiceImpl implements TestService {
 
     @Override
     public List<AdminTestResponse> getAllTest() {
-        List<Test> tests = testRepository.findAll();
+        List<Test> tests = testRepository.findAllByUserIdIsNull();
         return tests.stream()
                 .map(testMapper::toAdminTestResponse)
                 .collect(Collectors.toList());
