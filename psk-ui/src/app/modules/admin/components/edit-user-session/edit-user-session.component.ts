@@ -81,7 +81,36 @@ export class EditUserSessionComponent {
         .subscribe({
           next: (response: SessionResponseV2) => {
             this.session = response;
+            this.bindingNoteForUser = response.noteForUser ?? '';
             this.isEditingNoteForUser = false;
+          },
+          error: (error) => {
+            this.toastErrorMessage = 'Not eklenirken bir hata oluştu';
+            this.showToast = true;
+          },
+        });
+    }
+  }
+
+  addNoteForPsychologist() {
+    if (this.session) {
+      const requestBody: SessionPsychologistNoteRequest = {
+        sessionId: this.session.sessionId,
+        noteForPsychologist: this.bindingNoteForPsychologist,
+      };
+
+      this.sessionControllerV2Service
+        .addNoteToSessionForPsychologistV2({ body: requestBody })
+        .subscribe({
+          next: (response: SessionResponseV2) => {
+            this.bindingNoteForPsychologist =
+              response.noteForPsychologist ?? '';
+            this.session = response;
+            this.isEditingNoteForPsychologist = false;
+          },
+          error: (error) => {
+            this.toastErrorMessage = 'Not eklenirken bir hata oluştu';
+            this.showToast = true;
           },
         });
     }
@@ -120,30 +149,8 @@ export class EditUserSessionComponent {
             window.location.reload();
           },
           error: (error) => {
-            this.toastErrorMessage = 'Seans tarihi güncellenirken bir hata oluştu';
-            this.showToast = true;
-          },
-        });
-    }
-  }
-
-  addNoteForPsychologist() {
-    if (this.session) {
-      const requestBody: SessionPsychologistNoteRequest = {
-        sessionId: this.session.sessionId,
-        noteForPsychologist: this.bindingNoteForPsychologist,
-      };
-
-      this.sessionControllerV2Service
-        .addNoteToSessionForPsychologistV2({ body: requestBody })
-        .subscribe({
-          next: (response: SessionResponseV2) => {
-            this.bindingNoteForPsychologist =
-              response.noteForPsychologist ?? '';
-            this.session = response;
-          },
-          error: (error) => {
-            this.toastErrorMessage = 'Not eklenirken bir hata oluştu';
+            this.toastErrorMessage =
+              'Seans tarihi güncellenirken bir hata oluştu';
             this.showToast = true;
           },
         });

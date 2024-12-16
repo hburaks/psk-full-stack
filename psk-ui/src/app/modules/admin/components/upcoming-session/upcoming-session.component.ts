@@ -45,12 +45,10 @@ export class UpcomingSessionComponent {
   constructor(
     private sessionControllerV2Service: SessionControllerV2Service,
     private testService: TestService
-  ) {
-    
-  }
+  ) {}
 
   ngAfterViewInit() {
-    if (!this.selectedUser) {
+    if (!this.selectedUser?.id) {
       this.getUpcomingSession();
     } else {
       this.getUserData(this.selectedUser.id!);
@@ -135,6 +133,16 @@ export class UpcomingSessionComponent {
               new Date(a.date ?? '').getTime()
             );
           });
+
+          this.upcomingSession =
+            result
+              .filter(
+                (session) => session.date && new Date(session.date) > new Date()
+              )
+              .sort(
+                (a, b) =>
+                  new Date(a.date!).getTime() - new Date(b.date!).getTime()
+              )[0] || null;
         },
         error: (error) => {
           this.toastErrorMessage = 'Seanslar getirilirken bir hata oluştu';
@@ -144,8 +152,7 @@ export class UpcomingSessionComponent {
   }
 
   addSessionToUser() {
-    const session: SessionResponseV2 = {
-    } as SessionResponseV2;
+    const session: SessionResponseV2 = {} as SessionResponseV2;
     this.receiveSelectedSession(session);
   }
 }

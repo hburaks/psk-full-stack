@@ -30,7 +30,7 @@
           <button (click)="addNoteForUser()" class="btn btn-outline-primary mb-2" type="button"
             id="button-addon-user">Notu
             Kaydet</button>
-          <input type="text" class="form-control" placeholder="" aria-label="Example text with button addon"
+          <input type="text" class="form-control" placeholder="{{session?.noteForUser}}"
             [(ngModel)]="bindingNoteForUser" aria-describedby="button-addon-user">
         </div>
         <p class=" mt-2 text-primary mb-0 mt-4">Terapistin Kendine Notu:
@@ -43,7 +43,7 @@
         <div *ngIf="isEditingNoteForPsychologist">
           <button (click)="addNoteForPsychologist()" class="btn btn-outline-primary mb-2" type="button"
             id="button-addon-psyc">Notu Kaydet</button>
-          <input type="text" class="form-control" [(ngModel)]="bindingNoteForPsychologist"
+          <input type="text" class="form-control" placeholder="{{session?.noteForPsychologist}}" [(ngModel)]="bindingNoteForPsychologist"
             aria-describedby="button-addon-psyc">
         </div>
       </div>
