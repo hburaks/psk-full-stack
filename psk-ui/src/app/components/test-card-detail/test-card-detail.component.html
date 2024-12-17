@@ -7,40 +7,82 @@
             <div class="test-circle mx-auto"></div>
           </div>
           <div class="col-8 d-flex flex-column justify-content-center about-text">
-            <p class="fs-5 fw-bold">{{testCard?.title}}</p>
-            <p class="fw-light mt-2 text-secondary">
-              {{testCard?.subTitle}}
-            </p>
+            <ng-container *ngIf="isEditPage; else viewMode">
+              <input [(ngModel)]="editableTestCard!.title" class="form-control fs-5 fw-bold" placeholder="Başlık" />
+              <input [(ngModel)]="editableTestCard!.subTitle" class="form-control fw-light mt-2 text-secondary"
+                placeholder="Alt başlık" />
+              <input type="file" class="form-control mt-2" (change)="onFileChange($event)" />
+              <div class="mt-2 d-flex align-items-start">
+                <p class="me-2">Aktiflik Durumu: </p>
+                <input type="checkbox" [(ngModel)]="editableTestCard!.isActive" class="form-check-input" />
+              </div>
+            </ng-container>
+            <ng-template #viewMode>
+              <p class="fs-5 fw-bold">{{testCard?.title}}</p>
+              <p class="fw-light mt-2 text-secondary">{{testCard?.subTitle}}</p>
+            </ng-template>
           </div>
         </div>
       </div>
     </div>
-    <div class="row mx-0 my-2 py-4 px-md-5 px-sm-2" *ngFor="let question of testCard?.questions; let i = index">
-      <div class="col">
-        <p><span class="fw-bold">{{i + 1}}- </span>{{question.text}}</p>
-        <div class="simple alert" [ngClass]="{
-          'alert-primary': selectedChoices[i] === j,
-          'alert-dark': selectedChoices[i] !== j
-        }" (click)="selectChoice(i, j, question.id ?? 0)"
-          *ngFor="let choice of question.publicChoiceResponseList; let j = index">
-          {{j === 0 ? 'A) ' : j === 1 ? 'B) ' : j === 2 ? 'C) ' : j === 3 ? 'D) ' : 'E) '}}{{choice.text}}
+    <div *ngIf="isEditPage">
+      <div class="row mx-0 my-2 py-4 px-md-5 px-sm-2"
+        *ngFor="let question of editableTestCard?.questions; let i = index">
+        <div class="col">
+          <div class="d-flex align-items-center">
+            <div class="me-2 d-flex align-items-center">{{i + 1}}- </div>
+            <input [(ngModel)]="question.text" class="form-control" placeholder="Soru metni" />
+          </div>
+          <div class="d-flex" *ngFor="let choice of question.publicChoiceResponseList; let j = index">
+            <input [(ngModel)]="choice.text" class="form-control mt-2 me-2 ms-2" placeholder="Seçenek metni" />
+            <button class="btn btn-outline-danger mt-2" (click)="removeChoice(i, j)">X</button>
+          </div>
+          <div class="d-flex justify-content-between">
+            <button class="btn btn-outline-primary mt-2" (click)="addChoice(i)">Seçenek Ekle</button>
+            <button class="btn btn-outline-danger mt-2" (click)="removeQuestion(i)">Soruyu Sil</button>
+          </div>
         </div>
       </div>
     </div>
-    <div class="row mx-0  px-md-5 px-sm-2">
-      <div class="col-12 text-end">
+    <div *ngIf="!isEditPage">
+      <div class="row mx-0 my-2 py-4 px-md-5 px-sm-2" *ngFor="let question of testCard?.questions; let i = index">
+        <div class="col">
+          <p><span class="fw-bold">{{i + 1}}- </span>{{question.text}}</p>
+          <div class="simple alert" [ngClass]="{
+                                                            'alert-primary': selectedChoices[i] === j,
+                                                            'alert-dark': selectedChoices[i] !== j
+                                                          }" (click)="selectChoice(i, j, question.id ?? 0)"
+            *ngFor="let choice of question.publicChoiceResponseList; let j = index">
+            {{j === 0 ? 'A) ' : j === 1 ? 'B) ' : j === 2 ? 'C) ' : j === 3 ? 'D) ' : 'E) '}}{{choice.text}}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row mx-0 px-md-5 px-sm-2">
+      <div *ngIf="isEditPage" class="col-12 text-end">
+        <button class="btn btn-primary-custom" (click)="addQuestion()">Soru Ekle</button>
+      </div>
+    </div>
+    <div class="row mx-0 mt-2 pt-4 px-md-5 px-sm-2" *ngIf="isEditPage">
+      <app-edit-comment (updateModalEvent)="updateComments($event)" [comments]="editableTestCard?.comments"></app-edit-comment>
+    </div>
+    <div class="row mx-0 px-md-5 px-sm-2">
+      <div *ngIf="isEditPage" class="col-12 text-end">
+        <button class="btn btn-primary mt-4" (click)="saveChanges()">Testi Kaydet</button>
+      </div>
+      <div *ngIf="!isEditPage" class="col-12 text-end">
         <button class="btn btn-primary" (click)="getResult()">Testi Tamamla</button>
       </div>
-      <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 11">
-        <div id="liveToast" class="toast align-items-center text-bg-danger border-0" role="alert" aria-live="assertive"
-          aria-atomic="true">
-          <div class="d-flex">
-            <div class="toast-body">
-              Lütfen testi tamamlayınız.
-            </div>
-            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
-              aria-label="Close"></button>
+    </div>
+    <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+      <div id="liveToast" class="toast align-items-center text-bg-danger border-0" role="alert" aria-live="assertive"
+        aria-atomic="true">
+        <div class="d-flex">
+          <div class="toast-body">
+            Lütfen testi tamamlayınız.
           </div>
+          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+            aria-label="Close"></button>
         </div>
       </div>
     </div>

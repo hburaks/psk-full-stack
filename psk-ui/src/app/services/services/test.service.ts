@@ -11,16 +11,21 @@ import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 
+import { AdminTestResponse } from '../models/admin-test-response';
 import { assignTestToUserV2 } from '../fn/test/assign-test-to-user-v-2';
 import { AssignTestToUserV2$Params } from '../fn/test/assign-test-to-user-v-2';
 import { checkPublicTestAnswer } from '../fn/test/check-public-test-answer';
 import { CheckPublicTestAnswer$Params } from '../fn/test/check-public-test-answer';
 import { createPublicTestV2 } from '../fn/test/create-public-test-v-2';
 import { CreatePublicTestV2$Params } from '../fn/test/create-public-test-v-2';
+import { deleteTestV2 } from '../fn/test/delete-test-v-2';
+import { DeleteTestV2$Params } from '../fn/test/delete-test-v-2';
 import { getAllMyTests } from '../fn/test/get-all-my-tests';
 import { GetAllMyTests$Params } from '../fn/test/get-all-my-tests';
 import { getAllPublicTests } from '../fn/test/get-all-public-tests';
 import { GetAllPublicTests$Params } from '../fn/test/get-all-public-tests';
+import { getAllTest } from '../fn/test/get-all-test';
+import { GetAllTest$Params } from '../fn/test/get-all-test';
 import { getAllTestsAssignedToUserV2 } from '../fn/test/get-all-tests-assigned-to-user-v-2';
 import { GetAllTestsAssignedToUserV2$Params } from '../fn/test/get-all-tests-assigned-to-user-v-2';
 import { getPublicTestById } from '../fn/test/get-public-test-by-id';
@@ -29,43 +34,18 @@ import { MyTestResponse } from '../models/my-test-response';
 import { PublicTestAdminResponse } from '../models/public-test-admin-response';
 import { PublicTestAnswerCommentResponse } from '../models/public-test-answer-comment-response';
 import { PublicTestResponse } from '../models/public-test-response';
+import { removeTestFromUserV2 } from '../fn/test/remove-test-from-user-v-2';
+import { RemoveTestFromUserV2$Params } from '../fn/test/remove-test-from-user-v-2';
 import { saveMyTestAnswer } from '../fn/test/save-my-test-answer';
 import { SaveMyTestAnswer$Params } from '../fn/test/save-my-test-answer';
 import { updatePublicTestAvailabilityV2 } from '../fn/test/update-public-test-availability-v-2';
 import { UpdatePublicTestAvailabilityV2$Params } from '../fn/test/update-public-test-availability-v-2';
-import { updatePublicTestV2 } from '../fn/test/update-public-test-v-2';
-import { UpdatePublicTestV2$Params } from '../fn/test/update-public-test-v-2';
 import { UserTestForAdminResponse } from '../models/user-test-for-admin-response';
 
 @Injectable({ providedIn: 'root' })
 export class TestService extends BaseService {
   constructor(config: ApiConfiguration, http: HttpClient) {
     super(config, http);
-  }
-
-  /** Path part for operation `updatePublicTestV2()` */
-  static readonly UpdatePublicTestV2Path = '/v2/test/update';
-
-  /**
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `updatePublicTestV2()` instead.
-   *
-   * This method sends `application/json` and handles request body of type `application/json`.
-   */
-  updatePublicTestV2$Response(params: UpdatePublicTestV2$Params, context?: HttpContext): Observable<StrictHttpResponse<PublicTestAdminResponse>> {
-    return updatePublicTestV2(this.http, this.rootUrl, params, context);
-  }
-
-  /**
-   * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `updatePublicTestV2$Response()` instead.
-   *
-   * This method sends `application/json` and handles request body of type `application/json`.
-   */
-  updatePublicTestV2(params: UpdatePublicTestV2$Params, context?: HttpContext): Observable<PublicTestAdminResponse> {
-    return this.updatePublicTestV2$Response(params, context).pipe(
-      map((r: StrictHttpResponse<PublicTestAdminResponse>): PublicTestAdminResponse => r.body)
-    );
   }
 
   /** Path part for operation `updatePublicTestAvailabilityV2()` */
@@ -127,7 +107,7 @@ export class TestService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  createPublicTestV2$Response(params: CreatePublicTestV2$Params, context?: HttpContext): Observable<StrictHttpResponse<PublicTestAdminResponse>> {
+  createPublicTestV2$Response(params: CreatePublicTestV2$Params, context?: HttpContext): Observable<StrictHttpResponse<AdminTestResponse>> {
     return createPublicTestV2(this.http, this.rootUrl, params, context);
   }
 
@@ -137,9 +117,9 @@ export class TestService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  createPublicTestV2(params: CreatePublicTestV2$Params, context?: HttpContext): Observable<PublicTestAdminResponse> {
+  createPublicTestV2(params: CreatePublicTestV2$Params, context?: HttpContext): Observable<AdminTestResponse> {
     return this.createPublicTestV2$Response(params, context).pipe(
-      map((r: StrictHttpResponse<PublicTestAdminResponse>): PublicTestAdminResponse => r.body)
+      map((r: StrictHttpResponse<AdminTestResponse>): AdminTestResponse => r.body)
     );
   }
 
@@ -268,6 +248,31 @@ export class TestService extends BaseService {
     );
   }
 
+  /** Path part for operation `getAllTest()` */
+  static readonly GetAllTestPath = '/v2/test/all';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getAllTest()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getAllTest$Response(params?: GetAllTest$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<AdminTestResponse>>> {
+    return getAllTest(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getAllTest$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getAllTest(params?: GetAllTest$Params, context?: HttpContext): Observable<Array<AdminTestResponse>> {
+    return this.getAllTest$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<AdminTestResponse>>): Array<AdminTestResponse> => r.body)
+    );
+  }
+
   /** Path part for operation `getAllMyTests()` */
   static readonly GetAllMyTestsPath = '/tests/my-tests';
 
@@ -290,6 +295,56 @@ export class TestService extends BaseService {
   getAllMyTests(params?: GetAllMyTests$Params, context?: HttpContext): Observable<Array<MyTestResponse>> {
     return this.getAllMyTests$Response(params, context).pipe(
       map((r: StrictHttpResponse<Array<MyTestResponse>>): Array<MyTestResponse> => r.body)
+    );
+  }
+
+  /** Path part for operation `removeTestFromUserV2()` */
+  static readonly RemoveTestFromUserV2Path = '/v2/test/remove-test-from-user';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `removeTestFromUserV2()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  removeTestFromUserV2$Response(params: RemoveTestFromUserV2$Params, context?: HttpContext): Observable<StrictHttpResponse<boolean>> {
+    return removeTestFromUserV2(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `removeTestFromUserV2$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  removeTestFromUserV2(params: RemoveTestFromUserV2$Params, context?: HttpContext): Observable<boolean> {
+    return this.removeTestFromUserV2$Response(params, context).pipe(
+      map((r: StrictHttpResponse<boolean>): boolean => r.body)
+    );
+  }
+
+  /** Path part for operation `deleteTestV2()` */
+  static readonly DeleteTestV2Path = '/v2/test/delete';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `deleteTestV2()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  deleteTestV2$Response(params: DeleteTestV2$Params, context?: HttpContext): Observable<StrictHttpResponse<boolean>> {
+    return deleteTestV2(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `deleteTestV2$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  deleteTestV2(params: DeleteTestV2$Params, context?: HttpContext): Observable<boolean> {
+    return this.deleteTestV2$Response(params, context).pipe(
+      map((r: StrictHttpResponse<boolean>): boolean => r.body)
     );
   }
 

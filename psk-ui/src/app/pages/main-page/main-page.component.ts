@@ -9,7 +9,8 @@ import {
   DailyCalendarResponse,
   HourlySessionResponse,
 } from 'src/app/services/models';
-import { CommonService } from 'src/app/custom-services/common.service';
+import { CommonService } from 'src/app/custom-services/common-service/common.service';
+import { TokenService } from 'src/app/custom-services/token/token.service';
 
 @Component({
   selector: 'app-main-page',
@@ -20,6 +21,8 @@ export class MainPageComponent implements OnInit {
   isScreenSmall: boolean = false;
   isScreenMedium: boolean = false;
   isScreenLarge: boolean = false;
+
+  isUserLoggedIn: boolean = false;
 
   objectKeys(obj: object): string[] {
     return Object.keys(obj);
@@ -56,13 +59,15 @@ export class MainPageComponent implements OnInit {
     private blogService: BlogService,
     private testServiceV3: TestService,
     private sessionControllerV3Service: SessionControllerV3Service,
-    private commonService: CommonService
+    private commonService: CommonService,
+    private tokenService: TokenService
   ) {}
 
   ngOnInit(): void {
     this.getBlogList();
     this.getTestList();
     this.updateScreenSize();
+    this.isUserLoggedIn = this.tokenService.isTokenValid();
   }
 
   @HostListener('window:resize', ['$event'])

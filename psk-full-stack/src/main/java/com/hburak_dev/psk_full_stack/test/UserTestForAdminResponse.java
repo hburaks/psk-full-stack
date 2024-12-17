@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -21,7 +22,7 @@ public class UserTestForAdminResponse {
 
     private String subTitle;
 
-    byte[] cover;
+    private String[] cover;
 
     private Integer userId;
 
@@ -30,4 +31,6 @@ public class UserTestForAdminResponse {
     private List<UserCommentResponse> comments;
 
     private Map<AnswerType, Long> answerDistribution;
+
+    private LocalDateTime lastModifiedDate;
 }

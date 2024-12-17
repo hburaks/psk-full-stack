@@ -5,15 +5,9 @@ import lombok.Getter;
 @Getter
 public enum AnswerType {
 
-    ANSWER_A("A"),
-    ANSWER_B("B"),
-    ANSWER_C("C"),
-    ANSWER_D("D"),
-    ANSWER_E("E");
-
-    private final String answer;
-
-    AnswerType(String answer) {
-        this.answer = answer;
-    }
+    ANSWER_A,
+    ANSWER_B,
+    ANSWER_C,
+    ANSWER_D,
+    ANSWER_E
 }

@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.Authentication;
 
 import java.util.List;
 
@@ -16,13 +17,9 @@ public class TestControllerV2 {
     private final TestService testService;
 
     @PostMapping("/create")
-    public ResponseEntity<PublicTestAdminResponse> createPublicTestV2(@RequestBody PublicTestRequest publicTestRequest) {
-        return ResponseEntity.ok(testService.createPublicTestV2(publicTestRequest));
-    }
-
-    @PutMapping("/update")
-    public ResponseEntity<PublicTestAdminResponse> updatePublicTestV2(@RequestBody PublicTestRequest publicTestRequest) {
-        return ResponseEntity.ok(testService.updatePublicTestV2(publicTestRequest));
+    public ResponseEntity<AdminTestResponse> createPublicTestV2(@RequestBody PublicTestRequest publicTestRequest,
+            Authentication connectedUser) {
+        return ResponseEntity.ok(testService.createPublicTestV2(publicTestRequest, connectedUser));
     }
 
     @PutMapping("/update-availability")
@@ -36,7 +33,22 @@ public class TestControllerV2 {
     }
 
     @PostMapping("/assign-test")
-    public ResponseEntity<Boolean> assignTestToUserV2(@RequestParam Integer testId, @RequestParam Integer userId) {
-        return testService.assignTestToUserV2(testId, userId);
+    public ResponseEntity<Boolean> assignTestToUserV2(@RequestParam Integer testId, @RequestParam Integer userId, Authentication connectedUser) {
+        return testService.assignTestToUserV2(testId, userId, connectedUser);
+    }
+
+    @DeleteMapping("/remove-test-from-user")
+    public ResponseEntity<Boolean> removeTestFromUserV2(@RequestParam Integer testId) {
+        return testService.removeTestFromUserV2(testId);
+    }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<Boolean> deleteTestV2(@RequestParam Integer testId) {
+        return testService.deleteTestV2(testId);
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<AdminTestResponse>> getAllTest() {
+        return ResponseEntity.ok(testService.getAllTest());
     }
 }

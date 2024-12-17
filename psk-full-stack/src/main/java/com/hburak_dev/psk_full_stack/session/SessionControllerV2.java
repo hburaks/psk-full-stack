@@ -2,11 +2,9 @@ package com.hburak_dev.psk_full_stack.session;
 
 import com.hburak_dev.psk_full_stack.common.PageResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @RestController
@@ -42,7 +40,7 @@ public class SessionControllerV2 {
     }
 
     @GetMapping("/users-with-sessions")
-    public PageResponse<UserWithSessionResponse> getAllUsersWithSessionV2(@RequestParam int page, @RequestParam int size) {
+    public PageResponse<UserWithIncomingSessionResponse> getAllUsersWithSessionV2(@RequestParam int page, @RequestParam int size) {
         return sessionService.getAllUsersWithSessionV2(page, size);
     }
 
@@ -68,14 +66,14 @@ public class SessionControllerV2 {
 
     @PostMapping("/create")
     public Integer createSessionForUserV2(
-            @RequestParam("date")
-            @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH") String date, @RequestParam Integer userId) {
+            @RequestParam("date") LocalDateTime date, @RequestParam Integer userId) {
 
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH");
+        return sessionService.createSessionForUserV2(date, userId);
+    }
 
-        LocalDateTime localDateTime = LocalDateTime.parse(date, dateTimeFormatter);
-
-        return sessionService.createSessionForUserV2(localDateTime, userId);
+    @GetMapping("/upcoming-session")
+    public SessionResponseV2 getUpcomingSessionsV2() {
+        return sessionService.getUpcomingSessionsV2();
     }
 
 

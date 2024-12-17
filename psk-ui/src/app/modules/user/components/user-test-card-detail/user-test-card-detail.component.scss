@@ -1,0 +1,55 @@
+.test-circle {
+  width: 180px;
+  height: 180px;
+  border: 0.4rem solid #7749f8;
+  border-radius: 50%;
+}
+
+
+.test-logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;  
+}
+
+
+.logo-circle {
+  width: 200px;
+  height: 100px;
+  background-color: pink;
+  border-top-left-radius: 90px;
+  border-bottom-right-radius: 90px;
+}
+
+.simple.alert {
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #e0e0e0; // Change this color to whatever you prefer for hover
+  }
+}
+
+.toast-container {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  padding: 1rem;
+  z-index: 1050;
+}
+
+.toast {
+  min-width: 250px;
+  background-color: #dc3545; /* Bootstrap danger color */
+  color: white;
+  border-radius: 0.25rem;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.toast-body {
+  padding: 0.75rem 1.25rem;
+}
+
+.btn-close {
+  margin-right: 0.5rem;
+}

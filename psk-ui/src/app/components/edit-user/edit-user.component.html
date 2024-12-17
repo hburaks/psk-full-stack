@@ -1,0 +1,35 @@
+<div class="col-12 mb-4">
+  <h4 class="text-secondary">Kullanıcı Bilgilerini Düzenle</h4>
+</div>
+<div class="page-content container">
+  <div class="row mx-0 card mb-5 py-4 px-md-5 px-sm-2">
+    <div class="col">
+      <div class="card-body edit-card-body my-1 row d-flex flex-column align-items-center">
+        <div class="col-12 col-sm-9">
+          <div>
+            <p class="text-secondary"><strong>İsim:</strong> {{user?.firstname}} {{user?.lastname}}</p>
+            <p class="text-secondary"><strong>Email Adresi:</strong> {{user?.email}}</p>
+            <p class="text-secondary"><strong>Telefon Numarası:</strong> {{user?.phoneNumber}}</p>
+            <p class="text-secondary"><strong>Doğum Tarihi:</strong> {{user?.birthYear}}</p>
+          </div>
+          <div class="col-12 mt-3">
+            <p class="text-secondary fw-bold mb-0">İsim Değiştir</p>
+            <input type="text" class="form-control mt-2" placeholder="Yeni İsim" [(ngModel)]="firstName">
+            <input type="text" class="form-control mt-2" placeholder="Yeni Soyisim" [(ngModel)]="lastName">
+            <button class="btn btn-primary mt-2 w-100" (click)="updateName()">İsim Değiştir</button>
+          </div>
+          <div class="col-12 mt-3">
+            <p class="text-secondary fw-bold mb-0">Telefon Numarası Değiştir</p>
+            <input type="text" class="form-control mt-2" placeholder="Yeni Telefon Numarası" [(ngModel)]="phoneNumber">
+            <button class="btn btn-primary mt-2 w-100" (click)="updatePhoneNumber()">Telefon Numarası Değiştir</button>
+          </div>
+          <div class="col-12 mt-3">
+            <p class="text-secondary fw-bold mb-0">Doğum Yılı Değiştir</p>
+            <input type="number" class="form-control mt-2" placeholder="Yeni Doğum Yılı" min="1940" max="2023"
+              [(ngModel)]="birthYear">
+            <button class="btn btn-primary mt-2 w-100" (click)="updateBirthYear()">Doğum Yılı Değiştir</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

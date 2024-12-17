@@ -1,0 +1,59 @@
+.logo-circle {
+  width: 360px;
+  height: 180px;
+  background-color: pink;
+  margin-bottom: 1rem;
+  border-top-left-radius: 90px;
+  border-bottom-right-radius: 90px;
+}
+
+.row-edit {
+  flex-direction: column;
+  text-align: center;
+}
+
+.edit-text,
+.edit-logo {
+  width: 100%;
+}
+
+.edit-text p:first-child {
+  text-align: center;
+}
+
+.edit-text p:not(:first-child) {
+  text-align: justify;
+}
+
+.edit-text {
+  margin: 0 auto;
+  max-width: 800px;
+}
+
+.shareable-label {
+  width: 150px;
+}
+
+.test-circle {
+  width: 180px;
+  height: 180px;
+  border: 0.4rem solid #7749f8;
+  border-radius: 50%;
+}
+
+
+.test-logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;  
+}
+
+.remove-comment {
+  position: absolute;
+  right: 0.5rem;
+  top: 0.5rem;
+  width: 2.25rem;
+  height: 2.25rem;
+  font-weight: bold;
+  border: none;
+}

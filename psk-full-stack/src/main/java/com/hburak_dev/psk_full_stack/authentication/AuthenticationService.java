@@ -10,6 +10,9 @@ import com.hburak_dev.psk_full_stack.user.Token;
 import com.hburak_dev.psk_full_stack.user.TokenRepository;
 import com.hburak_dev.psk_full_stack.user.User;
 import com.hburak_dev.psk_full_stack.user.UserRepository;
+import com.hburak_dev.psk_full_stack.user.UserRequest;
+import com.hburak_dev.psk_full_stack.user.UserResponse;
+
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,6 +22,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.security.core.Authentication;
 
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
@@ -48,7 +52,8 @@ public class AuthenticationService {
         try {
             var userRole = roleRepository.findByName("ROLE_USER")
                     // todo - better exception handling
-                    .orElseThrow(() -> new IllegalStateException("Sistemsel bir hata oluştu. Lütfen daha sonra tekrar deneyin."));
+                    .orElseThrow(() -> new IllegalStateException(
+                            "Sistemsel bir hata oluştu. Lütfen daha sonra tekrar deneyin."));
             var user = User.builder()
                     .firstname(request.getFirstname())
                     .lastname(request.getLastname())
@@ -67,15 +72,15 @@ public class AuthenticationService {
         }
     }
 
-
-    //@Transactional
+    // @Transactional
     public void activateAccount(String token) throws MessagingException {
         Token savedToken = tokenRepository.findByToken(token)
                 // todo exception has to be defined
                 .orElseThrow(() -> new ActivationTokenException("Aktivasyon kodu geçerli değil"));
         if (LocalDateTime.now().isAfter(savedToken.getExpiresAt())) {
             sendValidationEmail(savedToken.getUser());
-            throw new ActivationTokenException("Aktivasyon kodunun süresi doldu. Aynı e-posta adresine yeni bir kod gönderildi.");
+            throw new ActivationTokenException(
+                    "Aktivasyon kodunun süresi doldu. Aynı e-posta adresine yeni bir kod gönderildi.");
         }
 
         var user = userRepository.findById(savedToken.getUser().getId())
@@ -104,7 +109,8 @@ public class AuthenticationService {
     private void sendValidationEmail(User user) throws MessagingException {
         var newToken = generateAndSaveActivationToken(user);
 
-        emailService.sendEmail(user.getEmail(), user.getFullName(), EmailTemplateName.ACTIVATE_ACCOUNT, activationUrl, newToken, "Hesap Aktifleştirme");
+        emailService.sendEmail(user.getEmail(), user.getFullName(), EmailTemplateName.ACTIVATE_ACCOUNT, activationUrl,
+                newToken, "Hesap Aktifleştirme");
 
     }
 
@@ -126,9 +132,7 @@ public class AuthenticationService {
         var auth = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(),
-                        request.getPassword()
-                )
-        );
+                        request.getPassword()));
 
         var claims = new HashMap<String, Object>();
         var user = ((User) auth.getPrincipal());
@@ -138,5 +142,41 @@ public class AuthenticationService {
         return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .build();
+    }
+
+    public UserResponse getUser(Authentication connectedUser) {
+        var user = ((User) connectedUser.getPrincipal());
+
+        return userToResponse(user);
+    }
+
+    private UserResponse userToResponse(User user) {
+        return UserResponse.builder()
+                .id(user.getId())
+                .firstname(user.getFirstname())
+                .lastname(user.getLastname())
+                .email(user.getEmail())
+                .phoneNumber(user.getPhoneNumber())
+                .birthYear(user.getBirthYear())
+                .build();
+    }
+
+    public UserResponse updateUser(UserRequest request, Authentication connectedUser) {
+        var user = ((User) connectedUser.getPrincipal());
+
+        if (request.getFirstname() != null) {
+            user.setFirstname(request.getFirstname());
+        }
+        if (request.getLastname() != null) {
+            user.setLastname(request.getLastname());
+        }
+        if (request.getPhoneNumber() != null) {
+            user.setPhoneNumber(request.getPhoneNumber());
+        }
+        if (request.getBirthYear() != null) {
+            user.setBirthYear(request.getBirthYear());
+        }
+        userRepository.save(user);
+        return userToResponse(user);
     }
 }

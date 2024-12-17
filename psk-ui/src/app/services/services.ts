@@ -4,6 +4,7 @@
 
 export { TestService } from './services/test.service';
 export { BlogService } from './services/blog.service';
+export { UserService } from './services/user.service';
 export { SessionControllerV2Service } from './services/session-controller-v-2.service';
 export { SessionControllerService } from './services/session-controller.service';
 export { AuthenticationService } from './services/authentication.service';

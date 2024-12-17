@@ -1,5 +1,8 @@
-<div class="col-md-4 card border-0 col-sm-6 d-flex h-100 w-100 ">
+<div class="col-md-4 card border-0 col-sm-6 d-flex h-100 w-100">
   <div class="flex-grow-1 w-100 d-flex align-items-center justify-content-center card border-0">
-    <img src="https://i.ibb.co/WD8V52c/empty-card.png">
+    <img *ngIf="!isBlogEditable" src="https://i.ibb.co/WD8V52c/empty-card.png">
+    <div *ngIf="isBlogEditable" (click)="addBlog()">
+      <i class="fas fa-plus fa-5x rounded-circle pointer-cursor" style="color: #DEE2E6;"></i>
+    </div>
   </div>
 </div>

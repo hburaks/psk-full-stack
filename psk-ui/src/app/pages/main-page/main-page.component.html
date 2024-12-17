@@ -1,4 +1,4 @@
-<div class="page-content container ">
+<div class="page-content container">
   <div class="row mx-0 card mb-5 py-4 px-md-5 px-sm-2">
     <div class="col">
       <div class="card-body about-card-body my-1 row row-about align-items-center g-5">
@@ -17,7 +17,7 @@
     </div>
   </div>
   <div class="mx-0 row justify-content-center">
-    <app-blog-card *ngIf="!isScreenSmall" [blogCardList]="blogCardList"></app-blog-card>
+    <app-blog-card-list *ngIf="!isScreenSmall" [blogCardList]="blogCardList"></app-blog-card-list>
     <div *ngIf="isScreenSmall" id="carouselBlogIndicators" class="carousel slide">
       <div class="col-12 mb-4">
         <h2>Blog Yazıları</h2>
@@ -51,11 +51,11 @@
   </div>
   <div class="mx-0 row justify-content-center">
     <div class="col-12">
-      <app-test-card *ngIf="!isScreenSmall" [testCardList]="testCardList" [isMainPage]="true"></app-test-card>
+      <app-test-card-list *ngIf="!isScreenSmall" [testCardList]="fetchedTestList" [isMainPage]="true"></app-test-card-list>
       <div *ngIf="isScreenSmall" id="carouselTestIndicators" class="carousel carousel-dark slide">
         <div class="col-12 mb-4">
           <h2>Testler</h2>
-          </div>
+        </div>
         <div class="carousel-inner">
           <div class="carousel-item" [ngClass]="{ 'active': i === 0 }"
             *ngFor="let testCard of testCardList; let i = index">
@@ -88,7 +88,7 @@
       </div>
     </div>
   </div>
-  <div class="row mx-0 ">
-    <app-weekly-session-calendar></app-weekly-session-calendar>
+  <div *ngIf="!isUserLoggedIn" class="row mx-0 ">
+    <app-weekly-session-calendar [isEdit]="false"></app-weekly-session-calendar>
   </div>
-  </div>
+</div>

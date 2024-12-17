@@ -48,5 +48,22 @@ export class TokenService {
     return [];
   }
 
+  isAdmin() {
+    return this.userRoles.includes('ROLE_ADMIN');
+  }
+
+  isUser() {
+    return this.userRoles.includes('ROLE_USER');
+  }
+
+  getUserId() {
+    const token = this.token;
+    if (token) {
+      const jwtHelper = new JwtHelperService();
+      const decodedToken = jwtHelper.decodeToken(token);
+      return decodedToken.userId;
+    }
+    return null;
+  }
 
 }

@@ -1,8 +1,5 @@
-import { Component, HostListener, Input } from '@angular/core';
-import { BlogResponse } from '../../services/models/blog-response';
-import { BlogService } from 'src/app/services/services/blog.service';
-import { PageResponseBlogResponse } from 'src/app/services/models/page-response-blog-response';
-import { CommonService } from 'src/app/custom-services/common.service';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { BlogResponse } from 'src/app/services/models/blog-response';
 
 @Component({
   selector: 'app-blog-card',
@@ -10,31 +7,18 @@ import { CommonService } from 'src/app/custom-services/common.service';
   styleUrls: ['./blog-card.component.scss'],
 })
 export class BlogCardComponent {
-  isScreenSmall: boolean = false;
-  isScreenMedium: boolean = false;
-  isScreenLarge: boolean = false;
-  @Input() blogCardList: BlogResponse[] = [];
-  fetchedBlogList: BlogResponse[] = [];
+  @Input() blogCard: BlogResponse | null = null;
+  @Input() isBlogEditable: boolean = false;
+  @Input() isInDetailEdit: boolean = false;
+  @Output() editBlogEvent = new EventEmitter<void>();
+  @Output() deleteBlogEvent = new EventEmitter<void>();
 
-  @HostListener('window:resize', ['$event'])
-  onResize(event: any) {
-    this.updateScreenSize();
+
+  editBlog() {
+    this.editBlogEvent.emit();
   }
 
-  constructor(
-    private blogService: BlogService,
-    private commonService: CommonService
-  ) {
-    this.updateScreenSize();
-  }
-
-  updateScreenSize() {
-    this.isScreenSmall = false;
-    this.isScreenMedium = false;
-    this.isScreenLarge = false;
-
-    this.isScreenSmall = window.innerWidth < 576;
-    this.isScreenMedium = window.innerWidth < 768 && window.innerWidth >= 576;
-    this.isScreenLarge = window.innerWidth >= 768;
+  deleteBlog() {
+    this.deleteBlogEvent.emit();
   }
 }

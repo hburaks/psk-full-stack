@@ -12,10 +12,7 @@ import { BlogRequest } from '../../models/blog-request';
 
 export interface UpdateBlog$Params {
   id: number;
-      body?: {
-'blog': BlogRequest;
-'cover'?: Blob;
-}
+      body: BlogRequest
 }
 
 export function updateBlog(http: HttpClient, rootUrl: string, params: UpdateBlog$Params, context?: HttpContext): Observable<StrictHttpResponse<number>> {

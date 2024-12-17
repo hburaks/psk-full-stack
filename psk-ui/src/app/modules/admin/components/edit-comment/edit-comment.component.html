@@ -1,0 +1,36 @@
+<div class="card-body edit-card-body mt-1 row row-edit">
+  <div class="col-12 mb-2 text-start">
+    <h4 class="text-secondary">Yorum Ekle</h4>
+  </div>
+  <div *ngFor="let comment of comments; let i = index" class="my-1 card mt-2 p-4 col-12">
+    <div class="row d-flex justify-content-end mt-2">
+      <button class="btn btn-outline-danger remove-comment" (click)="removeComment(i)">X</button>
+    </div>
+    <div class="row mt-4 mb-4">
+      <div class="test-logo mt-0 col-4">
+        <div class="test-circle mx-auto"></div>
+      </div>
+      <div class="col-8 d-flex flex-column justify-content-center about-text">
+        <ng-container>
+          <input [(ngModel)]="comment!.title" class="form-control fs-5 fw-bold" placeholder="Başlık"
+            (ngModelChange)="onCommentChange(i)" />
+          <input [(ngModel)]="comment!.text" class="form-control fw-light mt-2 text-secondary" placeholder="Metin"
+            (ngModelChange)="onCommentChange(i)" />
+          <input type="file" class="form-control mt-2" (change)="onFileChange($event, i)" />
+          <div class="mt-2 d-flex align-items-center">
+            <p class="me-2 my-auto">Skor: </p>
+            <input type="number" [(ngModel)]="comment!.score" class="form-control"
+              (ngModelChange)="onCommentChange(i)" />
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+  <div class="col-12">
+    <div class="d-flex align-items-center justify-content-center ">
+      <div class="pt-5" (click)="addComment()">
+        <i class="fas fa-plus fa-5x rounded-circle pointer-cursor" style="color: #a9a9a9;"></i>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,5 @@
+<ul class="nav nav-underline mb-2">
+  <li class="nav-item" *ngFor="let item of navItems">
+    <a class="nav-link pointer-cursor fw-light" [ngClass]="{'active text-primary': isActiveItem(item), 'text-secondary': !isActiveItem(item)}" aria-current="page" (click)="selectNavItem(item)">{{item}}</a>
+  </li>
+</ul>

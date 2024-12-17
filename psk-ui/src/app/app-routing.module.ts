@@ -1,5 +1,5 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { inject, NgModule } from '@angular/core';
+import { Router, RouterModule, Routes } from '@angular/router';
 import { AuthComponent } from './pages/auth/auth.component';
 import { MainPageComponent } from './pages/main-page/main-page.component';
 import { BlogComponent } from './pages/blog/blog.component';
@@ -10,10 +10,35 @@ import { TestComponent } from './pages/test/test.component';
 import { TestCardDetailComponent } from './components/test-card-detail/test-card-detail.component';
 import { TestResultComponent } from './components/test-result/test-result.component';
 import { SessionsComponent } from './pages/sessions/sessions.component';
+import { TokenService } from './custom-services/token/token.service';
 
 const routes: Routes = [
-  { path: 'register', component: AuthComponent },
-  { path: 'login', component: AuthComponent },
+  { 
+    path: 'register', 
+    component: AuthComponent,
+    canActivate: [() => {
+      const tokenService = inject(TokenService);
+      const router = inject(Router);
+      if (!tokenService.isTokenNotValid()) {
+        router.navigate(['main']);
+        return false;
+      }
+      return true;
+    }]
+  },
+  { 
+    path: 'login', 
+    component: AuthComponent,
+    canActivate: [() => {
+      const tokenService = inject(TokenService);
+      const router = inject(Router);
+      if (!tokenService.isTokenNotValid()) {
+        router.navigate(['main']); 
+        return false;
+      }
+      return true;
+    }]
+  },
   { path: 'activate-account', component: AuthComponent },
   { path: 'main', component: MainPageComponent },
   { path: 'about', component: AboutComponent },

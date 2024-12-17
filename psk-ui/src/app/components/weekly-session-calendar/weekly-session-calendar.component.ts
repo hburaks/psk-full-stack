@@ -1,6 +1,16 @@
-import { Component, HostListener, Input } from '@angular/core';
+import {
+  Component,
+  HostListener,
+  Input,
+  Output,
+  EventEmitter,
+} from '@angular/core';
+import { UpdateSessionDateV2$Params } from 'src/app/services/fn/session-controller-v-2/update-session-date-v-2';
+import { SessionResponseV2 } from 'src/app/services/models';
 import { DailyCalendarResponse } from 'src/app/services/models/daily-calendar-response';
 import { HourlySessionResponse } from 'src/app/services/models/hourly-session-response';
+import { SessionControllerService } from 'src/app/services/services';
+import { SessionControllerV2Service } from 'src/app/services/services/session-controller-v-2.service';
 import { SessionControllerV3Service } from 'src/app/services/services/session-controller-v-3.service';
 
 @Component({
@@ -17,9 +27,18 @@ export class WeeklySessionCalendarComponent {
   previousWeekAvailable: boolean = false;
   nextWeekAvailable: boolean = true;
 
+  showAddSessionModal: boolean = false;
+
+  @Input() isEdit: boolean = false;
+  @Input() isCreateMySession: boolean = false;
   weeklySessionCalendar: DailyCalendarResponse[] = [];
 
-  constructor(private sessionControllerV3Service: SessionControllerV3Service) {
+  @Output() dateToUpdateSession = new EventEmitter<string | null>();
+
+  constructor(
+    private sessionControllerV3Service: SessionControllerV3Service,
+    private sessionControllerService: SessionControllerService
+  ) {
     this.updateScreenSize();
     this.getWeeklySessions();
   }
@@ -27,6 +46,30 @@ export class WeeklySessionCalendarComponent {
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
     this.updateScreenSize();
+  }
+
+  addSession(date: string | null) {
+    this.dateToUpdateSession.emit(date);
+  }
+
+  editSession(date: string | null) {
+    if (this.isCreateMySession) {
+      this.createMySession(date);
+    } else {
+      this.dateToUpdateSession.emit(date);
+    }
+  }
+
+  createMySession(date: string | null) {
+    this.sessionControllerService.createMySession({ date: date || '' }).subscribe({
+      next: (response: number) => {
+        console.log('Session created', response);
+        window.location.reload();
+      },
+      error: (error) => {
+        console.error('Error creating session', error);
+      },
+    });
   }
 
   getFormattedDate(day: DailyCalendarResponse): string {

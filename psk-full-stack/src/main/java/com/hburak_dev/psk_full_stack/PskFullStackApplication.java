@@ -200,6 +200,29 @@ public class PskFullStackApplication {
 
 				testRepository.saveAll(mockTests);
 			}
+			// is empty or null?
+
+			if(sessionRepository.findFirstByDateAfterAndSessionStatusNotOrderByDateAsc(LocalDateTime.now(), SessionStatusType.CANCELED) == null){
+				LocalDateTime now = LocalDateTime.now();
+				LocalDateTime date1 = now.with(DayOfWeek.SATURDAY).withHour(10).withMinute(0);
+				List<Session> mockSessions = new ArrayList<>();
+
+				if (!sessionRepository.existsByDate(date1)) {
+					mockSessions.add(Session.builder()
+							.createdBy(mockUser.getId())
+							.date(date1)
+							.user(mockUser)
+							.sessionStatus(SessionStatusType.AWAITING_PSYCHOLOGIST_APPROVAL)
+							.isSessionPaid(true)
+							.isMock(true)
+							.build());
+				}
+
+				if (!mockSessions.isEmpty()) {
+					sessionRepository.saveAll(mockSessions);
+				}
+
+			}
 			if (sessionRepository.count() == 0) {
 
 				LocalDateTime now = LocalDateTime.now();

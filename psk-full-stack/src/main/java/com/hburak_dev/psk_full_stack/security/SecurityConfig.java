@@ -44,8 +44,8 @@ public class SecurityConfig {
                                         "/v3/**"
                                 )
                                 .permitAll()
-                                .requestMatchers("/v1/**").hasRole("USER")
-                                .requestMatchers("/v2/**").hasRole("ADMIN")
+                                .requestMatchers("/v1/**").hasAnyAuthority("ROLE_USER")
+                                .requestMatchers("/v2/**").hasAnyAuthority("ROLE_ADMIN")
                                 .anyRequest()
                                 .authenticated()
                 )

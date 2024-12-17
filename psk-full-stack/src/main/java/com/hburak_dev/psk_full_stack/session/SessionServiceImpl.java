@@ -20,6 +20,8 @@ import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -71,7 +73,8 @@ public class SessionServiceImpl implements SessionService {
         LocalDateTime fullHour = Util.toFullHour(date);
         validateSessionDate(fullHour);
 
-        if (sessionRepository.existsByDate(fullHour)) {
+        if (sessionRepository.existsByDate(fullHour)
+                && sessionRepository.findByDate(fullHour).getSessionStatus() != SessionStatusType.CANCELED) {
             throw new SessionNotFoundException("Bu zaman diliminde takvim müsait değil: " + fullHour);
         }
 
@@ -129,7 +132,7 @@ public class SessionServiceImpl implements SessionService {
     @Override
     public PageResponse<SessionResponseV2> getAllSessionsV2(int page, int size) {
 
-        Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
+        Pageable pageable = PageRequest.of(page, size, Sort.by("date").descending());
         Page<Session> sessions = sessionRepository.findAll(pageable);
 
         List<SessionResponseV2> sessionResponseList = sessions
@@ -213,28 +216,50 @@ public class SessionServiceImpl implements SessionService {
     }
 
     @Override
-    public PageResponse<UserWithSessionResponse> getAllUsersWithSessionV2(int page, int size) {
+    public PageResponse<UserWithIncomingSessionResponse> getAllUsersWithSessionV2(int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
-        Page<User> usersWithSessions = userRepository.findAllUsersWithSessions(pageable);
 
-        List<UserWithSessionResponse> responseList = usersWithSessions
+        Page<User> allUsers = userRepository.findAll(pageable);
+
+        for (User user : allUsers) {
+            Session session = user.getSessions().stream()
+                    .filter(s -> !s.getSessionStatus().equals(SessionStatusType.UNAVAILABLE)
+                            && !s.getSessionStatus().equals(SessionStatusType.CANCELED))
+                    .filter(s -> s.getDate().isAfter(LocalDateTime.now()))
+                    .min(Comparator.comparing(Session::getDate))
+                    .orElse(null);
+            if (session != null) {
+                System.out.println(session);
+                user.setSessions(Collections.singletonList(session));
+            } else {
+                user.setSessions(Collections.emptyList());
+            }
+        }
+
+        List<UserWithIncomingSessionResponse> responseList = allUsers
                 .stream()
-                .map(user -> UserWithSessionResponse.builder()
-                        .id(user.getId())
-                        .firstname(user.getFirstname())
-                        .lastname(user.getLastname())
-                        .sessionIds(sessionMapper.toSessionIdList(user.getSessions()))
-                        .build())
+                .map(user -> {
+                    UserWithIncomingSessionResponse userWithIncomingSessionResponse = UserWithIncomingSessionResponse
+                            .builder()
+                            .id(user.getId())
+                            .firstname(user.getFirstname())
+                            .lastname(user.getLastname())
+                            .build();
+                    if (!user.getSessions().isEmpty()) {
+                        userWithIncomingSessionResponse.setSessionResponse(
+                                sessionMapper.toSessionResponseV2(user.getSessions().get(0)));
+                    }
+                    return userWithIncomingSessionResponse;
+                })
                 .toList();
-
         return new PageResponse<>(
                 responseList,
-                usersWithSessions.getNumber(),
-                usersWithSessions.getSize(),
-                usersWithSessions.getTotalElements(),
-                usersWithSessions.getTotalPages(),
-                usersWithSessions.isFirst(),
-                usersWithSessions.isLast());
+                allUsers.getNumber(),
+                allUsers.getSize(),
+                allUsers.getTotalElements(),
+                allUsers.getTotalPages(),
+                allUsers.isFirst(),
+                allUsers.isLast());
     }
 
     @Override
@@ -361,5 +386,30 @@ public class SessionServiceImpl implements SessionService {
                     return session;
                 })
                 .toList();
+    }
+
+    @Override
+    public SessionResponseV2 getUpcomingSessionsV2() {
+        Session sessions = sessionRepository.findFirstByDateAfterAndSessionStatusNotOrderByDateAsc(LocalDateTime.now(),
+                SessionStatusType.CANCELED);
+
+        if (sessions == null) {
+            System.out.println("session not found");
+            return null;
+        }
+
+        return sessionMapper.toSessionResponseV2(sessions);
+    }
+
+    @Override
+    public SessionResponse getUpcomingSession(Authentication connectedUser) {
+        User user = (User) connectedUser.getPrincipal();
+        Session session = sessionRepository.findFirstByDateAfterAndSessionStatusNotAndUserIdOrderByDateAsc(
+                LocalDateTime.now(),
+                SessionStatusType.CANCELED, user.getId());
+        if (session == null) {
+            return null;
+        }
+        return sessionMapper.toSessionResponse(session);
     }
 }
