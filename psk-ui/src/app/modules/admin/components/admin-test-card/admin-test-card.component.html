@@ -1,0 +1,46 @@
+<h4 *ngIf="testResults.length > 0" class="text-secondary mt-3 mb-3">Danışana Atanmış Testler</h4>
+
+<div *ngIf="testResults.length > 0" class="row  justify-content-center mt-3 g-3">
+  <div class="col-md-4 col-sm-6 test-card-container mb-4" *ngFor="let testCard of testResults; let i = index">
+    <div class="test-circle mx-auto"></div>
+    <!-- TODO:change with real data <img src="{{testCard.cover}}" class="card-img-top card-image"> -->
+    <div
+      class="card test-card card-body test-card-body test-card-body-large d-flex flex-column justify-content-between">
+      <h5 class="card-title text-center mb-0">{{testCard.title}}</h5>
+      <p *ngIf="!testCard.answerDistribution" class="card-text text-secondary">Test sonucu henüz alınmadı.</p>
+      <button *ngIf="testCard.testId !== undefined && !testCard.answerDistribution"
+        (click)="removeTestFromUser(testCard.testId)" class="btn btn-outline-primary btn-primary-outline-custom btn-test">Testi
+        Kaldır</button>
+      <p *ngIf="testCard.answerDistribution" class="card-text text-secondary mb-0 pb-0">
+        {{formatAnswerDistribution(testCard.answerDistribution)}}</p>
+      <p *ngIf="testCard.answerDistribution" class=" card-text text-secondary fw-bold mb-0 pb-0">Tamamlandığı tarih:</p>
+      <p *ngIf="testCard.answerDistribution" class="card-text text-secondary mb-0 mt-0">
+        {{testCard.lastModifiedDate | date:'dd.MM.yyyy HH:mm'}}</p>
+      <button *ngIf="testCard.answerDistribution && testCard.testId !== undefined" (click)="seeResult(testCard.testId)"
+        class="btn btn-outline-primary btn-primary-outline-custom btn-test">Test Sonucu</button>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="publicTests.length > 0" class="row justify-content-center mt-3 g-3">
+  <div class="col-md-4 col-sm-6 test-card-container mb-4" *ngFor="let testCard of publicTests; let i = index">
+    <div class="test-circle mx-auto"></div>
+    <!-- TODO:change with real data <img src="{{testCard.cover}}" class="card-img-top card-image"> -->
+    <div class="card test-card card-body test-card-body test-card-body-large d-flex justify-content-between">
+      <h5 class="card-title text-center">{{testCard.title}}</h5>
+      <p class="card-text text-secondary">{{testCard.subTitle}}</p>
+      <button *ngIf="testCard.id !== undefined" (click)="addTestToUser(testCard.id)"
+        class="btn btn-outline-primary btn-primary-outline-custom btn-test">Testi Danışana Ata</button>
+    </div>
+  </div>
+</div>
+
+
+<div *ngIf="isResultOpen" class="mt-4 row">
+  <div class="d-flex justify-content-end col-12">
+    <button (click)="closeResult()" class="btn btn-primary">Test Sonucunu Kapat</button>
+  </div>
+  <app-admin-test-result class="col-12" [testResult]="selectedTest"></app-admin-test-result>
+</div>
+
+<app-toast *ngIf="showToast" [toastErrorMessage]="errorMessage"></app-toast>

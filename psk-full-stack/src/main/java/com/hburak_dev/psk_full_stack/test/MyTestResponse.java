@@ -18,7 +18,7 @@ public class MyTestResponse {
 
     private String subTitle;
 
-    byte[] cover;
+    private String[] cover;
 
     private List<MyQuestionResponse> questions;
 

@@ -1,0 +1,52 @@
+<div *ngIf="upcomingSession != null" class="row mx-0 card mb-5 py-4 px-md-5 px-sm-2">
+  <div class="col-12">
+    <div *ngIf="isUpcomingSession" class="card-body about-card-body my-1 row row-about align-items-center g-5">
+      <div class="col-md-8 col-12 mt-0 about-text">
+        <p class="fs-5 mb-0 fw-bold">{{user?.firstname}}
+          {{user?.lastname}}</p>
+        <p class="fs-5 mb-0 fw-bold">Gelecek Seans: {{upcomingSession.date | date:'dd.MM.yyyy / HH:mm'}}</p>
+        <p class=" mt-2 text-primary mb-0">Danışanın Seans Notu:
+        </p>
+        <p *ngIf="!upcomingSession?.noteForUser" class="fw-light text-secondary mb-2">
+          Not bulunmamaktadır.
+        </p>
+        <p *ngIf="upcomingSession.noteForUser" class="fw-light text-secondary mb-2">
+          {{upcomingSession.noteForUser}}
+        </p>
+
+      </div>
+      <div class="about-logo mt-0 col-md-4 col-12 order-md-2 order-first">
+        <div class="logo-circle mx-auto"></div>
+      </div>
+    </div>
+    <div *ngIf="isUpcomingSession" class="row mx-0 g-2 mt-4 mb-2">
+      <div class="btn-group">
+        <a *ngFor="let status of statusList" [class.active]="status === upcomingSession.sessionStatus"
+          [class.btn-primary-custom]="status !== upcomingSession.sessionStatus"
+          [class.btn-primary-hovered]="status === upcomingSession.sessionStatus"
+          class="btn sm-f py-auto d-flex align-items-center justify-content-center" style="pointer-events: none"
+          aria-current="page">{{statusMap[status]}}</a>
+      </div>
+    </div>
+    <div class="row g-3 mb-4">
+      <div *ngIf="myTests.length > 0">
+        <h4 class="text-secondary mt-3 mb-3">Seansınız İçin Atanmış Testler</h4>
+        <div class="row d-flex justify-content-center">
+          <div class="col-md-4 col-sm-6" *ngFor="let testCard of myTests; let i = index">
+            <app-user-test-card [testCard]="testCard" (startTestEvent)="startTest($event)"></app-user-test-card>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="isUpcomingSession" class="row mx-1 g-2">
+      <button (click)="goToSession()" class="btn btn-primary">Seansa Git</button>
+    </div>
+  </div>
+</div>
+<app-toast class="position-fixed top-0 start-50 translate-middle-x" style="z-index: 1050;" *ngIf="showToast"
+  [toastErrorMessage]="toastErrorMessage"></app-toast>
+<div *ngIf="upcomingSession == null" class="row mx-0 card px-md-5 px-sm-2">
+  <div class="col">
+    <h4 class="text-secondary my-4 ">Gelecek Seans Bulunamadı</h4>
+  </div>
+</div>

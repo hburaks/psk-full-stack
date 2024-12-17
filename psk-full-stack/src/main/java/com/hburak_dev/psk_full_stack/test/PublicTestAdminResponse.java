@@ -15,7 +15,7 @@ public class PublicTestAdminResponse {
 
     private Integer id;
 
-    private byte[] cover;
+    private String[] cover;
 
     private String title;
 

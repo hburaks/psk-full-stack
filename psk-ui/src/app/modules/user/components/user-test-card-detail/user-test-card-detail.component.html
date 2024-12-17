@@ -1,0 +1,48 @@
+<div class="page-content container">
+  <div>
+    <div class="row mx-0 card my-5 py-4 px-md-5 px-sm-2">
+      <div class="col">
+        <div class="card-body my-1 row">
+          <div class="test-logo mt-0 col-4">
+            <div class="test-circle mx-auto"></div>
+          </div>
+          <div class="col-8 d-flex flex-column justify-content-center about-text">
+              <p class="fs-5 fw-bold">{{testCard.title}}</p>
+              <p class="fw-light mt-2 text-secondary">{{testCard.subTitle}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="row mx-0 my-2 py-4 px-md-5 px-sm-2" *ngFor="let question of testCard?.questions; let i = index">
+        <div class="col">
+          <p><span class="fw-bold">{{i + 1}}- </span>{{question.text}}</p>
+          <div class="simple alert" [ngClass]="{
+                                                            'alert-primary': selectedChoices[i] === j,
+                                                            'alert-dark': selectedChoices[i] !== j
+                                                          }" (click)="selectChoice(i, j, question.questionId ?? 0)"
+            *ngFor="let choice of question.choices; let j = index">
+            {{j === 0 ? 'A) ' : j === 1 ? 'B) ' : j === 2 ? 'C) ' : j === 3 ? 'D) ' : 'E) '}}{{choice.text}}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row mx-0 px-md-5 px-sm-2">
+      <div class="col-12 text-end">
+        <button class="btn btn-primary" (click)="completeTest()">Testi Tamamla</button>
+      </div>
+    </div>
+    <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+      <div id="liveToast" class="toast align-items-center text-bg-danger border-0" role="alert" aria-live="assertive"
+        aria-atomic="true">
+        <div class="d-flex">
+          <div class="toast-body">
+            Lütfen testi tamamlayınız.
+          </div>
+          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+            aria-label="Close"></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

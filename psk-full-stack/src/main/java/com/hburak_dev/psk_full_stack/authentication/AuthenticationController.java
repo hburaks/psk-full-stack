@@ -1,6 +1,5 @@
 package com.hburak_dev.psk_full_stack.authentication;
 
-
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
@@ -26,15 +25,13 @@ public class AuthenticationController {
 
     @PostMapping("/authenticate")
     public ResponseEntity<AuthenticationResponse> authenticate(
-            @RequestBody @Valid AuthenticationRequest request
-    ) {
+            @RequestBody @Valid AuthenticationRequest request) {
         return ResponseEntity.ok(service.authenticate(request));
     }
 
     @GetMapping("/activate-account")
     public void confirm(
-            @RequestParam String token
-    ) throws MessagingException {
+            @RequestParam String token) throws MessagingException {
         service.activateAccount(token);
     }
 }

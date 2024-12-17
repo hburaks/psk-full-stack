@@ -6,8 +6,6 @@ import lombok.Getter;
 public enum SessionStatusType {
 
     AWAITING_PSYCHOLOGIST_APPROVAL("Terapist Onayı Bekleniyor"),
-    AWAITING_PAYMENT("Ödeme Bekleniyor"),
-    AWAITING_PAYMENT_CONFIRMATION("Ödeme Onayı Bekleniyor"),
     APPOINTMENT_SCHEDULED("Randevu Alındı"),
     COMPLETED("Gerçekleşti"),
     CANCELED("İptal"),

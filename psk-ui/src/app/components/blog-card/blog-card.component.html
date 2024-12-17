@@ -1,0 +1,39 @@
+<div class="card">
+  <div class="image-gradient-container">
+    <img src="https://i.ibb.co/qj44W4n/Auth-bg.jpg" class="blog-card-image card-img-top card-image">
+    <!-- TODO:change with real data <img src="{{blogCard.cover}}"  class="blog-card-image card-img-top card-image"> -->
+  </div>
+  <div class="card-body blog-card d-flex flex-column justify-content-between">
+    <div>
+      <h5 class="card-title">{{blogCard?.title}}</h5>
+      <p class="card-text text-secondary">{{blogCard?.subTitle}}</p>
+      </div>
+    <div *ngIf="!isBlogEditable">
+      <a href="/blog/{{blogCard?.id}}" class="btn btn-outline-primary">Devamı..</a>
+    </div>
+    <div *ngIf="isBlogEditable && !isInDetailEdit" class="d-flex justify-content-between">
+      <button (click)="editBlog()" class="btn btn-outline-primary">Düzenle</button>
+      <button type="button" class="btn btn-primary btn-primary-custom" data-bs-toggle="modal" data-bs-target="#blogModal">
+        Kaldır
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="blogModal" tabindex="-1" aria-labelledby="blogModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="blogModalLabel">Blogu Kaldır</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Blogu kaldırmak istediğinize emin misiniz?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Vazgeç</button>
+        <button data-bs-dismiss="modal" (click)="deleteBlog()" type="button" class="btn btn-primary">Kaldır</button>
+      </div>
+    </div>
+  </div>
+</div>

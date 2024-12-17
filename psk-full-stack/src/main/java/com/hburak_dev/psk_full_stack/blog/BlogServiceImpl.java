@@ -129,4 +129,11 @@ public class BlogServiceImpl implements BlogService {
             return ResponseEntity.status(404).body(false);
         }
     }
+
+    @Override
+    @Transactional
+    public BlogResponse findBlogById(Integer id) {
+        return blogMapper.toBlogResponse(blogRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Bu ID ile blog bulunamadı :: " + id)));
+    }
 }

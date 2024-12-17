@@ -32,7 +32,7 @@ public class Question extends BaseEntity {
     private AnswerType userAnswer;
 
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     private List<Choice> choices;
 
 }

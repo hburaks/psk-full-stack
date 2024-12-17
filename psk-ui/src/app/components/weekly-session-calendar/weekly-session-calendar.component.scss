@@ -1,0 +1,12 @@
+.no-pointer-cursor {
+  cursor: default;
+}
+.smaller-font {
+  font-size: 0.9rem;
+}
+.edit {
+  cursor: pointer;
+  &:hover {
+    color: #ff00ae;
+  }
+}

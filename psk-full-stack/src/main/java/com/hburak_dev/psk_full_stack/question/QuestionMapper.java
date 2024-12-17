@@ -13,59 +13,82 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class QuestionMapper {
 
-    private final ChoiceMapper choiceMapper;
+        private final ChoiceMapper choiceMapper;
 
-    public PublicQuestionResponse toPublicQuestionResponse(Question question) {
-        return PublicQuestionResponse.builder()
-                .id(question.getId())
-                .text(question.getText())
-                .publicChoiceResponseList(question.getChoices().stream()
-                        .map(choiceMapper::toPublicChoiceResponse)
-                        .collect(Collectors.toList()))
-                .build();
-    }
+        public PublicQuestionResponse toPublicQuestionResponse(Question question) {
+                return PublicQuestionResponse.builder()
+                                .id(question.getId())
+                                .text(question.getText())
+                                .publicChoiceResponseList(question.getChoices().stream()
+                                                .map(choiceMapper::toPublicChoiceResponse)
+                                                .collect(Collectors.toList()))
+                                .build();
+        }
 
-    public MyQuestionResponse toMyQuestionResponse(Question question) {
-        return MyQuestionResponse.builder()
-                .questionId(question.getId())
-                .text(question.getText())
-                .choices(question.getChoices().stream()
-                        .map(choiceMapper::toMyChoiceResponse)
-                        .collect(Collectors.toList()))
-                .build();
-    }
+        public MyQuestionResponse toMyQuestionResponse(Question question) {
+                return MyQuestionResponse.builder()
+                                .questionId(question.getId())
+                                .text(question.getText())
+                                .choices(question.getChoices().stream()
+                                                .map(choiceMapper::toMyChoiceResponse)
+                                                .collect(Collectors.toList()))
+                                .build();
+        }
 
-    public Question toQuestion(PublicTestQuestionRequest publicTestQuestionRequest, Test test) {
-        List<Choice> choices = publicTestQuestionRequest.getPublicChoiceRequestList().stream()
-                .map(publicChoiceRequest -> Choice.builder()
-                        .text(publicChoiceRequest.getText())
-                        .build())
-                .collect(Collectors.toList());
+        public Question toQuestion(PublicTestQuestionRequest publicTestQuestionRequest, Integer userId, Test test) {
+                Question question = new Question();
 
-        return Question.builder()
-                .text(publicTestQuestionRequest.getText())
-                .choices(choices)
-                .test(test)
-                .build();
-    }
+                if (publicTestQuestionRequest.getQuestionId() == null) {
+                        question.setCreatedBy(userId);
+                }
 
-    public PublicQuestionAdminResponse toPublicQuestionAdminResponse(Question question) {
-        return PublicQuestionAdminResponse.builder()
-                .id(question.getId())
-                .text(question.getText())
-                .publicChoiceResponseList(question.getChoices().stream()
-                        .map(choiceMapper::toPublicChoiceAdminResponse)
-                        .collect(Collectors.toList()))
-                .build();
-    }
+                if (publicTestQuestionRequest != null) {
+                        if (publicTestQuestionRequest.getText() != null) {
+                                question.setText(publicTestQuestionRequest.getText());
+                        }
 
-    public UserQuestionResponse toUserQuestionResponse(Question question) {
-        return UserQuestionResponse.builder()
-                .text(question.getText())
-                .userAnswer(question.getUserAnswer())
-                .choices(question.getChoices().stream()
-                        .map(choiceMapper::toUserChoiceResponse)
-                        .collect(Collectors.toList()))
-                .build();
-    }
+                        if (publicTestQuestionRequest.getPublicChoiceRequestList() != null) {
+                                List<Choice> choices = publicTestQuestionRequest.getPublicChoiceRequestList().stream()
+                                                .<Choice>map(publicChoiceRequest -> choiceMapper.toChoice(
+                                                                publicChoiceRequest,
+                                                                userId))
+                                                .filter(choiceRequest -> choiceRequest != null
+                                                                && choiceRequest.getText() != null)
+                                                .collect(Collectors.toList());
+
+                                if (!choices.isEmpty()) {
+                                        question.setChoices(choices);
+                                }
+                        }
+
+                        if (publicTestQuestionRequest.getQuestionId() != null) {
+                                question.setId(publicTestQuestionRequest.getQuestionId());
+                        }
+
+                        question.setTest(test);
+
+                }
+
+                return question;
+        }
+
+        public PublicQuestionAdminResponse toPublicQuestionAdminResponse(Question question) {
+                return PublicQuestionAdminResponse.builder()
+                                .id(question.getId())
+                                .text(question.getText())
+                                .publicChoiceResponseList(question.getChoices().stream()
+                                                .map(choiceMapper::toPublicChoiceAdminResponse)
+                                                .collect(Collectors.toList()))
+                                .build();
+        }
+
+        public UserQuestionResponse toUserQuestionResponse(Question question) {
+                return UserQuestionResponse.builder()
+                                .text(question.getText())
+                                .userAnswer(question.getUserAnswer())
+                                .choices(question.getChoices().stream()
+                                                .map(choiceMapper::toUserChoiceResponse)
+                                                .collect(Collectors.toList()))
+                                .build();
+        }
 }

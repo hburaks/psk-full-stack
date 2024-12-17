@@ -11,55 +11,55 @@ import java.util.stream.Collectors;
 public class SessionMapper {
 
 
-    public PublicSessionResponse toPublicSessionResponse(Session session) {
+        public PublicSessionResponse toPublicSessionResponse(Session session) {
 
-        return PublicSessionResponse.builder()
-                .date(session.getDate())
-                .build();
-    }
+                return PublicSessionResponse.builder()
+                                .date(session.getDate())
+                                .build();
+        }
 
-    public SessionResponse toSessionResponse(Session session) {
+        public SessionResponse toSessionResponse(Session session) {
 
-        return SessionResponse.builder()
-                .date(session.getDate())
-                .sessionStatus(session.getSessionStatus())
-                .sessionId(session.getId())
-                .noteForUser(session.getNoteForUser())
-                .build();
-    }
+                return SessionResponse.builder()
+                                .date(session.getDate())
+                                .sessionStatus(session.getSessionStatus())
+                                .sessionId(session.getId())
+                                .noteForUser(session.getNoteForUser())
+                                .build();
+        }
 
-    public Session toSession(LocalDateTime date, User user) {
-        return Session.builder()
-                .date(date)
-                .user(user)
-                .sessionStatus(SessionStatusType.AWAITING_PSYCHOLOGIST_APPROVAL)
-                .isSessionPaid(false)
-                .isMock(false)
-                .build();
-    }
+        public Session toSession(LocalDateTime date, User user) {
+                return Session.builder()
+                                .date(date)
+                                .user(user)
+                                .sessionStatus(SessionStatusType.AWAITING_PSYCHOLOGIST_APPROVAL)
+                                .isSessionPaid(false)
+                                .isMock(false)
+                                .build();
+        }
 
-    public SessionResponseV2 toSessionResponseV2(Session session) {
-        return SessionResponseV2.builder()
-                .sessionId(session.getId())
-                .userForSessionResponse(
-                        UserForSessionResponse.builder()
-                                .id(session.getUser().getId())
-                                .firstname(session.getUser().getFirstname())
-                                .lastname(session.getUser().getLastname())
-                                .build())
-                .date(session.getDate())
-                .sessionStatus(session.getSessionStatus())
-                .noteForUser(session.getNoteForUser())
-                .noteForPsychologist(session.getNoteForPsychologist())
-                .isPaid(session.isSessionPaid())
-                .build();
-    }
+        public SessionResponseV2 toSessionResponseV2(Session session) {
+                return SessionResponseV2.builder()
+                                .sessionId(session.getId())
+                                .userForSessionResponse(
+                                                UserForSessionResponse.builder()
+                                                                .id(session.getUser().getId())
+                                                                .firstname(session.getUser().getFirstname())
+                                                                .lastname(session.getUser().getLastname())
+                                                                .build())
+                                .date(session.getDate())
+                                .sessionStatus(session.getSessionStatus())
+                                .noteForUser(session.getNoteForUser())
+                                .noteForPsychologist(session.getNoteForPsychologist())
+                                .isPaid(session.isSessionPaid())
+                                .build();
+        }
 
 
-    public List<Integer> toSessionIdList(List<Session> sessions) {
-        return sessions.stream()
-                .map(Session::getId)
-                .collect(Collectors.toList());
-    }
+        public List<Integer> toSessionIdList(List<Session> sessions) {
+                return sessions.stream()
+                                .map(Session::getId)
+                                .collect(Collectors.toList());
+        }
 
 }

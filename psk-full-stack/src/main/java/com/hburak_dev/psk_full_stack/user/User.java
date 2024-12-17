@@ -50,7 +50,7 @@ public class User implements UserDetails, Principal {
     private boolean enabled;
 
     @OneToMany(mappedBy = "user")
-    @JsonIgnoreProperties("user")
+    @JsonIgnoreProperties({ "user", "cover" })
     private List<Test> tests;
 
     @OneToMany(mappedBy = "user")

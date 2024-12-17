@@ -8,4 +8,10 @@ public interface TestRepository extends JpaRepository<Test, Integer> {
 
     List<Test> findAllByIsActiveTrue();
 
+    List<Test> findAllByUserId(Integer userId);
+
+    List<Test> findAllByUserIdAndIsCompletedIsFalse(Integer userId);
+
+    List<Test> findAllByUserIdIsNull();
+
 }

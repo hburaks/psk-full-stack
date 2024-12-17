@@ -2,18 +2,17 @@ import {Component} from '@angular/core';
 import {AuthenticationService} from "../../services/services/authentication.service";
 import {AuthenticationRequest} from "../../services/models/authentication-request";
 import {AuthenticationResponse} from "../../services/models/authentication-response";
-import {DecodedToken} from "../../services/models/decoded-token";
 import {ActivatedRoute, Router} from "@angular/router";
-import {TokenService} from "../../services/token/token.service";
+import { TokenService } from '../../custom-services/token/token.service';
 import {RegistrationRequest} from "../../services/models/registration-request";
+import { CommonService } from 'src/app/custom-services/common-service/common.service';
 
 @Component({
   selector: 'app-register',
   templateUrl: './auth.component.html',
-  styleUrls: ['./auth.component.scss']
+  styleUrls: ['./auth.component.scss'],
 })
 export class AuthComponent {
-
   path: string | null = '';
   birthYears: number[] = [];
   isLogin: boolean = false;
@@ -22,17 +21,16 @@ export class AuthComponent {
 
   loginRequest: AuthenticationRequest = {
     email: '',
-    password: ''
-  }
+    password: '',
+  };
   registerRequest: RegistrationRequest = {
     birthYear: '',
     email: '',
     firstname: '',
     lastname: '',
     password: '',
-    phoneNumber: ''
-  }
-
+    phoneNumber: '',
+  };
 
   activationMessage: string[] = [];
   isActivationOkay = true;
@@ -41,9 +39,10 @@ export class AuthComponent {
   confirmPassword: string = '';
   errorMsg: Array<string> = [];
 
-
-  loginInfoText: string = 'Randevularına ve sana atanmış testlere erişmek için giriş yap.';
-  registerInfoText: string = 'Randevu almak ve sana atanan testleri takip edebilmek için kayıt ol.';
+  loginInfoText: string =
+    'Randevularına ve sana atanmış testlere erişmek için giriş yap.';
+  registerInfoText: string =
+    'Randevu almak ve sana atanan testleri takip edebilmek için kayıt ol.';
 
   infoText: string = '';
 
@@ -51,9 +50,9 @@ export class AuthComponent {
     private authService: AuthenticationService,
     private router: Router,
     private tokenService: TokenService,
-    private route: ActivatedRoute
-  ) {
-  }
+    private route: ActivatedRoute,
+    private commonService: CommonService
+  ) {}
 
   ngOnInit(): void {
     this.path = this.route.snapshot.url.toString();
@@ -89,9 +88,9 @@ export class AuthComponent {
     this.isActivateAccount = true;
     this.isLogin = false;
     this.isRegister = false;
-    this.infoText = "Hesabını aktive etmek için mail adresine gönderilen kodu giriniz.";
+    this.infoText =
+      'Hesabını aktive etmek için mail adresine gönderilen kodu giriniz.';
   }
-
 
   calculateBirthYearOptions(): void {
     const minYear = new Date().getFullYear() - 18;
@@ -100,80 +99,75 @@ export class AuthComponent {
     }
   }
 
-  toggleContent(path: string): void {
-    this.router.navigate([path]);
-  }
-
-
   login(): void {
     this.errorMsg = [];
-    this.authService.authenticate(
-      {
-        body: this.loginRequest
-      }
-    ).subscribe(
-      {
+    this.authService
+      .authenticate({
+        body: this.loginRequest,
+      })
+      .subscribe({
         next: (res: AuthenticationResponse) => {
           this.tokenService.token = res.token as string;
-          const decodedToken: DecodedToken = JSON.parse(atob(this.tokenService.token.split('.')[1]));
-          if (decodedToken.authorities.includes("ROLE_ADMIN")) {
-            this.router.navigate(['navigateAdminMain'])
+          const authorities: string[] = this.tokenService.userRoles;
+          // TODO:test const decodedToken: DecodedToken = JSON.parse(atob(this.tokenService.token.split('.')[1]));
+          if (authorities.includes('ROLE_ADMIN')) {
+            this.commonService.isAdminRegistered = true;
+            this.router.navigate(['admin/panel']);
           } else {
-            this.router.navigate(['navigateMain'])
-
+            this.commonService.isUserRegistered = true;
+            this.router.navigate(['user/panel']);
           }
+          this.commonService.updateUserStatus(true);
         },
         error: (err) => {
           if (err.error.validationErrors) {
             this.errorMsg = err.error.validationErrors;
           } else {
-            this.errorMsg.push(err.error.error)
+            this.errorMsg.push(err.error.error);
           }
-          console.log(err);
-        }
-      }
-    )
+        },
+      });
   }
 
   register(): void {
     this.errorMsg = [];
-    if (this.registerRequest.password !== this.confirmPassword && this.registerRequest.password !== '') {
-      this.errorMsg.push("Şifreler uyuşmuyor.");
+    if (
+      this.registerRequest.password !== this.confirmPassword &&
+      this.registerRequest.password !== ''
+    ) {
+      this.errorMsg.push('Şifreler uyuşmuyor.');
       return;
     }
-    this.authService.register(
-      {
-        body: this.registerRequest
-      }
-    ).subscribe(
-      {
+    this.authService
+      .register({
+        body: this.registerRequest,
+      })
+      .subscribe({
         next: (res: any) => {
-          console.log(res.toString())
+          console.log(res.toString());
         },
         error: (err) => {
           if (err.error.validationErrors) {
             this.errorMsg = err.error.validationErrors;
           } else {
-            this.errorMsg.push(err.error.error)
+            this.errorMsg.push(err.error.error);
           }
-          console.log(err);
-        }
-      }
-    )
+        },
+      });
   }
 
   activateAccount(token: string): void {
     this.errorMsg = [];
-    this.authService.confirm(
-      {
-        token: token
-      }
-    ).subscribe(
-      {
+    this.authService
+      .confirm({
+        token: token,
+      })
+      .subscribe({
         next: (res: any) => {
-          this.activationMessage.push('Hesabınız başarıyla aktive edildi.\nGiriş yapabilirsiniz.');
+          this.activationMessage.push(
+            'Hesabınız başarıyla aktive edildi.\nGiriş yapabilirsiniz.'
+          );
           this.isActivationSubmitted = true;
-          console.log(res.toString())
         },
         error: (err) => {
           this.activationMessage.push('Sistem hatası oluştu.');
@@ -183,12 +177,11 @@ export class AuthComponent {
           if (parsedErr.validationErrors) {
             this.activationMessage = parsedErr.validationErrors;
           } else {
-            this.activationMessage.push(parsedErr.error)
+            this.activationMessage.push(parsedErr.error);
           }
-          console.log(parsedErr);
-        }
-      }
-    )
+          this.errorMsg.push('Sistem hatası oluştu.');
+        },
+      });
   }
 
   redirectToLogin() {

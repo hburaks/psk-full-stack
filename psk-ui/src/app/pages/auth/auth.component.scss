@@ -12,6 +12,11 @@
   margin: 0 auto;
   position: relative;
   z-index: 1;
+  padding-inline: 3rem;
+
+  @media (max-width: 460px) {
+    padding-inline: 1rem
+  }
 }
 
 img {
@@ -21,7 +26,6 @@ img {
 .activation-token {
   margin: 0 auto;
 }
-
 code-input {
   @media (max-width: 460px) {
     --item-height: 3em;
@@ -50,6 +54,27 @@ code-input {
   }
 
   @media (max-width: 576px) {
-    padding: 3rem 1rem;
+    padding: 1rem 1rem;
   }
+}
+
+.auth-wrap {
+  @media (max-width: 992px) {
+    padding-inline: 1rem;
+  }
+  @media (max-width: 576px) {
+    padding-inline: 0.5rem;
+  }
+}
+
+.alert-danger {
+  padding: 0;
+}
+
+.single-error {
+  margin-top: 1rem;
+}
+
+.multiple-errors:first-child {
+  margin-top: 1rem;
 }

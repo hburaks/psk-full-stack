@@ -1,0 +1,51 @@
+<div class="card-body about-card-body my-1 row row-about">
+  <div *ngIf="isBlogEditable" class="col-12 mb-4 text-start">
+    <h4 class="text-secondary">Blog Düzenle</h4>
+  </div>
+  <div class="about-logo mt-0 col-4">
+    <div class="logo-circle mx-auto"></div>
+    <div *ngIf="isBlogEditable || isEditable">
+      <button class="btn btn-primary" (click)="uploadImage()">Fotoğrafı Değiştir</button>
+    </div>
+  </div>
+  <div class="col-8 mt-4 about-text">
+    <p *ngIf="!isEditable" class="fs-5 fw-bold">{{title}}</p>
+    <div *ngIf="isBlogEditable">
+      <h5 class="text-secondary">Blog Başlığını Düzenle</h5>
+      <textarea *ngIf="isBlogEditable" class="form-control" id="floatingTextarea"
+        (input)="updateTitle($event)">{{title}}</textarea>
+    </div>
+    <p *ngIf="!isEditable" class="fw-light mt-4 text-secondary" [ngClass]="{'text-center': isTextCenter}">
+      {{subTitle}}
+    </p>
+    <div *ngIf="isBlogEditable" class="mt-4">
+      <h5 class="text-secondary">Blog Alt Başlığını Düzenle</h5>
+      <textarea class="form-control" id="floatingTextarea" (input)="updateSubTitle($event)">{{subTitle}}</textarea>
+    </div>
+    <p *ngIf="!isEditable" class="fw-light mt-4 text-secondary" [ngClass]="{'text-center': isTextCenter}">
+      {{text}}
+    </p>
+    <div *ngIf="isBlogEditable">
+      <h5 class="text-secondary">Blog Metnini Düzenle</h5>
+      <textarea class="form-control" id="floatingTextarea" (input)="updateText($event)">{{text}}</textarea>
+    </div>
+    <div *ngIf="isBlogEditable" class="mt-4">
+      <div class="form-check form-switch d-flex align-items-center justify-content-center p-0">
+        <input class="form-check-input mx-3" type="checkbox" role="switch" id="flexSwitchCheckDefault"
+          [(ngModel)]="shareable">
+        <label *ngIf="shareable" class="form-check-label shareable-label"
+          for="flexSwitchCheckDefault">Paylaşılabilir</label>
+        <label *ngIf="!shareable" class="form-check-label shareable-label" for="flexSwitchCheckDefault">Paylaşılabilir
+          Değil</label>
+      </div>
+    </div>
+    <div *ngIf="isBlogEditable" class="mt-4 d-flex justify-content-center">
+      <app-blog-card [isBlogEditable]="isBlogEditable" [blogCard]="blogCard" [isInDetailEdit]="true"></app-blog-card>
+    </div>
+  </div>
+</div>
+<div *ngIf="isBlogEditable" class="mt-2 mb-4 row">
+  <div class="d-flex justify-content-center col-12">
+    <button (click)="saveBlog()" class="btn btn-primary">Kaydet</button>
+  </div>
+</div>
