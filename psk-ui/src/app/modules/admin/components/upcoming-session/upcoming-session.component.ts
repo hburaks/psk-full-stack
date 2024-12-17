@@ -154,5 +154,6 @@ export class UpcomingSessionComponent {
   addSessionToUser() {
     const session: SessionResponseV2 = {} as SessionResponseV2;
     this.receiveSelectedSession(session);
+    window.scrollTo(0, 0);
   }
 }

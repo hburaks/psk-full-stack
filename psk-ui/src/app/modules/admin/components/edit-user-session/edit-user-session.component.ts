@@ -37,8 +37,7 @@ export class EditUserSessionComponent {
   ) {
     this.statusMap = this.commonService.sessionStatusMap;
     this.statusList = Object.keys(this.statusMap).filter(
-      (status) =>
-        status !== 'UNAVAILABLE' && status !== 'AWAITING_PSYCHOLOGIST_APPROVAL'
+      (status) => status !== 'UNAVAILABLE'
     );
   }
 
@@ -160,8 +159,6 @@ export class EditUserSessionComponent {
   changeStatus(status: string) {
     this.session!.sessionStatus = status as
       | 'AWAITING_PSYCHOLOGIST_APPROVAL'
-      | 'AWAITING_PAYMENT'
-      | 'AWAITING_PAYMENT_CONFIRMATION'
       | 'APPOINTMENT_SCHEDULED'
       | 'COMPLETED'
       | 'CANCELED'
@@ -170,8 +167,6 @@ export class EditUserSessionComponent {
       sessionId: this.session!.sessionId,
       sessionStatusType: status as
         | 'AWAITING_PSYCHOLOGIST_APPROVAL'
-        | 'AWAITING_PAYMENT'
-        | 'AWAITING_PAYMENT_CONFIRMATION'
         | 'APPOINTMENT_SCHEDULED'
         | 'COMPLETED'
         | 'CANCELED'

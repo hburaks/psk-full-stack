@@ -9,6 +9,7 @@ import { UpdateSessionDateV2$Params } from 'src/app/services/fn/session-controll
 import { SessionResponseV2 } from 'src/app/services/models';
 import { DailyCalendarResponse } from 'src/app/services/models/daily-calendar-response';
 import { HourlySessionResponse } from 'src/app/services/models/hourly-session-response';
+import { SessionControllerService } from 'src/app/services/services';
 import { SessionControllerV2Service } from 'src/app/services/services/session-controller-v-2.service';
 import { SessionControllerV3Service } from 'src/app/services/services/session-controller-v-3.service';
 
@@ -29,12 +30,15 @@ export class WeeklySessionCalendarComponent {
   showAddSessionModal: boolean = false;
 
   @Input() isEdit: boolean = false;
-
+  @Input() isCreateMySession: boolean = false;
   weeklySessionCalendar: DailyCalendarResponse[] = [];
 
   @Output() dateToUpdateSession = new EventEmitter<string | null>();
 
-  constructor(private sessionControllerV3Service: SessionControllerV3Service) {
+  constructor(
+    private sessionControllerV3Service: SessionControllerV3Service,
+    private sessionControllerService: SessionControllerService
+  ) {
     this.updateScreenSize();
     this.getWeeklySessions();
   }
@@ -48,44 +52,24 @@ export class WeeklySessionCalendarComponent {
     this.dateToUpdateSession.emit(date);
   }
 
-  addSessionToUser() {
-    /*
-      this.sessionControllerV2Service
-        .createSessionForUserV2({
-          date: this.dateToAddSession,
-          userId: this.userId,
-        })
-        .subscribe({
-          next: (response: number) => {
-            this.isAddSession = false;
-            window.location.reload();
-          },
-          error: (error) => {
-            console.error('Error adding session to user', error);
-          },
-        });
-    }*/
+  editSession(date: string | null) {
+    if (this.isCreateMySession) {
+      this.createMySession(date);
+    } else {
+      this.dateToUpdateSession.emit(date);
+    }
   }
 
-  editSession(date: string | null) {
-    this.dateToUpdateSession.emit(date);
-    /*
-  }
-      const updateRequest: UpdateSessionDateV2$Params = {
-        body: {
-          date: session.date,
-          sessionId: this.selectedSession!.sessionId,
-        },
-      };
-      console.log('editing session', session);
-      this.sessionControllerV2Service
-        .updateSessionDateV2(updateRequest)
-        .subscribe({
-          next: () => {
-            window.location.reload();
-          },
-        });
-    } */
+  createMySession(date: string | null) {
+    this.sessionControllerService.createMySession({ date: date || '' }).subscribe({
+      next: (response: number) => {
+        console.log('Session created', response);
+        window.location.reload();
+      },
+      error: (error) => {
+        console.error('Error creating session', error);
+      },
+    });
   }
 
   getFormattedDate(day: DailyCalendarResponse): string {

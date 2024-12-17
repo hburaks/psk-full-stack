@@ -9,12 +9,12 @@ import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
 
-export interface CreateSessionForUserV21$Params {
+export interface CreateMySession$Params {
   date: string;
 }
 
-export function createSessionForUserV21(http: HttpClient, rootUrl: string, params: CreateSessionForUserV21$Params, context?: HttpContext): Observable<StrictHttpResponse<number>> {
-  const rb = new RequestBuilder(rootUrl, createSessionForUserV21.PATH, 'post');
+export function createMySession(http: HttpClient, rootUrl: string, params: CreateMySession$Params, context?: HttpContext): Observable<StrictHttpResponse<number>> {
+  const rb = new RequestBuilder(rootUrl, createMySession.PATH, 'post');
   if (params) {
     rb.query('date', params.date, {});
   }
@@ -29,4 +29,4 @@ export function createSessionForUserV21(http: HttpClient, rootUrl: string, param
   );
 }
 
-createSessionForUserV21.PATH = '/sessions/create';
+createMySession.PATH = '/sessions/create';

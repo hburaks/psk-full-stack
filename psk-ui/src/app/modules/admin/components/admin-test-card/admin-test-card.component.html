@@ -6,13 +6,16 @@
     <!-- TODO:change with real data <img src="{{testCard.cover}}" class="card-img-top card-image"> -->
     <div
       class="card test-card card-body test-card-body test-card-body-large d-flex flex-column justify-content-between">
-      <h5 class="card-title text-center">{{testCard.title}}</h5>
+      <h5 class="card-title text-center mb-0">{{testCard.title}}</h5>
       <p *ngIf="!testCard.answerDistribution" class="card-text text-secondary">Test sonucu henüz alınmadı.</p>
       <button *ngIf="testCard.testId !== undefined && !testCard.answerDistribution"
         (click)="removeTestFromUser(testCard.testId)" class="btn btn-outline-primary btn-primary-outline-custom btn-test">Testi
         Kaldır</button>
-      <p *ngIf="testCard.answerDistribution" class="card-text text-secondary">
+      <p *ngIf="testCard.answerDistribution" class="card-text text-secondary mb-0 pb-0">
         {{formatAnswerDistribution(testCard.answerDistribution)}}</p>
+      <p *ngIf="testCard.answerDistribution" class=" card-text text-secondary fw-bold mb-0 pb-0">Tamamlandığı tarih:</p>
+      <p *ngIf="testCard.answerDistribution" class="card-text text-secondary mb-0 mt-0">
+        {{testCard.lastModifiedDate | date:'dd.MM.yyyy HH:mm'}}</p>
       <button *ngIf="testCard.answerDistribution && testCard.testId !== undefined" (click)="seeResult(testCard.testId)"
         class="btn btn-outline-primary btn-primary-outline-custom btn-test">Test Sonucu</button>
     </div>

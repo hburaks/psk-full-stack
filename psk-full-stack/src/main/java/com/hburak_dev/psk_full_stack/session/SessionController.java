@@ -25,15 +25,11 @@ public class SessionController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Integer> createSessionForUserV2(
+    public ResponseEntity<Integer> createMySession(
             @RequestParam("date")
-            @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH") String date, Authentication connectedUser) {
+            LocalDateTime date, Authentication connectedUser) {
 
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH");
-
-        LocalDateTime localDateTime = LocalDateTime.parse(date, dateTimeFormatter);
-
-        Integer sessionId = sessionService.createUserSession(localDateTime, connectedUser);
+        Integer sessionId = sessionService.createUserSession(date, connectedUser);
         return ResponseEntity.ok(sessionId);
     }
 

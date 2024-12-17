@@ -104,6 +104,7 @@ public class TestMapper {
                                 .comments(test.getComments().stream()
                                                 .map(commentMapper::toUserCommentResponse)
                                                 .collect(Collectors.toList()))
+                                .lastModifiedDate(test.getLastModifiedDate())
                                 .build();
         }
 

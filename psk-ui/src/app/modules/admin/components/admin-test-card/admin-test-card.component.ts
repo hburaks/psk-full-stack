@@ -38,6 +38,14 @@ export class AdminTestCardComponent {
     private testApiService: TestApiService
   ) {}
 
+  ngAfterViewInit() {
+    this.testResults.sort((a, b) => {
+      const dateA = new Date(a.lastModifiedDate || 0).getTime();
+      const dateB = new Date(b.lastModifiedDate || 0).getTime();
+      return dateB - dateA; 
+    });
+  }
+
   seeResult(testId: number) {
     const selectedTest = this.testResults.find(
       (test) => test.testId === testId

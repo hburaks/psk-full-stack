@@ -73,7 +73,8 @@ public class SessionServiceImpl implements SessionService {
         LocalDateTime fullHour = Util.toFullHour(date);
         validateSessionDate(fullHour);
 
-        if (sessionRepository.existsByDate(fullHour)) {
+        if (sessionRepository.existsByDate(fullHour)
+                && sessionRepository.findByDate(fullHour).getSessionStatus() != SessionStatusType.CANCELED) {
             throw new SessionNotFoundException("Bu zaman diliminde takvim müsait değil: " + fullHour);
         }
 

@@ -51,23 +51,3 @@
     </div>
   </div>
 </div>
-<div *ngIf="showAddSessionModal"> hi iti s a try</div>
-<div *ngIf="showAddSessionModal" class="modal fade" tabindex="-1">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5">Seans Ekle</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        Seansınızı eklemek istediğinize emin misiniz?
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
-          (click)="showAddSessionModal = false">Vazgeç</button>
-        <button data-bs-dismiss="modal" (click)="addSessionToUser()" type="button"
-          class="btn btn-primary">Kaldır</button>
-      </div>
-    </div>
-  </div>
-</div>

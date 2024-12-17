@@ -10,6 +10,7 @@ export interface UserTestForAdminResponse {
 };
   comments?: Array<UserCommentResponse>;
   cover?: Array<string>;
+  lastModifiedDate?: string;
   questions?: Array<UserQuestionResponse>;
   subTitle?: string;
   testId?: number;

@@ -6,5 +6,5 @@ export interface SessionResponse {
   date?: string;
   noteForUser?: string;
   sessionId?: number;
-  sessionStatus?: 'AWAITING_PSYCHOLOGIST_APPROVAL' | 'AWAITING_PAYMENT' | 'AWAITING_PAYMENT_CONFIRMATION' | 'APPOINTMENT_SCHEDULED' | 'COMPLETED' | 'CANCELED' | 'UNAVAILABLE';
+  sessionStatus?: 'AWAITING_PSYCHOLOGIST_APPROVAL' | 'APPOINTMENT_SCHEDULED' | 'COMPLETED' | 'CANCELED' | 'UNAVAILABLE';
 }

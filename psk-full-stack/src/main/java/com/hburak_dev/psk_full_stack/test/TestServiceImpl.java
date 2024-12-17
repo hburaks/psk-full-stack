@@ -90,7 +90,8 @@ public class TestServiceImpl implements TestService {
     @Override
     public List<MyTestResponse> getAllMyTests(Authentication connectedUser) {
         User user = (User) connectedUser.getPrincipal();
-        List<Test> tests = testRepository.findAllByUserId(user.getId());
+
+        List<Test> tests = testRepository.findAllByUserIdAndIsCompletedIsFalse(user.getId());
         return tests.stream()
                 .map(testMapper::toMyTestResponse)
                 .collect(Collectors.toList());
@@ -122,6 +123,9 @@ public class TestServiceImpl implements TestService {
             question.setUserAnswer(questionRequest.getChosenAnswer());
             questionRepository.save(question);
         }
+
+        test.setIsCompleted(true);
+        testRepository.save(test);
 
         return ResponseEntity.ok(true);
     }
@@ -242,8 +246,6 @@ public class TestServiceImpl implements TestService {
 
         List<Test> userTests = user.getTests();
         List<UserTestForAdminResponse> userTestForAdminResponses = new ArrayList<>();
-        System.out.println("hbs");
-        System.out.println(userTests);
         if (userTests == null) {
             return userTestForAdminResponses;
         }
@@ -289,6 +291,7 @@ public class TestServiceImpl implements TestService {
                 .subTitle(test.getSubTitle())
                 .cover(test.getCover())
                 .isActive(false)
+                .isCompleted(false)
                 .questions(
                         test.getQuestions().stream()
                                 .map(question -> createQuestionForUser(question, userId))

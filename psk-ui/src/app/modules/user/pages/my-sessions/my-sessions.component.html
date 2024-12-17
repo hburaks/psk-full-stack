@@ -1,0 +1,23 @@
+<div class="row mx-0 card mb-5 py-4 px-md-3 px-sm-1">
+  <div class="col-12">
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Tarih</th>
+          <th scope="col">Randevu Statüsü</th>
+      </thead>
+      <tbody>
+        <tr *ngFor="let session of mySessions; let i = index">
+          <td>{{ session.date | date: 'dd.MM.yyyy' }}</td>
+          <td>{{ getStatusText(session.sessionStatus ?? '') }}</td>
+          <td *ngIf="isSessionCancelable(session.sessionStatus ?? '')">
+            <button class="btn btn-primary btn-primary-custom" (click)="cancelSession(session.sessionId ?? 0)">İptal
+              Et</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+
+</div>

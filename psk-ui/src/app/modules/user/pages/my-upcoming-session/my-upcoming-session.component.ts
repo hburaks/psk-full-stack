@@ -1,9 +1,14 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { CommonService } from 'src/app/custom-services/common-service/common.service';
-import { SessionResponse, UserResponse } from 'src/app/services/models';
+import {
+  MyTestResponse,
+  SessionResponse,
+  UserResponse,
+} from 'src/app/services/models';
 import {
   SessionControllerService,
   SessionControllerV3Service,
+  TestService,
   UserService,
 } from 'src/app/services/services';
 
@@ -28,18 +33,28 @@ export class MyUpcomingSessionComponent {
   statusMap: { [key: string]: string } = {};
   statusList: string[] = [];
 
+  myTests: MyTestResponse[] = [];
+
+  @Output() startTestEvent = new EventEmitter<MyTestResponse>();
+
+  startTest(test: MyTestResponse) {
+    this.startTestEvent.emit(test);
+  }
+
   constructor(
     private mySessionService: SessionControllerService,
     private userService: UserService,
-    private commonService: CommonService
+    private commonService: CommonService,
+    private myTestService: TestService
   ) {
     this.getUpcomingSession();
     this.fetchUser();
-    this.fetchMySessions();
+    this.fetchMyTests();
+    //TODO it will be used in my sessions tab
+    /* this.fetchMySessions(); */
     this.statusMap = this.commonService.sessionStatusMap;
     this.statusList = Object.keys(this.statusMap).filter(
-      (status) =>
-        status !== 'UNAVAILABLE' && status !== 'AWAITING_PSYCHOLOGIST_APPROVAL'
+      (status) => status !== 'UNAVAILABLE'
     );
   }
 
@@ -52,6 +67,7 @@ export class MyUpcomingSessionComponent {
   getUpcomingSession() {
     this.mySessionService.getUpcomingSession().subscribe((session) => {
       this.upcomingSession = session;
+      this.isUpcomingSession = session != null;
     });
   }
 
@@ -66,9 +82,14 @@ export class MyUpcomingSessionComponent {
     });
   }
 
+  fetchMyTests() {
+    this.myTestService.getAllMyTests().subscribe((tests) => {
+      this.myTests = tests;
+    });
+  }
+
   goToSession() {
     // TODO
     console.log(this.upcomingSession);
   }
-
 }

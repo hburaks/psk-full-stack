@@ -1,6 +1,18 @@
 <div class="page-content container">
   <app-user-nav-underline (selectedNavItemEvent)="onSelectedNavItem($event)"></app-user-nav-underline>
   <div *ngIf="selectedNavItem === UserNavItems.MY_UPCOMING_SESSION">
-    <app-my-upcoming-session></app-my-upcoming-session>
+    <app-my-upcoming-session *ngIf="selectedTest === null"
+      (startTestEvent)="startTest($event)"></app-my-upcoming-session>
+    <app-user-test-card-detail *ngIf="selectedTest !== null" [testCard]="selectedTest"
+      (onCompleteTest)="onCompleteTest()"></app-user-test-card-detail>
+  </div>
+  <div *ngIf="selectedNavItem === UserNavItems.MY_SESSIONS">
+    <app-my-sessions></app-my-sessions>
+  </div>
+  <div *ngIf="selectedNavItem === UserNavItems.ACCOUNT_SETTINGS">
+    <app-edit-user></app-edit-user>
+  </div>
+  <div *ngIf="selectedNavItem === UserNavItems.CREATE_APPOINTMENT">
+    <app-create-my-session></app-create-my-session>
   </div>
 </div>

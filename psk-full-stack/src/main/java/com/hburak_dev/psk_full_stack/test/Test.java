@@ -7,6 +7,7 @@ import com.hburak_dev.psk_full_stack.question.Question;
 import com.hburak_dev.psk_full_stack.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -30,14 +31,17 @@ public class Test extends BaseEntity {
 
     private Boolean isActive;
 
-    @OneToMany(mappedBy = "test", cascade = CascadeType.ALL)
+    @Builder.Default
+    private Boolean isCompleted = Boolean.FALSE;
+
+    @OneToMany(mappedBy = "test", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Question> questions;
 
     @ManyToOne
     @JsonIgnoreProperties("tests")
     private User user;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     private List<Comment> comments;
 
 }

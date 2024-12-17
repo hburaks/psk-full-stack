@@ -625,14 +625,15 @@
     "/sessions/create": {
       "post": {
         "tags": ["session-controller"],
-        "operationId": "createSessionForUserV2_1",
+        "operationId": "createMySession",
         "parameters": [
           {
             "name": "date",
             "in": "query",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "format": "date-time"
             }
           }
         ],
@@ -1596,8 +1597,6 @@
             "type": "string",
             "enum": [
               "AWAITING_PSYCHOLOGIST_APPROVAL",
-              "AWAITING_PAYMENT",
-              "AWAITING_PAYMENT_CONFIRMATION",
               "APPOINTMENT_SCHEDULED",
               "COMPLETED",
               "CANCELED",
@@ -1624,8 +1623,6 @@
             "type": "string",
             "enum": [
               "AWAITING_PSYCHOLOGIST_APPROVAL",
-              "AWAITING_PAYMENT",
-              "AWAITING_PAYMENT_CONFIRMATION",
               "APPOINTMENT_SCHEDULED",
               "COMPLETED",
               "CANCELED",
@@ -2044,6 +2041,10 @@
               "type": "integer",
               "format": "int64"
             }
+          },
+          "lastModifiedDate": {
+            "type": "string",
+            "format": "date-time"
           }
         }
       },
@@ -2207,8 +2208,6 @@
             "type": "string",
             "enum": [
               "AWAITING_PSYCHOLOGIST_APPROVAL",
-              "AWAITING_PAYMENT",
-              "AWAITING_PAYMENT_CONFIRMATION",
               "APPOINTMENT_SCHEDULED",
               "COMPLETED",
               "CANCELED",
