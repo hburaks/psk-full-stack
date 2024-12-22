@@ -5,12 +5,9 @@ import {
   Output,
   EventEmitter,
 } from '@angular/core';
-import { UpdateSessionDateV2$Params } from 'src/app/services/fn/session-controller-v-2/update-session-date-v-2';
-import { SessionResponseV2 } from 'src/app/services/models';
 import { DailyCalendarResponse } from 'src/app/services/models/daily-calendar-response';
 import { HourlySessionResponse } from 'src/app/services/models/hourly-session-response';
 import { SessionControllerService } from 'src/app/services/services';
-import { SessionControllerV2Service } from 'src/app/services/services/session-controller-v-2.service';
 import { SessionControllerV3Service } from 'src/app/services/services/session-controller-v-3.service';
 
 @Component({
@@ -35,6 +32,12 @@ export class WeeklySessionCalendarComponent {
 
   @Output() dateToUpdateSession = new EventEmitter<string | null>();
 
+  approveModalText: string = '';
+  approveModalDate: string | null = null;
+
+  showToast: boolean = false;
+  toastErrorMessage: string = '';
+
   constructor(
     private sessionControllerV3Service: SessionControllerV3Service,
     private sessionControllerService: SessionControllerService
@@ -53,23 +56,33 @@ export class WeeklySessionCalendarComponent {
   }
 
   editSession(date: string | null) {
-    if (this.isCreateMySession) {
-      this.createMySession(date);
+    const formattedDate = new Date(date!).toLocaleString('tr-TR', {
+      day: '2-digit',
+      month: 'long',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+    if (this.isCreateMySession && date) {
+      this.approveModalText = `${formattedDate} tarihli randevu talebi oluşturmak ister misiniz?`;
     } else {
-      this.dateToUpdateSession.emit(date);
+      this.approveModalText = `${formattedDate} tarihini seçmek istediğinize emin misiniz?`;
     }
+    this.approveModalDate = date;
   }
 
   createMySession(date: string | null) {
-    this.sessionControllerService.createMySession({ date: date || '' }).subscribe({
-      next: (response: number) => {
-        console.log('Session created', response);
-        window.location.reload();
-      },
-      error: (error) => {
-        console.error('Error creating session', error);
-      },
-    });
+    this.sessionControllerService
+      .createMySession({ date: date || '' })
+      .subscribe({
+        next: (response: number) => {
+          window.location.reload();
+        },
+        error: (error) => {
+          this.toastErrorMessage = 'Seans oluşturulurken bir hata oluştu';
+          this.showToast = true;
+        },
+      });
   }
 
   getFormattedDate(day: DailyCalendarResponse): string {
@@ -198,7 +211,8 @@ export class WeeklySessionCalendarComponent {
         this.weeklySessionCalendar = sessions;
       },
       error: (error) => {
-        console.error('Error fetching weekly sessions', error);
+        this.toastErrorMessage = 'Seans takvimi yüklenirken bir hata oluştu';
+        this.showToast = true;
         this.weeklySessionCalendar = this.createDefaultWeeklyCalendar(false);
       },
     });
@@ -252,5 +266,13 @@ export class WeeklySessionCalendarComponent {
     }
 
     return defaultWeeklyCalendar;
+  }
+
+  approveModal() {
+    if (this.isCreateMySession) {
+      this.createMySession(this.approveModalDate);
+    } else {
+      this.dateToUpdateSession.emit(this.approveModalDate);
+    }
   }
 }
