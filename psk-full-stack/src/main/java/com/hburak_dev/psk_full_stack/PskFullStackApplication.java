@@ -121,7 +121,6 @@ public class PskFullStackApplication {
 			}
 
 			if (testRepository.count() == 0) {
-				List<Test> mockTests = new ArrayList<>();
 
 				Test depressionTest = Test.builder()
 						.title("Depresyon Değerlendirmesi")
