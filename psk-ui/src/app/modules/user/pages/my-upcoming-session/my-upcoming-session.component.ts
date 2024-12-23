@@ -89,7 +89,7 @@ export class MyUpcomingSessionComponent {
   }
 
   goToSession() {
-    // TODO
+    // TODO5
     console.log(this.upcomingSession);
   }
 }

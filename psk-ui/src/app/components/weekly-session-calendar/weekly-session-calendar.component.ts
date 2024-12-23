@@ -33,6 +33,7 @@ export class WeeklySessionCalendarComponent {
   @Output() dateToUpdateSession = new EventEmitter<string | null>();
 
   approveModalText: string = '';
+  approveModalHeader: string = '';
   approveModalDate: string | null = null;
 
   showToast: boolean = false;
@@ -65,8 +66,10 @@ export class WeeklySessionCalendarComponent {
     });
     if (this.isCreateMySession && date) {
       this.approveModalText = `${formattedDate} tarihli randevu talebi oluşturmak ister misiniz?`;
+      this.approveModalHeader = 'Randevu Talebi Oluştur';
     } else {
       this.approveModalText = `${formattedDate} tarihini seçmek istediğinize emin misiniz?`;
+      this.approveModalHeader = 'Randevu Seç';
     }
     this.approveModalDate = date;
   }

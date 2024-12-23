@@ -14,7 +14,7 @@ export class EditUserComponent {
   firstName: string = '';
   lastName: string = '';
   phoneNumber: string = '';
-  birthYear: number = 0;
+  birthYear: string = '1990';
 
   constructor(private userService: UserService) {}
 
@@ -25,6 +25,10 @@ export class EditUserComponent {
   fetchUser() {
     this.userService.getUser().subscribe((user) => {
       this.user = user;
+      this.firstName = user.firstname || '';
+      this.lastName = user.lastname || '';
+      this.phoneNumber = user.phoneNumber || '';
+      this.birthYear = user.birthYear || '1990';
     });
   }
 
