@@ -1,4 +1,3 @@
-
 package com.hburak_dev.psk_full_stack.session;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -43,5 +42,7 @@ public class Session extends BaseEntity {
     private boolean isSessionPaid;
 
     private boolean isMock;
+
+    private String googleMeetLink;
 
 }

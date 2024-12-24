@@ -1637,6 +1637,9 @@
           },
           "isPaid": {
             "type": "boolean"
+          },
+          "googleMeetLink": {
+            "type": "string"
           }
         }
       },
@@ -2215,6 +2218,9 @@
             ]
           },
           "noteForUser": {
+            "type": "string"
+          },
+          "googleMeetLink": {
             "type": "string"
           }
         }

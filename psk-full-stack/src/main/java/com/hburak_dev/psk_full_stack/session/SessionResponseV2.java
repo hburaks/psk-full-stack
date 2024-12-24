@@ -25,4 +25,6 @@ public class SessionResponseV2 {
 
     private Boolean isPaid;
 
+    private String googleMeetLink;
+
 }

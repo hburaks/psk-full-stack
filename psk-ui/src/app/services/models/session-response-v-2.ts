@@ -5,6 +5,7 @@
 import { UserForSessionResponse } from '../models/user-for-session-response';
 export interface SessionResponseV2 {
   date?: string;
+  googleMeetLink?: string;
   isPaid?: boolean;
   noteForPsychologist?: string;
   noteForUser?: string;

@@ -19,4 +19,6 @@ public class SessionResponse {
 
     private String noteForUser;
 
+    private String googleMeetLink;
+
 }

@@ -59,6 +59,7 @@ export class EditUserSessionComponent {
 
   closeModal() {
     this.showEditSessionModal.emit(false);
+    window.location.reload();
   }
 
   editNoteForUser() {
