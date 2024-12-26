@@ -43,6 +43,8 @@ public class Session extends BaseEntity {
 
     private boolean isMock;
 
-    private String googleMeetLink;
+    private String sessionLink;
+
+    private String googleEventId;
 
 }

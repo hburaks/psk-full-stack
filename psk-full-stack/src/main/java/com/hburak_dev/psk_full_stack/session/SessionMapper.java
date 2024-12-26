@@ -25,7 +25,7 @@ public class SessionMapper {
                                 .sessionStatus(session.getSessionStatus())
                                 .sessionId(session.getId())
                                 .noteForUser(session.getNoteForUser())
-                                .googleMeetLink(session.getGoogleMeetLink())
+                                .sessionLink(session.getSessionLink())
                                 .build();
         }
 
@@ -53,7 +53,7 @@ public class SessionMapper {
                                 .noteForUser(session.getNoteForUser())
                                 .noteForPsychologist(session.getNoteForPsychologist())
                                 .isPaid(session.isSessionPaid())
-                                .googleMeetLink(session.getGoogleMeetLink())
+                                .sessionLink(session.getSessionLink())
                                 .build();
         }
 

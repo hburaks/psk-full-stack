@@ -43,3 +43,10 @@ application:
       photos-output-path: ./uploads
 server:
   port: 8088
+google:
+  calendar:
+    client-id: ${GOOGLE_CLIENT_ID}
+    client-secret: ${GOOGLE_CLIENT_SECRET}
+    refresh-token: ${GOOGLE_REFRESH_TOKEN}
+    application-name: PSK Calendar
+    therapist-email: ${THERAPIST_EMAIL}

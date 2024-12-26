@@ -158,12 +158,6 @@ export class EditUserSessionComponent {
   }
 
   changeStatus(status: string) {
-    this.session!.sessionStatus = status as
-      | 'AWAITING_PSYCHOLOGIST_APPROVAL'
-      | 'APPOINTMENT_SCHEDULED'
-      | 'COMPLETED'
-      | 'CANCELED'
-      | 'UNAVAILABLE';
     const sessionStatusRequest: SessionStatusRequest = {
       sessionId: this.session!.sessionId,
       sessionStatusType: status as
@@ -178,7 +172,7 @@ export class EditUserSessionComponent {
       .updateSessionStatusV2({ body: sessionStatusRequest })
       .subscribe({
         next: (response: number) => {
-          console.log(response);
+          this.session!.sessionStatus = sessionStatusRequest.sessionStatusType;
         },
         error: (error) => {
           this.toastErrorMessage = 'Durum değiştirirken bir hata oluştu';

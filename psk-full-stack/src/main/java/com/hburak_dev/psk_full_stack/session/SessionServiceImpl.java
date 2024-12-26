@@ -3,6 +3,7 @@ package com.hburak_dev.psk_full_stack.session;
 import com.hburak_dev.psk_full_stack.Util;
 import com.hburak_dev.psk_full_stack.common.PageResponse;
 import com.hburak_dev.psk_full_stack.exception.SessionNotFoundException;
+import com.hburak_dev.psk_full_stack.handler.BusinessErrorCodes;
 import com.hburak_dev.psk_full_stack.user.User;
 import com.hburak_dev.psk_full_stack.user.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
@@ -38,6 +40,7 @@ public class SessionServiceImpl implements SessionService {
 
     private final SessionMapper sessionMapper;
 
+    private final GoogleMeetService googleMeetService;
 
     private List<PublicSessionResponse> getAllSessionsWeekly(LocalDateTime dateTime) {
 
@@ -125,13 +128,6 @@ public class SessionServiceImpl implements SessionService {
                 .createdBy(admin.getId())
                 .build();
 
-        /* try {
-            String meetLink = googleCalendarService.createMeeting(session, admin);
-            session.setGoogleMeetLink(meetLink);
-        } catch (Exception e) {
-            log.error("Failed to create Google Calendar meeting", e);
-        } */
-
         Session savedSession = sessionRepository.save(session);
         return savedSession.getId();
     }
@@ -213,18 +209,20 @@ public class SessionServiceImpl implements SessionService {
 
     @Override
     public Integer updateSessionStatusV2(SessionStatusRequest sessionStatusRequest) {
-        Optional<Session> sessionOpt = sessionRepository.findById(sessionStatusRequest.getSessionId());
+        Session session = sessionRepository.findById(sessionStatusRequest.getSessionId())
+                .orElseThrow(() -> new SessionNotFoundException("Seans bulunamadı"));
 
-        if (sessionOpt.isPresent()) {
-            Session session = sessionOpt.get();
-            session.setSessionStatus(sessionStatusRequest.getSessionStatusType());
-
-            Session savedSession = sessionRepository.save(session);
-
-            return savedSession.getId();
-        } else {
-            throw new SessionNotFoundException("Bu id ile seans bulunamadı: " + sessionStatusRequest.getSessionId());
+        if (sessionStatusRequest.getSessionStatusType() == SessionStatusType.APPOINTMENT_SCHEDULED) {
+            googleMeetService.createMeeting(session);
+        } else if (session.getSessionLink() != null) {
+            googleMeetService.deleteMeeting(session.getGoogleEventId());
+            session.setSessionLink(null);
+            session.setGoogleEventId(null);
         }
+
+        session.setSessionStatus(sessionStatusRequest.getSessionStatusType());
+        sessionRepository.save(session);
+        return session.getId();
     }
 
     @Override
