@@ -38,6 +38,7 @@ public class SessionServiceImpl implements SessionService {
 
     private final SessionMapper sessionMapper;
 
+
     private List<PublicSessionResponse> getAllSessionsWeekly(LocalDateTime dateTime) {
 
         LocalDateTime startOfWeek = dateTime.with(DayOfWeek.MONDAY).with(LocalTime.MIN);
@@ -101,11 +102,38 @@ public class SessionServiceImpl implements SessionService {
     }
 
     @Override
-    public Integer createSessionForUserV2(LocalDateTime date, Integer userId) {
+    public Integer createSessionForUserV2(LocalDateTime date, Integer userId, Authentication connectedUser) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new SessionNotFoundException("Bu id ile kullanıcı bulunamadı: " + userId));
 
-        return createSessionWithIdAndDate(user, date);
+        User admin = (User) connectedUser.getPrincipal();
+
+        LocalDateTime fullHour = Util.toFullHour(date);
+        validateSessionDate(fullHour);
+
+        if (sessionRepository.existsByDate(fullHour)
+                && sessionRepository.findByDate(fullHour).getSessionStatus() != SessionStatusType.CANCELED) {
+            throw new SessionNotFoundException("Bu zaman diliminde takvim müsait değil: " + fullHour);
+        }
+
+        Session session = Session.builder()
+                .date(fullHour)
+                .user(user)
+                .sessionStatus(SessionStatusType.APPOINTMENT_SCHEDULED)
+                .isSessionPaid(false)
+                .isMock(false)
+                .createdBy(admin.getId())
+                .build();
+
+        /* try {
+            String meetLink = googleCalendarService.createMeeting(session, admin);
+            session.setGoogleMeetLink(meetLink);
+        } catch (Exception e) {
+            log.error("Failed to create Google Calendar meeting", e);
+        } */
+
+        Session savedSession = sessionRepository.save(session);
+        return savedSession.getId();
     }
 
     @Override
