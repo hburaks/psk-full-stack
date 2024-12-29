@@ -1,28 +1,43 @@
 package com.hburak_dev.psk_full_stack.blog;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
+import com.hburak_dev.psk_full_stack.service.FileStorageService;
+
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class BlogMapper {
+
+    @Value("${server.port}")
+    private String serverPort;
+
     public Blog toBlog(BlogRequest request) {
         return Blog.builder()
                 .title(request.getTitle())
                 .subTitle(request.getSubTitle())
                 .text(request.getText())
-                .cover(request.getCover())
                 .shareable(request.isShareable())
                 .build();
     }
 
-    public BlogResponse toBlogResponse(Blog blog) {
+    private BlogResponse toBlogResponse(Blog blog) {
+        String imageUrl = null;
+        if (blog.getImageFileName() != null) {
+            imageUrl = String.format("http://localhost:%s/api/v3/files/blog/download/%s",
+                    serverPort, blog.getImageFileName());
+        }
+
         return BlogResponse.builder()
                 .id(blog.getId())
-                .createdDate(blog.getCreatedDate())
                 .title(blog.getTitle())
-                .subTitle(blog.getSubTitle())
                 .text(blog.getText())
-                .cover(blog.getCover())
+                .subTitle(blog.getSubTitle())
                 .shareable(blog.isShareable())
+                .imageUrl(imageUrl)
                 .build();
     }
 

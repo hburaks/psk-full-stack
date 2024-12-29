@@ -7,9 +7,8 @@ import {
   OnChanges,
   SimpleChanges,
 } from '@angular/core';
-import { SaveBlog$Params } from 'src/app/services/fn/blog/save-blog';
-import { BlogResponse } from 'src/app/services/models';
-import { BlogService } from 'src/app/services/services';
+import { BlogRequest, BlogResponse } from 'src/app/services/models';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-generic-card-detail',
@@ -20,7 +19,7 @@ export class GenericCardDetailComponent implements OnInit, OnChanges {
   @Input() blogId: number | null = null;
   @Input() text: string = '';
   @Input() title: string = '';
-  @Input() cover: string[] = [];
+  @Input() imageUrl: string = '';
   @Input() subTitle: string = '';
   @Input() shareable: boolean = true;
 
@@ -36,7 +35,11 @@ export class GenericCardDetailComponent implements OnInit, OnChanges {
 
   blob: Blob | null = null;
 
-  constructor(private blogService: BlogService) {}
+  selectedFile: File | null = null;
+
+  private apiUrl = 'http://localhost:8088/api'; // Add your actual API base URL
+
+  constructor(private http: HttpClient) {}
 
   ngOnInit() {
     this.initializeBlogCard();
@@ -47,7 +50,7 @@ export class GenericCardDetailComponent implements OnInit, OnChanges {
       changes['blogId'] ||
       changes['title'] ||
       changes['text'] ||
-      changes['cover'] ||
+      changes['imageUrl'] ||
       changes['subTitle'] ||
       changes['shareable']
     ) {
@@ -58,7 +61,7 @@ export class GenericCardDetailComponent implements OnInit, OnChanges {
   private initializeBlogCard() {
     this.blogCard = {
       id: this.blogId ?? undefined,
-      cover: this.cover?? undefined,
+      imageUrl: this.imageUrl ?? undefined,
       shareable: this.shareable,
       subTitle: this.subTitle,
       text: this.text,
@@ -66,10 +69,26 @@ export class GenericCardDetailComponent implements OnInit, OnChanges {
     };
   }
 
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedFile = file;
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.imageUrl = e.target.result;
+        this.updateBlogCard();
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
   uploadImage() {
-    // TODO: Implement image upload
-    //this.cover = ['https://i.ibb.co/WD8V52c/empty-card.png'];
-    this.updateBlogCard();
+    // Replace the button click with file input click
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.accept = 'image/*';
+    fileInput.onchange = (e) => this.onFileSelected(e);
+    fileInput.click();
   }
 
   updateShareable(event: any) {
@@ -88,43 +107,50 @@ export class GenericCardDetailComponent implements OnInit, OnChanges {
   }
 
   saveBlog() {
+    const formData = new FormData();
+    if (this.title) {
+      formData.append('title', this.title);
+    }
+    if (this.subTitle) {
+      formData.append('subTitle', this.subTitle);
+    }
+    if (this.text) {
+      formData.append('text', this.text);
+    }
+    formData.append('shareable', String(this.shareable));
+
+    if (this.selectedFile instanceof File) {
+      formData.append('image', this.selectedFile);
+    }
+
     if (!this.blogCard?.id) {
-      const blogParams: any = {};
-
-      if (this.cover) blogParams.cover = this.cover;
-      if (this.shareable !== undefined) blogParams.shareable = this.shareable;
-      if (this.subTitle) blogParams.subTitle = this.subTitle;
-      if (this.text) blogParams.text = this.text;
-      if (this.title) blogParams.title = this.title;
-
-      const saveBlogParams: SaveBlog$Params = {
-        body: blogParams,
-      };
-
-      this.blogService.saveBlog(saveBlogParams).subscribe({
-        next: (response) => {
-          this.isBlogEditable = false;
-          this.endEditingEvent.emit();
-        },
-        error: (error) => {
-          console.log(error);
-        },
-      });
-    } else {
-      const blogParams: any = {};
-
-      if (this.cover) blogParams.cover = this.cover;
-      if (this.shareable !== undefined) blogParams.shareable = this.shareable;
-      if (this.subTitle) blogParams.subTitle = this.subTitle;
-      if (this.text) blogParams.text = this.text;
-      if (this.title) blogParams.title = this.title;
-
-      this.blogService
-        .updateBlog({ id: this.blogCard.id, body: blogParams })
+      // Create new blog
+      this.http
+        .post<number>(`${this.apiUrl}/v2/blogs/save`, formData)
         .subscribe({
           next: (response) => {
             this.isBlogEditable = false;
             this.endEditingEvent.emit();
+          },
+          error: (error) => {
+            console.log('Save error:', error);
+          },
+        });
+    } else {
+      // Update existing blog
+      this.http
+        .put<number>(
+          `${this.apiUrl}/v2/blogs/update/${this.blogCard.id}`,
+          formData
+        )
+        .subscribe({
+          next: (response) => {
+            console.log('Update success:', response);
+            this.isBlogEditable = false;
+            this.endEditingEvent.emit();
+          },
+          error: (error) => {
+            console.log('Update error:', error);
           },
         });
     }

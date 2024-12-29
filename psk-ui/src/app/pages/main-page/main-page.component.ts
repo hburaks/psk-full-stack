@@ -29,7 +29,7 @@ export class MainPageComponent implements OnInit {
   }
 
   blog: BlogResponse = {
-    cover: ['https://i.ibb.co/qj44W4n/Auth-bg.jpg'],
+    imageUrl: 'https://i.ibb.co/qj44W4n/Auth-bg.jpg',
     createdDate: '',
     id: 1,
     shareable: true,

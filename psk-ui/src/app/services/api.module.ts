@@ -13,6 +13,7 @@ import { SessionControllerV2Service } from './services/session-controller-v-2.se
 import { SessionControllerService } from './services/session-controller.service';
 import { AuthenticationService } from './services/authentication.service';
 import { SessionControllerV3Service } from './services/session-controller-v-3.service';
+import { FileControllerService } from './services/file-controller.service';
 
 /**
  * Module that provides all services and configuration.
@@ -29,6 +30,7 @@ import { SessionControllerV3Service } from './services/session-controller-v-3.se
     SessionControllerService,
     AuthenticationService,
     SessionControllerV3Service,
+    FileControllerService,
     ApiConfiguration
   ],
 })

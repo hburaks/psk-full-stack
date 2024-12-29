@@ -21,8 +21,8 @@ public class BlogResponse {
 
     private String text;
 
-    private byte[] cover;
-
     private boolean shareable;
+
+    private String imageUrl;
 
 }

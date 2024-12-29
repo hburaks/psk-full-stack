@@ -90,8 +90,8 @@ export class MyUpcomingSessionComponent {
 
   goToSession() {
     //TODO
-    if (this.upcomingSession?.googleMeetLink) {
-      window.open(this.upcomingSession.googleMeetLink, '_blank');
+    if (this.upcomingSession?.sessionLink) {
+      window.open(this.upcomingSession.sessionLink, '_blank');
     } else {
       this.toastErrorMessage = 'Google Meet linki henüz oluşturulmamış';
       this.showToast = true;

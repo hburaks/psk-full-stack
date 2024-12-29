@@ -49,11 +49,7 @@ export class TestCardDetailComponent implements AfterViewInit {
   text: string =
     'Kendinizi daha iyi tanımak için tasarlanmış çeşitli psikolojik testlerimizi deneyebilirsiniz. Bu testler kişilik özellikleri, duygusal durum ve davranış kalıplarınız hakkında içgörü kazanmanıza yardımcı olacaktır.';
 
-  constructor(
-    private commonService: CommonService,
-    private route: ActivatedRoute,
-    private testService: TestService
-  ) {
+  constructor(private route: ActivatedRoute, private testService: TestService) {
     this.cardId = this.route.snapshot.params['id'];
   }
 
@@ -276,6 +272,8 @@ export class TestCardDetailComponent implements AfterViewInit {
   }
 
   async onFileChange(event: any) {
+    const file = event.target.files[0];
+
     /* const file = event.target.files[0];
     const base64 = await this.commonService.fileToBase64(file);
     this.editableTestCard!.cover = [base64]; */

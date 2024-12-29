@@ -93,7 +93,7 @@ export class BlogService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  saveBlog$Response(params: SaveBlog$Params, context?: HttpContext): Observable<StrictHttpResponse<number>> {
+  saveBlog$Response(params?: SaveBlog$Params, context?: HttpContext): Observable<StrictHttpResponse<number>> {
     return saveBlog(this.http, this.rootUrl, params, context);
   }
 
@@ -103,7 +103,7 @@ export class BlogService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  saveBlog(params: SaveBlog$Params, context?: HttpContext): Observable<number> {
+  saveBlog(params?: SaveBlog$Params, context?: HttpContext): Observable<number> {
     return this.saveBlog$Response(params, context).pipe(
       map((r: StrictHttpResponse<number>): number => r.body)
     );

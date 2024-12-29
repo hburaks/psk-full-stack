@@ -1,4 +1,4 @@
 <app-blog-card-list *ngIf="!isEditingBlog" (editBlogEvent)="editBlog($event)" (addBlogEvent)="addBlog()"
   [isBlogEditable]="true" [blogCardList]="blogCardList"></app-blog-card-list>
-<app-blog-card-detail *ngIf="isEditingBlog" [cardId]="getBlogId()" [isBlogEditable]="true" (endEditingEvent)="endEditing()">
-</app-blog-card-detail>
+<app-blog-card-detail *ngIf="isEditingBlog" [cardId]="getBlogId()" [isBlogEditable]="true"
+  (endEditingEvent)="endEditing()">

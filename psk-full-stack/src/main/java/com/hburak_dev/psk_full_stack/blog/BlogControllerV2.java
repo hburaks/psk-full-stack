@@ -18,7 +18,7 @@ public class BlogControllerV2 {
 
     @PostMapping("/save")
     public ResponseEntity<Integer> saveBlog(
-            @RequestBody BlogRequest request,
+            @ModelAttribute BlogRequest request,
             Authentication connectedUser
     ) {
         return ResponseEntity.ok(service.saveBlog(request, connectedUser));
@@ -35,7 +35,7 @@ public class BlogControllerV2 {
     @PutMapping("/update/{id}")
     public ResponseEntity<Integer> updateBlog(
             @PathVariable Integer id,
-            @RequestBody BlogRequest request,
+            @ModelAttribute BlogRequest request,
             Authentication authentication) {
         return ResponseEntity.ok(service.updateSelectedBlog(id, request, authentication));
     }

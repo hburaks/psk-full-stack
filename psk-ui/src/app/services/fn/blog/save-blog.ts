@@ -11,10 +11,10 @@ import { RequestBuilder } from '../../request-builder';
 import { BlogRequest } from '../../models/blog-request';
 
 export interface SaveBlog$Params {
-      body: BlogRequest
+      body?: BlogRequest
 }
 
-export function saveBlog(http: HttpClient, rootUrl: string, params: SaveBlog$Params, context?: HttpContext): Observable<StrictHttpResponse<number>> {
+export function saveBlog(http: HttpClient, rootUrl: string, params?: SaveBlog$Params, context?: HttpContext): Observable<StrictHttpResponse<number>> {
   const rb = new RequestBuilder(rootUrl, saveBlog.PATH, 'post');
   if (params) {
     rb.body(params.body, 'application/json');

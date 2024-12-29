@@ -34,7 +34,7 @@
       <app-admin-test-card [testResults]="testResults"></app-admin-test-card>
     </div>
     <div class="row mx-1 g-2">
-      <button (click)="goToSession()" class="btn btn-primary">Seansa Git</button>
+      <button *ngIf="upcomingSession?.sessionLink" (click)="goToSession()" class="btn btn-primary">Seansa Git</button>
       <button (click)="addTestToUser()" class="btn btn-primary">Danışana Test Ata</button>
       <button (click)="addSessionToUser()" class="btn btn-primary">Danışan İçin Seans Oluştur</button>
       <button (click)="editSession()" class="btn btn-primary btn-primary-custom">Seansı Düzenle</button>

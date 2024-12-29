@@ -2,6 +2,7 @@ package com.hburak_dev.psk_full_stack.blog;
 
 import com.hburak_dev.psk_full_stack.common.PageResponse;
 import com.hburak_dev.psk_full_stack.exception.OperationNotPermittedException;
+import com.hburak_dev.psk_full_stack.service.FileStorageService;
 import com.hburak_dev.psk_full_stack.user.User;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.util.List;
 import java.util.Objects;
@@ -25,12 +27,25 @@ public class BlogServiceImpl implements BlogService {
 
     private final BlogRepository blogRepository;
     private final BlogMapper blogMapper;
+    private final FileStorageService fileStorageService;
+
+    @Value("${server.servlet.context-path}")
+    private String contextPath;
+
+    @Value("${server.port}")
+    private String serverPort;
 
     @Override
     @Transactional
     public Integer saveBlog(BlogRequest request, Authentication connectedUser) {
         User user = ((User) connectedUser.getPrincipal());
         Blog blog = blogMapper.toBlog(request);
+
+        if (request.getImage() != null && !request.getImage().isEmpty()) {
+            String fileName = fileStorageService.storeFile(request.getImage(), "blogs");
+            blog.setImageFileName(fileName);
+        }
+
         blog.setCreatedBy(user.getId());
         Blog savedBlog = blogRepository.save(blog);
         return savedBlog.getId();
@@ -42,7 +57,7 @@ public class BlogServiceImpl implements BlogService {
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
         Page<Blog> blogs = blogRepository.findAllShareableBlogs(pageable);
         List<BlogResponse> blogsResponse = blogs.stream()
-                .map(blogMapper::toBlogResponse)
+                .map(blog -> toBlogResponse(blog))
                 .toList();
         return new PageResponse<>(
                 blogsResponse,
@@ -51,8 +66,7 @@ public class BlogServiceImpl implements BlogService {
                 blogs.getTotalElements(),
                 blogs.getTotalPages(),
                 blogs.isFirst(),
-                blogs.isLast()
-        );
+                blogs.isLast());
     }
 
     @Override
@@ -61,7 +75,7 @@ public class BlogServiceImpl implements BlogService {
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
         Page<Blog> blogs = blogRepository.findAllBlogs(pageable);
         List<BlogResponse> blogsResponse = blogs.stream()
-                .map(blogMapper::toBlogResponse)
+                .map(blog -> toBlogResponse(blog))
                 .toList();
         return new PageResponse<>(
                 blogsResponse,
@@ -70,8 +84,7 @@ public class BlogServiceImpl implements BlogService {
                 blogs.getTotalElements(),
                 blogs.getTotalPages(),
                 blogs.isFirst(),
-                blogs.isLast()
-        );
+                blogs.isLast());
     }
 
     @Override
@@ -81,28 +94,30 @@ public class BlogServiceImpl implements BlogService {
                 .orElseThrow(() -> new RuntimeException("Bu ID ile blog bulunamadı :: " + id));
 
         User user = (User) authentication.getPrincipal();
-
         if (!existingBlog.getCreatedBy().equals(user.getId())) {
             throw new RuntimeException("Blog güncellemek için gerekli yetkiye sahip değilsiniz");
         }
 
-        if (request.getTitle() != null) {
+        if (request.getImage() != null && !request.getImage().isEmpty()) {
+
+            String fileName = fileStorageService.storeFile(request.getImage(), "blogs");
+
+            if (existingBlog.getImageFileName() != null) {
+                fileStorageService.deleteFile(existingBlog.getImageFileName(), "blogs");
+            }
+            existingBlog.setImageFileName(fileName);
+        }
+
+        if (request.getTitle() != null)
             existingBlog.setTitle(request.getTitle());
-        }
-        if (request.getSubTitle() != null) {
+        if (request.getSubTitle() != null)
             existingBlog.setSubTitle(request.getSubTitle());
-        }
-        if (request.getText() != null) {
+        if (request.getText() != null)
             existingBlog.setText(request.getText());
-        }
-        if (request.getCover() != null) {
-            existingBlog.setCover(request.getCover());
-        }
         existingBlog.setShareable(request.isShareable());
 
         return blogRepository.save(existingBlog).getId();
     }
-
 
     @Override
     public Integer updateShareableStatus(Integer id, Authentication connectedUser) {
@@ -133,7 +148,24 @@ public class BlogServiceImpl implements BlogService {
     @Override
     @Transactional
     public BlogResponse findBlogById(Integer id) {
-        return blogMapper.toBlogResponse(blogRepository.findById(id)
+        return toBlogResponse(blogRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Bu ID ile blog bulunamadı :: " + id)));
+    }
+
+    private BlogResponse toBlogResponse(Blog blog) {
+        String imageUrl = null;
+        if (blog.getImageFileName() != null) {
+            imageUrl = String.format("http://localhost:%s/api/v3/files/blog/download/%s",
+                    serverPort, blog.getImageFileName());
+        }
+
+        return BlogResponse.builder()
+                .id(blog.getId())
+                .title(blog.getTitle())
+                .text(blog.getText())
+                .subTitle(blog.getSubTitle())
+                .shareable(blog.isShareable())
+                .imageUrl(imageUrl)
+                .build();
     }
 }

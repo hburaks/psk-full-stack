@@ -4,8 +4,8 @@
 
 export interface SessionResponse {
   date?: string;
-  googleMeetLink?: string;
   noteForUser?: string;
   sessionId?: number;
+  sessionLink?: string;
   sessionStatus?: 'AWAITING_PSYCHOLOGIST_APPROVAL' | 'APPOINTMENT_SCHEDULED' | 'COMPLETED' | 'CANCELED' | 'UNAVAILABLE';
 }
