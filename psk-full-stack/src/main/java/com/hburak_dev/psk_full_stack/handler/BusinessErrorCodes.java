@@ -13,6 +13,7 @@ public enum BusinessErrorCodes {
     ACCOUNT_DISABLED(303, FORBIDDEN, "User account is disabled"),
     BAD_CREDENTIALS(304, FORBIDDEN, "Email veya Şifre yanlış"),
     INVALID_ACTIVATION_TOKEN(305, BAD_REQUEST, "Aktivasyon kodu geçersiz"),
+    SESSION_STATUS_ALREADY_UPDATED(306, BAD_REQUEST, "Seans zaten bu durumda"),
     ;
 
     @Getter

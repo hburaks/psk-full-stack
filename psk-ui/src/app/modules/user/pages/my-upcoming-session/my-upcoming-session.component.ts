@@ -89,7 +89,12 @@ export class MyUpcomingSessionComponent {
   }
 
   goToSession() {
-    // TODO5
-    console.log(this.upcomingSession);
+    //TODO
+    if (this.upcomingSession?.googleMeetLink) {
+      window.open(this.upcomingSession.googleMeetLink, '_blank');
+    } else {
+      this.toastErrorMessage = 'Google Meet linki henüz oluşturulmamış';
+      this.showToast = true;
+    }
   }
 }

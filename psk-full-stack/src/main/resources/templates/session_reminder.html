@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <title>Psikoterapi Seans Hatırlatması</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f5f5f5;
+    }
+
+    .container {
+      background-color: #ffffff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .logo {
+      max-width: 350px;
+    }
+
+    .greeting {
+      color: #7749F8;
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    .session-details {
+      background-color: #faf8fc;
+      padding: 20px;
+      border-radius: 6px;
+      margin: 20px 0;
+      border-left: 4px solid #7749F8;
+    }
+
+    .meet-button {
+      display: inline-block;
+      background-color: #6339e6;
+      color: #ffffff !important;
+      text-decoration: none !important;
+      padding: 12px 24px;
+      border-radius: 4px;
+      margin: 20px 0;
+    }
+
+    .meet-button:hover {
+      background-color: #3d2190;
+      color: #ffffff !important;
+      text-decoration: none !important;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 1px solid #ece2f0;
+      color: #8e7196;
+      font-size: 14px;
+    }
+
+    a.meet-button {
+      color: #ffffff !important;
+      text-decoration: none !important;
+    }
+
+    h1 {
+      margin-top: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="header">
+      <img class="logo" src="https://i.ibb.co/rF8w6f9/vert-logo.png" alt="PSK Logo" />
+      <h1>Psikoterapi</h1>
+    </div>
+
+    <div class="greeting">
+      Sayın <span th:text="${username}"></span>,
+    </div>
+
+    <p>Online psikoterapi seansınız için önemli hatırlatma:</p>
+
+    <div class="session-details">
+      <p><strong>📅 Seans Tarihi:</strong>
+        <span th:if="${sessionDate != null}" th:text="${#temporals.format(sessionDate, 'dd MMMM yyyy HH:mm')}">
+        </span>
+        <span th:if="${sessionDate == null}">Tarih belirtilmedi</span>
+      </p>
+      <p><strong>💻 Platform:</strong> Google Meet</p>
+      <p><strong>⏱️ Süre:</strong> 50 dakika</p>
+    </div>
+
+    <p>Seansınıza katılmak için aşağıdaki butona tıklayabilirsiniz:</p>
+
+    <div style="text-align: center;">
+      <a class="meet-button" th:href="${confirmationUrl}">
+        Seansa Katıl
+      </a>
+    </div>
+
+    <p><strong>Önemli Hatırlatmalar:</strong></p>
+    <ul>
+      <li>Lütfen seansınıza zamanında katılım sağlayınız.</li>
+      <li>Görüşme öncesi sessiz ve rahat bir ortam hazırlayınız.</li>
+      <li>İnternet bağlantınızı kontrol ediniz.</li>
+      <li>Kulaklık kullanmanız önerilmektedir.</li>
+    </ul>
+
+    <div class="footer">
+      <p>Saygılarımızla,<br />
+        <strong>PSK Ekibi</strong>
+      </p>
+      <p>Sorularınız için: <a href="mailto:uzm.kl.psk.ecemds@gmail.com">uzm.kl.psk.ecemds@gmail.com</a></p>
+    </div>
+  </div>
+</body>
+
+</html>

@@ -105,19 +105,18 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ActivationTokenException.class)
     public ResponseEntity<ExceptionResponse> handleException(ActivationTokenException exp) {
-        Set<String> validationErrors = new HashSet<>();
-        validationErrors.add(exp.getMessage());
-        return ResponseEntity
-                .status(INVALID_ACTIVATION_TOKEN.getHttpStatus())
-                .body(
-                        ExceptionResponse.builder()
-                                .businessErrorCode(exp.getErrorCode().getCode())
-                                .businessErrorDescription(exp.getErrorCode().getDescription())
-                                .validationErrors(validationErrors)
-                                .error(exp.getMessage())
-                                .build()
-                );
+            Set<String> validationErrors = new HashSet<>();
+            validationErrors.add(exp.getMessage());
+            return ResponseEntity
+                            .status(INVALID_ACTIVATION_TOKEN.getHttpStatus())
+                            .body(
+                                            ExceptionResponse.builder()
+                                                            .businessErrorCode(exp.getErrorCode().getCode())
+                                                            .businessErrorDescription(
+                                                                            exp.getErrorCode().getDescription())
+                                                            .validationErrors(validationErrors)
+                                                            .error(exp.getMessage())
+                                                            .build());
     }
-
 
 }
