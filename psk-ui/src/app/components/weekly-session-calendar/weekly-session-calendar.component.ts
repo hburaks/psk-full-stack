@@ -278,4 +278,9 @@ export class WeeklySessionCalendarComponent {
       this.dateToUpdateSession.emit(this.approveModalDate);
     }
   }
+  isSessionDateInFuture(date: string): boolean {
+    const sessionDate = new Date(date);
+    const currentDate = new Date();
+    return sessionDate > currentDate;
+  }
 }

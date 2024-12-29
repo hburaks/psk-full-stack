@@ -144,7 +144,7 @@ export class AuthComponent {
       })
       .subscribe({
         next: (res: any) => {
-          console.log(res.toString());
+          this.router.navigate(['login']);
         },
         error: (err) => {
           if (err.error.validationErrors) {

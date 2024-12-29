@@ -5,7 +5,8 @@ import lombok.Getter;
 @Getter
 public enum EmailTemplateName {
 
-    ACTIVATE_ACCOUNT("activate_account");
+    ACTIVATE_ACCOUNT("activate_account"),
+    SESSION_REMINDER("session_reminder");
 
 
     private final String name;

@@ -110,7 +110,7 @@ public class AuthenticationService {
         var newToken = generateAndSaveActivationToken(user);
 
         emailService.sendEmail(user.getEmail(), user.getFullName(), EmailTemplateName.ACTIVATE_ACCOUNT, activationUrl,
-                newToken, "Hesap Aktifleştirme");
+                newToken, "Hesap Aktifleştirme", null);
 
     }
 
