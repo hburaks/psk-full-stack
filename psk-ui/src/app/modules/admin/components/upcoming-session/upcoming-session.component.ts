@@ -99,8 +99,14 @@ export class UpcomingSessionComponent {
   }
 
   goToSession() {
-    // TODO: google meet linki ile yönlendirme yapılacak. ayrıca upcominSession içerisinde link olmalı.
-    // window.open(this.upcomingSession?.googleMeetLink, '_blank');
+    //TODO
+    if (this.upcomingSession?.googleMeetLink) {
+      window.open(this.upcomingSession.googleMeetLink, '_blank');
+      console.log(this.upcomingSession.googleMeetLink);
+    } else {
+      this.toastErrorMessage = 'Google Meet linki henüz oluşturulmamış';
+      this.showToast = true;
+    }
   }
 
   addTestToUser() {

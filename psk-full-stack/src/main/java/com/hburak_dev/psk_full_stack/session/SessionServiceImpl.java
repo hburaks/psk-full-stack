@@ -1,6 +1,7 @@
 package com.hburak_dev.psk_full_stack.session;
 
 import com.hburak_dev.psk_full_stack.Util;
+import com.hburak_dev.psk_full_stack.common.GoogleMeetService;
 import com.hburak_dev.psk_full_stack.common.PageResponse;
 import com.hburak_dev.psk_full_stack.exception.SessionNotFoundException;
 import com.hburak_dev.psk_full_stack.user.User;
@@ -37,6 +38,8 @@ public class SessionServiceImpl implements SessionService {
     private final UserRepository userRepository;
 
     private final SessionMapper sessionMapper;
+
+    private final GoogleMeetService googleMeetService;
 
     private List<PublicSessionResponse> getAllSessionsWeekly(LocalDateTime dateTime) {
 
@@ -101,11 +104,31 @@ public class SessionServiceImpl implements SessionService {
     }
 
     @Override
-    public Integer createSessionForUserV2(LocalDateTime date, Integer userId) {
+    public Integer createSessionForUserV2(LocalDateTime date, Integer userId, Authentication connectedUser) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new SessionNotFoundException("Bu id ile kullanıcı bulunamadı: " + userId));
 
-        return createSessionWithIdAndDate(user, date);
+        User admin = (User) connectedUser.getPrincipal();
+
+        LocalDateTime fullHour = Util.toFullHour(date);
+        validateSessionDate(fullHour);
+
+        if (sessionRepository.existsByDate(fullHour)
+                && sessionRepository.findByDate(fullHour).getSessionStatus() != SessionStatusType.CANCELED) {
+            throw new SessionNotFoundException("Bu zaman diliminde takvim müsait değil: " + fullHour);
+        }
+
+        Session session = Session.builder()
+                .date(fullHour)
+                .user(user)
+                .sessionStatus(SessionStatusType.APPOINTMENT_SCHEDULED)
+                .isSessionPaid(false)
+                .isMock(false)
+                .createdBy(admin.getId())
+                .build();
+
+        Session savedSession = sessionRepository.save(session);
+        return savedSession.getId();
     }
 
     @Override
@@ -185,18 +208,22 @@ public class SessionServiceImpl implements SessionService {
 
     @Override
     public Integer updateSessionStatusV2(SessionStatusRequest sessionStatusRequest) {
-        Optional<Session> sessionOpt = sessionRepository.findById(sessionStatusRequest.getSessionId());
+        Session session = sessionRepository.findById(sessionStatusRequest.getSessionId())
+                .orElseThrow(() -> new SessionNotFoundException("Seans bulunamadı"));
 
-        if (sessionOpt.isPresent()) {
-            Session session = sessionOpt.get();
-            session.setSessionStatus(sessionStatusRequest.getSessionStatusType());
-
-            Session savedSession = sessionRepository.save(session);
-
-            return savedSession.getId();
-        } else {
-            throw new SessionNotFoundException("Bu id ile seans bulunamadı: " + sessionStatusRequest.getSessionId());
+        if (sessionStatusRequest.getSessionStatusType() == SessionStatusType.APPOINTMENT_SCHEDULED
+                && session.getSessionLink() == null) {
+            googleMeetService.createMeeting(session);
+        } else if (session.getSessionLink() != null
+                && sessionStatusRequest.getSessionStatusType() != SessionStatusType.APPOINTMENT_SCHEDULED) {
+            googleMeetService.deleteMeeting(session.getGoogleEventId());
+            session.setSessionLink(null);
+            session.setGoogleEventId(null);
         }
+
+        session.setSessionStatus(sessionStatusRequest.getSessionStatusType());
+        sessionRepository.save(session);
+        return session.getId();
     }
 
     @Override
@@ -205,11 +232,23 @@ public class SessionServiceImpl implements SessionService {
 
         if (sessionOpt.isPresent()) {
             Session session = sessionOpt.get();
-            session.setDate(sessionDateRequest.getDate());
+            if (!session.getDate().equals(sessionDateRequest.getDate())) {
 
-            Session savedSession = sessionRepository.save(session);
+                session.setDate(sessionDateRequest.getDate());
 
-            return savedSession.getId();
+                if (session.getSessionLink() != null) {
+                    googleMeetService.deleteMeeting(session.getGoogleEventId());
+                    session.setSessionLink(null);
+                    session.setGoogleEventId(null);
+                }
+                if (session.getSessionStatus() == SessionStatusType.APPOINTMENT_SCHEDULED) {
+                    googleMeetService.createMeeting(session);
+                }
+                Session savedSession = sessionRepository.save(session);
+                return savedSession.getId();
+            } else {
+                throw new IllegalArgumentException("Seans tarihi aynı olamaz: " + sessionDateRequest.getSessionId());
+            }
         } else {
             throw new SessionNotFoundException("Bu id ile seans bulunamadı: " + sessionDateRequest.getSessionId());
         }
@@ -302,8 +341,9 @@ public class SessionServiceImpl implements SessionService {
     public SessionResponseV2 updateSessionPaidStatusV2(Boolean isPaid, Integer sessionId) {
         Session session = sessionRepository.findById(sessionId)
                 .orElseThrow(() -> new SessionNotFoundException("Bu id ile seans bulunamadı: " + sessionId));
-
+        // TODO payment impl
         session.setSessionPaid(isPaid);
+        session.setSessionStatus(SessionStatusType.APPOINTMENT_SCHEDULED);
         Session savedSession = sessionRepository.save(session);
 
         return sessionMapper.toSessionResponseV2(savedSession);

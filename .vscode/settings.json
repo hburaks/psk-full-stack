@@ -3,5 +3,6 @@
 	"java.dependency.packagePresentation": "hierarchical",
 	"java.debug.settings.onBuildFailureProceed": true,
 	"java.debug.settings.showStaticVariables": true,
-	"java.debug.settings.showHex": false
+	"java.debug.settings.showHex": false,
+	"java.configuration.updateBuildConfiguration": "automatic"
 }

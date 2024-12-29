@@ -10,12 +10,12 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
+import org.springframework.beans.factory.annotation.Value;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.springframework.mail.javamail.MimeMessageHelper.MULTIPART_MODE_MIXED;
 
 @Service
 @Slf4j
@@ -24,6 +24,9 @@ public class EmailService {
     private final JavaMailSender mailSender;
     private final SpringTemplateEngine templateEngine;
 
+    @Value("${spring.mail.username}")
+    private String senderEmail;
+
     @Async
     public void sendEmail(
             String to,
@@ -31,36 +34,38 @@ public class EmailService {
             EmailTemplateName emailTemplate,
             String confirmationUrl,
             String activationCode,
-            String subject
+            String subject,
+            String sessionDateStr
     ) throws MessagingException {
-        String templateName;
-        if (emailTemplate == null) {
-            templateName = "confirm-email";
-        } else {
-            templateName = emailTemplate.name();
-        }
         MimeMessage mimeMessage = mailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(
-                mimeMessage,
-                MULTIPART_MODE_MIXED,
-                UTF_8.name()
-        );
+        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+
         Map<String, Object> properties = new HashMap<>();
         properties.put("username", username);
         properties.put("confirmationUrl", confirmationUrl);
         properties.put("activation_code", activationCode);
 
+        if (sessionDateStr != null) {
+            try {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy HH:mm");
+                LocalDateTime sessionDate = LocalDateTime.parse(sessionDateStr, formatter);
+                properties.put("sessionDate", sessionDate);
+            } catch (Exception e) {
+                log.error("Error parsing date: {}", sessionDateStr, e);
+            }
+        }
+
         Context context = new Context();
         context.setVariables(properties);
 
-        helper.setFrom("psk-ecem-contact@gmail.com");
+        String htmlContent = templateEngine.process(emailTemplate.getName(), context);
+        helper.setText(htmlContent, true);
+
+        helper.setFrom(senderEmail);
         helper.setTo(to);
         helper.setSubject(subject);
 
-        String template = templateEngine.process(templateName, context);
-
-        helper.setText(template, true);
-
         mailSender.send(mimeMessage);
+        log.info("Email sent to: {}", to);
     }
 }

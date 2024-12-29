@@ -4,6 +4,7 @@ import com.hburak_dev.psk_full_stack.blog.Blog;
 import com.hburak_dev.psk_full_stack.blog.BlogRepository;
 import com.hburak_dev.psk_full_stack.choice.Choice;
 import com.hburak_dev.psk_full_stack.comment.Comment;
+import com.hburak_dev.psk_full_stack.comment.CommentRepository;
 import com.hburak_dev.psk_full_stack.question.AnswerType;
 import com.hburak_dev.psk_full_stack.question.Question;
 import com.hburak_dev.psk_full_stack.role.Role;
@@ -27,11 +28,18 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @EnableJpaAuditing
 @EnableAsync
+@EnableScheduling
 @SpringBootApplication
 public class PskFullStackApplication {
+
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
 	public static void main(String[] args) {
 		SpringApplication.run(PskFullStackApplication.class, args);
@@ -43,13 +51,42 @@ public class PskFullStackApplication {
 			UserRepository userRepository,
 			RoleRepository roleRepository,
 			TestRepository testRepository,
-			BlogRepository blogRepository) {
+			CommentRepository commentRepository,
+					BlogRepository blogRepository) {
 		return args -> {
 			if (roleRepository.findByName("ROLE_USER").isEmpty()) {
 				roleRepository.save(Role.builder().name("ROLE_USER").build());
 			}
 			if (roleRepository.findByName("ROLE_ADMIN").isEmpty()) {
 				roleRepository.save(Role.builder().name("ROLE_ADMIN").build());
+			}
+
+			if (userRepository.findByEmail("admin@psk.com").isEmpty()) {
+				userRepository.save(User.builder()
+						.email("admin@psk.com")
+						.password(passwordEncoder.encode("12345678"))
+						.firstname("Ecem")
+						.lastname("Doğan Songur")
+						.phoneNumber("5510143267")
+						.birthYear("1990")
+						.enabled(true)
+						.accountLocked(false)
+						.roles(List.of(roleRepository.findByName("ROLE_ADMIN").get()))
+						.build());
+			}
+
+			if (userRepository.findByEmail("user@psk.com").isEmpty()) {
+				userRepository.save(User.builder()
+						.email("user@psk.com")
+						.password(passwordEncoder.encode("12345678"))
+						.firstname("Hasan Burak")
+						.lastname("Songur")
+						.phoneNumber("5426221542")
+						.birthYear("1990")
+						.enabled(true)
+						.accountLocked(false)
+						.roles(List.of(roleRepository.findByName("ROLE_USER").get()))
+						.build());
 			}
 
 			User mockUser = userRepository.findAll()
@@ -87,8 +124,6 @@ public class PskFullStackApplication {
 
 			if (testRepository.count() == 0) {
 
-				List<Test> mockTests = new ArrayList<>();
-
 				Test depressionTest = Test.builder()
 						.title("Depresyon Değerlendirmesi")
 						.subTitle("Depresyon belirtilerini değerlendir")
@@ -103,106 +138,101 @@ public class PskFullStackApplication {
 						.isActive(true)
 						.build();
 
-				mockTests.add(depressionTest);
-				mockTests.add(anxietyTest);
+				depressionTest = testRepository.save(depressionTest);
+				anxietyTest = testRepository.save(anxietyTest);
 
-				List<Comment> depressionComments = List.of(
+				List<Comment> depressionComments = commentRepository.saveAll(List.of(
 						Comment.builder().title("Yüksek").score(100).text("Yüksek depresyon seviyesi").createdBy(mockUser.getId())
 								.build(),
 						Comment.builder().title("Orta").score(50).text("Orta depresyon seviyesi").createdBy(mockUser.getId())
 								.build(),
 						Comment.builder().title("Düşük").score(0).text("Düşük depresyon seviyesi").createdBy(mockUser.getId())
-								.build());
+								.build()));
 
-				List<Comment> anxietyComments = List.of(
+				List<Comment> anxietyComments = commentRepository.saveAll(List.of(
 						Comment.builder().title("Yüksek").score(100).text("Yüksek anksiyete seviyesi").createdBy(mockUser.getId())
 								.build(),
 						Comment.builder().title("Orta").score(50).text("Orta anksiyete seviyesi").createdBy(mockUser.getId())
 								.build(),
 						Comment.builder().title("Düşük").score(0).text("Düşük anksiyete seviyesi").createdBy(mockUser.getId())
-								.build());
+								.build()));
 
 				depressionTest.setComments(depressionComments);
 				anxietyTest.setComments(anxietyComments);
 
-				List<Question> mockQuestions = List.of(
-						Question.builder()
-								.text("Ne sıklıkla üzgün veya mutsuz hissediyorsunuz?")
-								.createdBy(mockUser.getId())
-								.choices(List.of(
-										Choice.builder().answerType(AnswerType.ANSWER_A).text("Hiçbir zaman").createdBy(mockUser.getId())
-												.build(),
-										Choice.builder().answerType(AnswerType.ANSWER_B).text("Bazen").createdBy(mockUser.getId())
-												.build(),
-										Choice.builder().answerType(AnswerType.ANSWER_C).text("Sık sık").createdBy(mockUser.getId())
-												.build(),
-										Choice.builder().answerType(AnswerType.ANSWER_D).text("Her zaman").createdBy(mockUser.getId())
-												.build()))
-								.test(mockTests.get(0))
-								.build(),
-						Question.builder()
-								.text("Uyku problemi yaşıyor musunuz?")
-								.createdBy(mockUser.getId())
-								.choices(List.of(
-										Choice.builder().answerType(AnswerType.ANSWER_A).text("Hayır").createdBy(mockUser.getId()).build(),
-										Choice.builder().answerType(AnswerType.ANSWER_B).text("Ara sıra")
-												.createdBy(mockUser.getId()).build(),
-										Choice.builder().answerType(AnswerType.ANSWER_C).text("Sıklıkla").createdBy(mockUser.getId())
-												.build(),
-										Choice.builder().answerType(AnswerType.ANSWER_D).text("Her gece").createdBy(mockUser.getId())
-												.build()))
-								.test(mockTests.get(0))
-								.build());
+				List<Question> depressionQuestions = new ArrayList<>();
+				depressionQuestions.add(Question.builder()
+						.text("Ne sıklıkla üzgün veya mutsuz hissediyorsunuz?")
+						.createdBy(mockUser.getId())
+						.test(depressionTest)
+						.choices(List.of(
+								Choice.builder().answerType(AnswerType.ANSWER_A).text("Hiçbir zaman").createdBy(mockUser.getId())
+										.build(),
+								Choice.builder().answerType(AnswerType.ANSWER_B).text("Bazen").createdBy(mockUser.getId())
+										.build(),
+								Choice.builder().answerType(AnswerType.ANSWER_C).text("Sık sık").createdBy(mockUser.getId())
+										.build(),
+								Choice.builder().answerType(AnswerType.ANSWER_D).text("Her zaman").createdBy(mockUser.getId())
+										.build()))
+						.build());
 
-				List<Question> mockQuestions2 = List.of(
-						Question.builder()
-								.createdBy(mockUser.getId())
-								.text("Ne sıklıkla gergin veya endişeli hissediyorsunuz?")
-								.choices(List.of(
-										Choice.builder().answerType(AnswerType.ANSWER_A).text("Nadiren").createdBy(mockUser.getId())
-												.build(),
-										Choice.builder().answerType(AnswerType.ANSWER_B).text("Bazen").createdBy(mockUser.getId())
-												.build(),
-										Choice.builder().answerType(AnswerType.ANSWER_C).text("Sık sık").createdBy(mockUser.getId())
-												.build(),
-										Choice.builder().answerType(AnswerType.ANSWER_D).text("Çok sık").createdBy(mockUser.getId())
-												.build()))
-								.test(mockTests.get(1))
-								.build(),
-						Question.builder()
-								.createdBy(mockUser.getId())
-								.text("Panik atak yaşıyor musunuz?")
-								.choices(List.of(
-										Choice.builder().answerType(AnswerType.ANSWER_A).text("Hiçbir zaman")
-												.createdBy(mockUser.getId())
-												.build(),
-										Choice.builder().answerType(AnswerType.ANSWER_B).text("Nadiren").createdBy(mockUser.getId())
-												.build(),
-										Choice.builder().answerType(AnswerType.ANSWER_C).text("Bazen").createdBy(mockUser.getId())
-												.build(),
-										Choice.builder().answerType(AnswerType.ANSWER_D).text("Sıklıkla").createdBy(mockUser.getId())
-												.build()))
-								.test(mockTests.get(1))
-								.build());
+				depressionQuestions.add(Question.builder()
+						.text("Uyku problemi yaşıyor musunuz?")
+						.createdBy(mockUser.getId())
+						.test(depressionTest)
+						.choices(List.of(
+								Choice.builder().answerType(AnswerType.ANSWER_A).text("Hayır").createdBy(mockUser.getId())
+										.build(),
+								Choice.builder().answerType(AnswerType.ANSWER_B).text("Ara sıra").createdBy(mockUser.getId())
+										.build(),
+								Choice.builder().answerType(AnswerType.ANSWER_C).text("Sıklıkla").createdBy(mockUser.getId())
+										.build(),
+								Choice.builder().answerType(AnswerType.ANSWER_D).text("Her gece").createdBy(mockUser.getId())
+										.build()))
+						.build());
 
-				List<Comment> mockComments = List.of(
-						Comment.builder().title("Yüksek").score(100).text("Yüksek anksiyete seviyesi").tests(mockTests)
-								.createdBy(mockUser.getId()).build(),
-						Comment.builder().title("Orta").score(50).text("Orta anksiyete seviyesi").tests(mockTests)
-								.createdBy(mockUser.getId()).build(),
-						Comment.builder().title("Düşük").score(0).text("Düşük anksiyete seviyesi").tests(mockTests)
-								.createdBy(mockUser.getId()).build());
+				depressionTest.setQuestions(depressionQuestions);
+				testRepository.save(depressionTest);
 
-				mockTests.get(0).setComments(mockComments);
-				mockTests.get(0).setQuestions(mockQuestions);
-				mockTests.get(1).setComments(mockComments);
-				mockTests.get(1).setQuestions(mockQuestions2);
+				List<Question> anxietyQuestions = new ArrayList<>();
+				anxietyQuestions.add(Question.builder()
+						.text("Ne sıklıkla gergin veya endişeli hissediyorsunuz?")
+						.createdBy(mockUser.getId())
+						.test(anxietyTest)
+						.choices(List.of(
+								Choice.builder().answerType(AnswerType.ANSWER_A).text("Nadiren").createdBy(mockUser.getId())
+										.build(),
+								Choice.builder().answerType(AnswerType.ANSWER_B).text("Bazen").createdBy(mockUser.getId())
+										.build(),
+								Choice.builder().answerType(AnswerType.ANSWER_C).text("Sık sık").createdBy(mockUser.getId())
+										.build(),
+								Choice.builder().answerType(AnswerType.ANSWER_D).text("Çok sık").createdBy(mockUser.getId())
+										.build()))
+						.build());
 
-				testRepository.saveAll(mockTests);
+				anxietyQuestions.add(Question.builder()
+						.text("Panik atak yaşıyor musunuz?")
+						.createdBy(mockUser.getId())
+						.test(anxietyTest)
+						.choices(List.of(
+								Choice.builder().answerType(AnswerType.ANSWER_A).text("Hiçbir zaman")
+										.createdBy(mockUser.getId())
+										.build(),
+								Choice.builder().answerType(AnswerType.ANSWER_B).text("Nadiren").createdBy(mockUser.getId())
+										.build(),
+								Choice.builder().answerType(AnswerType.ANSWER_C).text("Bazen").createdBy(mockUser.getId())
+										.build(),
+								Choice.builder().answerType(AnswerType.ANSWER_D).text("Sıklıkla").createdBy(mockUser.getId())
+										.build()))
+						.build());
+
+				anxietyTest.setQuestions(anxietyQuestions);
+				testRepository.save(anxietyTest);
 			}
 			// is empty or null?
 
-			if(sessionRepository.findFirstByDateAfterAndSessionStatusNotOrderByDateAsc(LocalDateTime.now(), SessionStatusType.CANCELED) == null){
+			if (sessionRepository.findFirstByDateAfterAndSessionStatusNotOrderByDateAsc(LocalDateTime.now(),
+					SessionStatusType.CANCELED) == null) {
 				LocalDateTime now = LocalDateTime.now();
 				LocalDateTime date1 = now.with(DayOfWeek.SATURDAY).withHour(10).withMinute(0);
 				List<Session> mockSessions = new ArrayList<>();
