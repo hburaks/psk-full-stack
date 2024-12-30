@@ -39,7 +39,7 @@ export class MainPageComponent implements OnInit {
   };
 
   test: PublicTestResponse = {
-    cover: ['./assets/materials/logo-ex.svg'],
+    imageUrl: './assets/materials/logo-ex.svg',
     id: 1,
     questions: [],
     subTitle: 'Test kartı için oluşturulmuş kısa bir örnek alt başlık içeriği.',
@@ -51,7 +51,6 @@ export class MainPageComponent implements OnInit {
 
   testCardList: PublicTestResponse[] = [this.test, this.test, this.test];
   fetchedTestList: PublicTestResponse[] = [this.test, this.test, this.test];
-
 
   //TODO: base64 ten resime dönüşüm sağlanmalı
 

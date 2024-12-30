@@ -29,8 +29,7 @@ public class Comment extends BaseEntity {
 
     private String text;
 
-    private byte[] cover;
-
+    private String imageUrl;
     @ManyToMany(mappedBy = "comments")
     @JsonIgnore
     private List<Test> tests;

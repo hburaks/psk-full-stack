@@ -20,7 +20,7 @@ export class EditCommentComponent {
       title: '',
       text: '',
       score: 0,
-      cover: [],
+      imageUrl: '',
     });
     this.updateModal();
   }

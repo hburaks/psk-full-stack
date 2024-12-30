@@ -30,9 +30,9 @@ public interface TestService {
     ResponseEntity<Boolean> saveMyTestAnswer(MyAnswerRequest myAnswerRequest, Authentication connectedUser);
 
     /**
-     * Creates public test
+     * Creates & Updates public test
      */
-    AdminTestResponse createPublicTestV2(PublicTestRequest publicTestRequest, Authentication connectedUser);
+    AdminTestResponse updatePublicTestV2(PublicTestRequest publicTestRequest, Authentication connectedUser);
 
 
     /**

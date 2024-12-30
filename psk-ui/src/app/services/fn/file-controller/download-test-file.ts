@@ -9,12 +9,12 @@ import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
 
-export interface DownloadFile$Params {
+export interface DownloadTestFile$Params {
   fileName: string;
 }
 
-export function downloadFile(http: HttpClient, rootUrl: string, params: DownloadFile$Params, context?: HttpContext): Observable<StrictHttpResponse<Blob>> {
-  const rb = new RequestBuilder(rootUrl, downloadFile.PATH, 'get');
+export function downloadTestFile(http: HttpClient, rootUrl: string, params: DownloadTestFile$Params, context?: HttpContext): Observable<StrictHttpResponse<Blob>> {
+  const rb = new RequestBuilder(rootUrl, downloadTestFile.PATH, 'get');
   if (params) {
     rb.path('fileName', params.fileName, {});
   }
@@ -29,4 +29,4 @@ export function downloadFile(http: HttpClient, rootUrl: string, params: Download
   );
 }
 
-downloadFile.PATH = '/v3/files/blog/download/{fileName}';
+downloadTestFile.PATH = '/v3/files/test/download/{fileName}';

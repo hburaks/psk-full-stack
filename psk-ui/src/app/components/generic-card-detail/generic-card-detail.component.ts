@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { BlogRequest, BlogResponse } from 'src/app/services/models';
 import { HttpClient } from '@angular/common/http';
+import { CommonService } from 'src/app/custom-services/common-service/common.service';
 
 @Component({
   selector: 'app-generic-card-detail',
@@ -37,9 +38,7 @@ export class GenericCardDetailComponent implements OnInit, OnChanges {
 
   selectedFile: File | null = null;
 
-  private apiUrl = 'http://localhost:8088/api'; // Add your actual API base URL
-
-  constructor(private http: HttpClient) {}
+  constructor(private commonService: CommonService) {}
 
   ngOnInit() {
     this.initializeBlogCard();
@@ -122,37 +121,28 @@ export class GenericCardDetailComponent implements OnInit, OnChanges {
     if (this.selectedFile instanceof File) {
       formData.append('image', this.selectedFile);
     }
-
     if (!this.blogCard?.id) {
-      // Create new blog
-      this.http
-        .post<number>(`${this.apiUrl}/v2/blogs/save`, formData)
-        .subscribe({
-          next: (response) => {
-            this.isBlogEditable = false;
-            this.endEditingEvent.emit();
-          },
-          error: (error) => {
-            console.log('Save error:', error);
-          },
-        });
+      this.commonService.saveBlog(formData).subscribe({
+        next: (response) => {
+          console.log('Save success:', response);
+          this.isBlogEditable = false;
+          this.endEditingEvent.emit();
+        },
+        error: (error) => {
+          console.log('Save error:', error);
+        },
+      });
     } else {
-      // Update existing blog
-      this.http
-        .put<number>(
-          `${this.apiUrl}/v2/blogs/update/${this.blogCard.id}`,
-          formData
-        )
-        .subscribe({
-          next: (response) => {
-            console.log('Update success:', response);
-            this.isBlogEditable = false;
-            this.endEditingEvent.emit();
-          },
-          error: (error) => {
-            console.log('Update error:', error);
-          },
-        });
+      this.commonService.updateBlog(this.blogCard.id, formData).subscribe({
+        next: (response) => {
+          console.log('Update success:', response);
+          this.isBlogEditable = false;
+          this.endEditingEvent.emit();
+        },
+        error: (error) => {
+          console.log('Update error:', error);
+        },
+      });
     }
   }
 

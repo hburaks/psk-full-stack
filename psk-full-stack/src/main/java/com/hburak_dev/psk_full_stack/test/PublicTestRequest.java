@@ -7,6 +7,7 @@ import jakarta.persistence.OneToMany;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -21,9 +22,9 @@ public class PublicTestRequest {
 
     private String subTitle;
 
-    String[] cover;
+    private MultipartFile image;
 
-    List<PublicTestQuestionRequest> publicTestQuestionRequestList;
+    private List<PublicTestQuestionRequest> publicTestQuestionRequestList;
 
     @OneToMany(mappedBy = "test")
     private List<AdminTestCommentRequest> comments;

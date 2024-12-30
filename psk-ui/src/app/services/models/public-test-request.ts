@@ -6,7 +6,7 @@ import { AdminTestCommentRequest } from '../models/admin-test-comment-request';
 import { PublicTestQuestionRequest } from '../models/public-test-question-request';
 export interface PublicTestRequest {
   comments?: Array<AdminTestCommentRequest>;
-  cover?: Array<string>;
+  image?: Blob;
   isActive?: boolean;
   publicTestQuestionRequestList?: Array<PublicTestQuestionRequest>;
   subTitle?: string;

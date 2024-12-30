@@ -17,8 +17,16 @@ public class FileController {
 
     private final FileStorageService fileStorageService;
 
+    @GetMapping("/test/download/{fileName}")
+    public ResponseEntity<Resource> downloadTestFile(@PathVariable String fileName) {
+      Resource resource = fileStorageService.loadFileAsResource(fileName, "tests");
+      return ResponseEntity.ok()
+          .contentType(MediaType.IMAGE_JPEG)
+          .body(resource);
+    }
+
     @GetMapping("/blog/download/{fileName}")
-    public ResponseEntity<Resource> downloadFile(@PathVariable String fileName) {
+    public ResponseEntity<Resource> downloadBlogFile(@PathVariable String fileName) {
         Resource resource = fileStorageService.loadFileAsResource(fileName, "blogs");
         return ResponseEntity.ok()
                 .contentType(MediaType.IMAGE_JPEG)

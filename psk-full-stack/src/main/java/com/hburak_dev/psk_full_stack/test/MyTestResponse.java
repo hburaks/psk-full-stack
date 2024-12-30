@@ -18,7 +18,7 @@ public class MyTestResponse {
 
     private String subTitle;
 
-    private String[] cover;
+    private String imageUrl;
 
     private List<MyQuestionResponse> questions;
 

@@ -13,6 +13,5 @@ public class PublicTestAnswerCommentResponse {
 
     private String text;
 
-    byte[] cover;
-
+    private String imageUrl;
 }

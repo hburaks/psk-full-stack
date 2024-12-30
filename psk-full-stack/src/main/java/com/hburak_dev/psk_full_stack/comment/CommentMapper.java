@@ -12,7 +12,7 @@ public class CommentMapper {
         return PublicTestAnswerCommentResponse.builder()
                 .title(resultComment.getTitle())
                 .text(resultComment.getText())
-                .cover(resultComment.getCover())
+                .imageUrl(resultComment.getImageUrl())
                 .build();
     }
 
@@ -31,8 +31,8 @@ public class CommentMapper {
             comment.setTitle(adminTestCommentRequest.getTitle());
         }
 
-        if (adminTestCommentRequest.getCover() != null) {
-            comment.setCover(adminTestCommentRequest.getCover());
+        if (adminTestCommentRequest.getImageUrl() != null) {
+            comment.setImageUrl(adminTestCommentRequest.getImageUrl());
         }
 
         if (adminTestCommentRequest.getCommentId() != null) {
@@ -61,8 +61,8 @@ public class CommentMapper {
             comment.setTitle(adminTestCommentRequest.getTitle());
         }
 
-        if (adminTestCommentRequest.getCover() != null) {
-            comment.setCover(adminTestCommentRequest.getCover());
+        if (adminTestCommentRequest.getImageUrl() != null) {
+            comment.setImageUrl(adminTestCommentRequest.getImageUrl());
         }
 
         if (adminTestCommentRequest.getCommentId() != null) {
@@ -81,7 +81,7 @@ public class CommentMapper {
                 .score(comment.getScore())
                 .title(comment.getTitle())
                 .text(comment.getText())
-                .cover(comment.getCover())
+                .imageUrl(comment.getImageUrl())
                 .build();
     }
 
@@ -91,7 +91,7 @@ public class CommentMapper {
                 .score(comment.getScore())
                 .title(comment.getTitle())
                 .text(comment.getText())
-                .cover(comment.getCover())
+                .imageUrl(comment.getImageUrl())
                 .build();
     }
 }

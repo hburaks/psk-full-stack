@@ -4,6 +4,7 @@ import com.hburak_dev.psk_full_stack.choice.Choice;
 import com.hburak_dev.psk_full_stack.choice.ChoiceMapper;
 import com.hburak_dev.psk_full_stack.comment.*;
 import com.hburak_dev.psk_full_stack.question.*;
+import com.hburak_dev.psk_full_stack.service.FileStorageService;
 import com.hburak_dev.psk_full_stack.user.User;
 import com.hburak_dev.psk_full_stack.user.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +34,8 @@ public class TestServiceImpl implements TestService {
     private final ChoiceMapper choiceMapper;
 
     private final QuestionRepository questionRepository;
+
+    private final FileStorageService fileStorageService;
 
     @Override
     public List<PublicTestResponse> getAllPublicTests() {
@@ -131,15 +134,21 @@ public class TestServiceImpl implements TestService {
     }
 
     @Override
-    public AdminTestResponse createPublicTestV2(PublicTestRequest publicTestRequest,
-            Authentication connectedUser) {
+    public AdminTestResponse updatePublicTestV2(PublicTestRequest publicTestRequest,
+                    Authentication connectedUser) {
+
         User user = (User) connectedUser.getPrincipal();
+
         if (publicTestRequest.getTestId() != null) {
             Test testToUpdate = testRepository.findById(publicTestRequest.getTestId())
                     .orElseThrow(() -> new RuntimeException("Test bulunamadı"));
 
-            if (publicTestRequest.getCover() != null) {
-                testToUpdate.setCover(publicTestRequest.getCover());
+            if (publicTestRequest.getImage() != null && !publicTestRequest.getImage().isEmpty()) {
+                if (testToUpdate.getImageUrl() != null) {
+                    fileStorageService.deleteFile(testToUpdate.getImageUrl(), "tests");
+                }
+                String fileName = fileStorageService.storeFile(publicTestRequest.getImage(), "tests");
+                testToUpdate.setImageUrl(fileName);
             }
             if (publicTestRequest.getIsActive() != null) {
                 testToUpdate.setIsActive(publicTestRequest.getIsActive());
@@ -203,6 +212,10 @@ public class TestServiceImpl implements TestService {
         }
 
         Test test = testMapper.toTest(publicTestRequest, user.getId());
+        if (publicTestRequest.getImage() != null && !publicTestRequest.getImage().isEmpty()) {
+            String fileName = fileStorageService.storeFile(publicTestRequest.getImage(), "tests");
+            test.setImageUrl(fileName);
+        }
         testRepository.save(test);
         return testMapper.toAdminTestResponse(test);
     }
@@ -289,7 +302,7 @@ public class TestServiceImpl implements TestService {
         Test newTest = Test.builder()
                 .title(test.getTitle())
                 .subTitle(test.getSubTitle())
-                .cover(test.getCover())
+                .imageUrl(test.getImageUrl())
                 .isActive(false)
                 .isCompleted(false)
                 .questions(
@@ -334,12 +347,10 @@ public class TestServiceImpl implements TestService {
         Test test = testRepository.findById(testId)
                 .orElseThrow(() -> new RuntimeException("Test bulunamadı"));
 
-        // Clear associations first
         test.getComments().clear();
         test.getQuestions().clear();
-        testRepository.save(test); // Save to update associations
+        testRepository.save(test);
 
-        // Now delete the test
         testRepository.delete(test);
         return ResponseEntity.ok(true);
     }

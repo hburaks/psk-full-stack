@@ -16,10 +16,10 @@ public class TestControllerV2 {
 
     private final TestService testService;
 
-    @PostMapping("/create")
-    public ResponseEntity<AdminTestResponse> createPublicTestV2(@RequestBody PublicTestRequest publicTestRequest,
+    @PostMapping("/update")
+    public ResponseEntity<AdminTestResponse> updatePublicTestV2(@ModelAttribute PublicTestRequest publicTestRequest,
             Authentication connectedUser) {
-        return ResponseEntity.ok(testService.createPublicTestV2(publicTestRequest, connectedUser));
+        return ResponseEntity.ok(testService.updatePublicTestV2(publicTestRequest, connectedUser));
     }
 
     @PutMapping("/update-availability")

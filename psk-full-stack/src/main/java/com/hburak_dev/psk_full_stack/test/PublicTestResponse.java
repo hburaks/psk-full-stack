@@ -15,7 +15,7 @@ public class PublicTestResponse {
 
     private Integer id;
 
-    private String[] cover;
+    private String imageUrl;
 
     private String title;
 

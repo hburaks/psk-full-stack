@@ -11,8 +11,10 @@ import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 
-import { downloadFile } from '../fn/file-controller/download-file';
-import { DownloadFile$Params } from '../fn/file-controller/download-file';
+import { downloadBlogFile } from '../fn/file-controller/download-blog-file';
+import { DownloadBlogFile$Params } from '../fn/file-controller/download-blog-file';
+import { downloadTestFile } from '../fn/file-controller/download-test-file';
+import { DownloadTestFile$Params } from '../fn/file-controller/download-test-file';
 
 @Injectable({ providedIn: 'root' })
 export class FileControllerService extends BaseService {
@@ -20,27 +22,52 @@ export class FileControllerService extends BaseService {
     super(config, http);
   }
 
-  /** Path part for operation `downloadFile()` */
-  static readonly DownloadFilePath = '/v3/files/blog/download/{fileName}';
+  /** Path part for operation `downloadTestFile()` */
+  static readonly DownloadTestFilePath = '/v3/files/test/download/{fileName}';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `downloadFile()` instead.
+   * To access only the response body, use `downloadTestFile()` instead.
    *
    * This method doesn't expect any request body.
    */
-  downloadFile$Response(params: DownloadFile$Params, context?: HttpContext): Observable<StrictHttpResponse<Blob>> {
-    return downloadFile(this.http, this.rootUrl, params, context);
+  downloadTestFile$Response(params: DownloadTestFile$Params, context?: HttpContext): Observable<StrictHttpResponse<Blob>> {
+    return downloadTestFile(this.http, this.rootUrl, params, context);
   }
 
   /**
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `downloadFile$Response()` instead.
+   * To access the full response (for headers, for example), `downloadTestFile$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  downloadFile(params: DownloadFile$Params, context?: HttpContext): Observable<Blob> {
-    return this.downloadFile$Response(params, context).pipe(
+  downloadTestFile(params: DownloadTestFile$Params, context?: HttpContext): Observable<Blob> {
+    return this.downloadTestFile$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Blob>): Blob => r.body)
+    );
+  }
+
+  /** Path part for operation `downloadBlogFile()` */
+  static readonly DownloadBlogFilePath = '/v3/files/blog/download/{fileName}';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `downloadBlogFile()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  downloadBlogFile$Response(params: DownloadBlogFile$Params, context?: HttpContext): Observable<StrictHttpResponse<Blob>> {
+    return downloadBlogFile(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `downloadBlogFile$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  downloadBlogFile(params: DownloadBlogFile$Params, context?: HttpContext): Observable<Blob> {
+    return this.downloadBlogFile$Response(params, context).pipe(
       map((r: StrictHttpResponse<Blob>): Blob => r.body)
     );
   }

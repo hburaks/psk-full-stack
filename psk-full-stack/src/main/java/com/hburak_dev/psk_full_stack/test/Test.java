@@ -27,8 +27,8 @@ public class Test extends BaseEntity {
 
     private String subTitle;
 
-    private String[] cover;
-
+    private String imageUrl;
+    
     private Boolean isActive;
 
     @Builder.Default

@@ -11,12 +11,12 @@ import { RequestBuilder } from '../../request-builder';
 import { AdminTestResponse } from '../../models/admin-test-response';
 import { PublicTestRequest } from '../../models/public-test-request';
 
-export interface CreatePublicTestV2$Params {
+export interface UpdatePublicTestV2$Params {
       body: PublicTestRequest
 }
 
-export function createPublicTestV2(http: HttpClient, rootUrl: string, params: CreatePublicTestV2$Params, context?: HttpContext): Observable<StrictHttpResponse<AdminTestResponse>> {
-  const rb = new RequestBuilder(rootUrl, createPublicTestV2.PATH, 'post');
+export function updatePublicTestV2(http: HttpClient, rootUrl: string, params: UpdatePublicTestV2$Params, context?: HttpContext): Observable<StrictHttpResponse<AdminTestResponse>> {
+  const rb = new RequestBuilder(rootUrl, updatePublicTestV2.PATH, 'post');
   if (params) {
     rb.body(params.body, 'application/json');
   }
@@ -31,4 +31,4 @@ export function createPublicTestV2(http: HttpClient, rootUrl: string, params: Cr
   );
 }
 
-createPublicTestV2.PATH = '/v2/test/create';
+updatePublicTestV2.PATH = '/v2/test/update';

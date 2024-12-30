@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { TokenService } from '../token/token.service';
 import { BlogResponse } from '../../services/models';
+import { Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
@@ -11,6 +13,8 @@ export class CommonService {
   isAdminRegistered: boolean = false;
 
   fetchedBlogList: BlogResponse[] = [];
+
+  private apiUrl = 'http://localhost:8088/api';
 
   sessionStatusMap: { [key: string]: string } = {
     AWAITING_PSYCHOLOGIST_APPROVAL: 'Terapist Onayı Bekleniyor',
@@ -25,7 +29,7 @@ export class CommonService {
   );
   userStatus$ = this.userStatusSubject.asObservable();
 
-  constructor(private tokenService: TokenService) {}
+  constructor(private tokenService: TokenService, private http: HttpClient) {}
 
   updateUserStatus(isLoggedIn: boolean) {
     this.userStatusSubject.next(isLoggedIn);
@@ -57,5 +61,16 @@ export class CommonService {
       reader.onload = () => resolve(reader.result as string);
       reader.onerror = (error) => reject(error);
     });
+  }
+
+  updateBlog(blogId: number, formData: FormData): Observable<number> {
+    return this.http.post<number>(`${this.apiUrl}/v2/blog/update`, formData);
+  }
+  saveBlog(formData: FormData): Observable<number> {
+    return this.http.post<number>(`${this.apiUrl}/v2/blog/save`, formData);
+  }
+
+  updateTest(formData: FormData): Observable<number> {
+    return this.http.post<number>(`${this.apiUrl}/v2/test/update`, formData);
   }
 }

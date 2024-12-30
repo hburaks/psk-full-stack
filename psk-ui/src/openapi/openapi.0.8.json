@@ -179,10 +179,10 @@
         }
       }
     },
-    "/v2/test/create": {
+    "/v2/test/update": {
       "post": {
         "tags": ["Test"],
-        "operationId": "createPublicTestV2",
+        "operationId": "updatePublicTestV2",
         "requestBody": {
           "content": {
             "application/json": {
@@ -788,10 +788,39 @@
         }
       }
     },
+    "/v3/files/test/download/{fileName}": {
+      "get": {
+        "tags": ["file-controller"],
+        "operationId": "downloadTestFile",
+        "parameters": [
+          {
+            "name": "fileName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v3/files/blog/download/{fileName}": {
       "get": {
         "tags": ["file-controller"],
-        "operationId": "downloadFile",
+        "operationId": "downloadBlogFile",
         "parameters": [
           {
             "name": "fileName",
@@ -1317,11 +1346,8 @@
             "type": "integer",
             "format": "int32"
           },
-          "cover": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+          "imageUrl": {
+            "type": "string"
           },
           "title": {
             "type": "string"
@@ -1443,12 +1469,8 @@
           "text": {
             "type": "string"
           },
-          "cover": {
-            "type": "array",
-            "items": {
-              "type": "string",
-              "format": "byte"
-            }
+          "imageUrl": {
+            "type": "string"
           }
         }
       },
@@ -1469,12 +1491,8 @@
           "text": {
             "type": "string"
           },
-          "cover": {
-            "type": "array",
-            "items": {
-              "type": "string",
-              "format": "byte"
-            }
+          "imageUrl": {
+            "type": "string"
           }
         }
       },
@@ -1525,11 +1543,9 @@
           "subTitle": {
             "type": "string"
           },
-          "cover": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+          "image": {
+            "type": "string",
+            "format": "binary"
           },
           "publicTestQuestionRequestList": {
             "type": "array",
@@ -1565,12 +1581,8 @@
           "text": {
             "type": "string"
           },
-          "cover": {
-            "type": "array",
-            "items": {
-              "type": "string",
-              "format": "byte"
-            }
+          "imageUrl": {
+            "type": "string"
           }
         }
       },
@@ -1587,11 +1599,8 @@
           "subTitle": {
             "type": "string"
           },
-          "cover": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+          "imageUrl": {
+            "type": "string"
           },
           "isActive": {
             "type": "boolean"
@@ -1855,11 +1864,8 @@
             "type": "integer",
             "format": "int32"
           },
-          "cover": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+          "imageUrl": {
+            "type": "string"
           },
           "title": {
             "type": "string"
@@ -1996,12 +2002,8 @@
           "text": {
             "type": "string"
           },
-          "cover": {
-            "type": "array",
-            "items": {
-              "type": "string",
-              "format": "byte"
-            }
+          "imageUrl": {
+            "type": "string"
           }
         }
       },
@@ -2036,11 +2038,8 @@
           "subTitle": {
             "type": "string"
           },
-          "cover": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+          "imageUrl": {
+            "type": "string"
           },
           "userId": {
             "type": "integer",
@@ -2202,11 +2201,8 @@
           "subTitle": {
             "type": "string"
           },
-          "cover": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+          "imageUrl": {
+            "type": "string"
           },
           "questions": {
             "type": "array",

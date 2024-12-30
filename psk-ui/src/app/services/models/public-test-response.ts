@@ -4,8 +4,8 @@
 
 import { PublicQuestionResponse } from '../models/public-question-response';
 export interface PublicTestResponse {
-  cover?: Array<string>;
   id?: number;
+  imageUrl?: string;
   questions?: Array<PublicQuestionResponse>;
   subTitle?: string;
   title?: string;

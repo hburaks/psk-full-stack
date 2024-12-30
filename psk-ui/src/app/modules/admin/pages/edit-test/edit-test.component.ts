@@ -23,7 +23,7 @@ export class EditTestComponent {
       id: undefined,
       title: '',
       subTitle: '',
-      cover: [],
+      imageUrl: '',
       questions: [],
     };
     this.isEditingTest = true;

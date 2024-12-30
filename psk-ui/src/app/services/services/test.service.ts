@@ -16,8 +16,6 @@ import { assignTestToUserV2 } from '../fn/test/assign-test-to-user-v-2';
 import { AssignTestToUserV2$Params } from '../fn/test/assign-test-to-user-v-2';
 import { checkPublicTestAnswer } from '../fn/test/check-public-test-answer';
 import { CheckPublicTestAnswer$Params } from '../fn/test/check-public-test-answer';
-import { createPublicTestV2 } from '../fn/test/create-public-test-v-2';
-import { CreatePublicTestV2$Params } from '../fn/test/create-public-test-v-2';
 import { deleteTestV2 } from '../fn/test/delete-test-v-2';
 import { DeleteTestV2$Params } from '../fn/test/delete-test-v-2';
 import { getAllMyTests } from '../fn/test/get-all-my-tests';
@@ -40,6 +38,8 @@ import { saveMyTestAnswer } from '../fn/test/save-my-test-answer';
 import { SaveMyTestAnswer$Params } from '../fn/test/save-my-test-answer';
 import { updatePublicTestAvailabilityV2 } from '../fn/test/update-public-test-availability-v-2';
 import { UpdatePublicTestAvailabilityV2$Params } from '../fn/test/update-public-test-availability-v-2';
+import { updatePublicTestV2 } from '../fn/test/update-public-test-v-2';
+import { UpdatePublicTestV2$Params } from '../fn/test/update-public-test-v-2';
 import { UserTestForAdminResponse } from '../models/user-test-for-admin-response';
 
 @Injectable({ providedIn: 'root' })
@@ -98,27 +98,27 @@ export class TestService extends BaseService {
     );
   }
 
-  /** Path part for operation `createPublicTestV2()` */
-  static readonly CreatePublicTestV2Path = '/v2/test/create';
+  /** Path part for operation `updatePublicTestV2()` */
+  static readonly UpdatePublicTestV2Path = '/v2/test/update';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `createPublicTestV2()` instead.
+   * To access only the response body, use `updatePublicTestV2()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  createPublicTestV2$Response(params: CreatePublicTestV2$Params, context?: HttpContext): Observable<StrictHttpResponse<AdminTestResponse>> {
-    return createPublicTestV2(this.http, this.rootUrl, params, context);
+  updatePublicTestV2$Response(params: UpdatePublicTestV2$Params, context?: HttpContext): Observable<StrictHttpResponse<AdminTestResponse>> {
+    return updatePublicTestV2(this.http, this.rootUrl, params, context);
   }
 
   /**
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `createPublicTestV2$Response()` instead.
+   * To access the full response (for headers, for example), `updatePublicTestV2$Response()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  createPublicTestV2(params: CreatePublicTestV2$Params, context?: HttpContext): Observable<AdminTestResponse> {
-    return this.createPublicTestV2$Response(params, context).pipe(
+  updatePublicTestV2(params: UpdatePublicTestV2$Params, context?: HttpContext): Observable<AdminTestResponse> {
+    return this.updatePublicTestV2$Response(params, context).pipe(
       map((r: StrictHttpResponse<AdminTestResponse>): AdminTestResponse => r.body)
     );
   }

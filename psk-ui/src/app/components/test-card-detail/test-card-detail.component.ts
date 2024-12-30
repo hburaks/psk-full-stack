@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import {
   AfterViewInit,
   Component,
@@ -21,7 +22,7 @@ import {
   AdminTestResponse,
   AdminTestCommentResponse,
 } from 'src/app/services/models';
-import { TestService } from 'src/app/services/services';
+import { FileControllerService, TestService } from 'src/app/services/services';
 declare var bootstrap: any;
 
 @Component({
@@ -49,7 +50,16 @@ export class TestCardDetailComponent implements AfterViewInit {
   text: string =
     'Kendinizi daha iyi tanımak için tasarlanmış çeşitli psikolojik testlerimizi deneyebilirsiniz. Bu testler kişilik özellikleri, duygusal durum ve davranış kalıplarınız hakkında içgörü kazanmanıza yardımcı olacaktır.';
 
-  constructor(private route: ActivatedRoute, private testService: TestService) {
+  selectedFile: File | null = null;
+  imageUrl: string = '';
+
+  private apiUrl = 'http://localhost:8088/api';
+
+  constructor(
+    private route: ActivatedRoute,
+    private testService: TestService,
+    private commonService: CommonService
+  ) {
     this.cardId = this.route.snapshot.params['id'];
   }
 
@@ -158,64 +168,55 @@ export class TestCardDetailComponent implements AfterViewInit {
     );
   }
 
-  testResponseToRequestMapper(
-    editableTestCard: AdminTestResponse
-  ): PublicTestRequest {
-    const questionsRequest: PublicTestQuestionRequest[] =
-      this.questionResponseListToRequestMapper(
-        editableTestCard.questions || []
-      );
-    return {
-      cover: editableTestCard.cover,
-      isActive: editableTestCard.isActive,
-      publicTestQuestionRequestList: questionsRequest,
-      subTitle: editableTestCard.subTitle,
-      testId: editableTestCard.id,
-      title: editableTestCard.title,
-      comments: this.commentResponseListToRequestMapper(
-        editableTestCard.comments || []
-      ),
-    };
-  }
-
-  commentResponseListToRequestMapper(
-    commentResponseList: AdminTestCommentResponse[]
-  ): AdminTestCommentRequest[] {
-    return commentResponseList.map((comment) =>
-      this.commentResponseToRequestMapper(comment)
-    );
-  }
-
-  commentResponseToRequestMapper(
-    commentResponse: AdminTestCommentResponse
-  ): AdminTestCommentRequest {
-    return {
-      commentId: commentResponse.commentId ?? undefined,
-      cover: commentResponse.cover,
-      score: commentResponse.score,
-      text: commentResponse.text,
-      title: commentResponse.title,
-    };
-  }
-
   saveChanges() {
     if (this.editableTestCard) {
-      let testRequest: PublicTestRequest = this.testResponseToRequestMapper(
-        this.editableTestCard
-      );
-      testRequest = this.checkQuestionAnswerType(testRequest);
-      this.testService.createPublicTestV2({ body: testRequest }).subscribe({
-        next: () => {
-          console.log('Test saved successfully');
-          this.closeModalEvent.emit();
-        },
-        error: (error) => {
-          console.log(error);
-        },
-      });
+      const formData = new FormData();
+
+      if (this.editableTestCard.id) {
+        formData.append('testId', String(this.editableTestCard.id));
+      }
+
+      if (this.editableTestCard.title) {
+        formData.append('title', this.editableTestCard.title);
+      }
+
+      if (this.editableTestCard.subTitle) {
+        formData.append('subTitle', this.editableTestCard.subTitle);
+      }
+
+
+      if (this.selectedFile) {
+        formData.append('image', this.selectedFile);
+      }
+
+      if (this.editableTestCard.questions) {
+        formData.append(
+          'publicTestQuestionRequestList',
+          JSON.stringify(this.editableTestCard.questions)
+        );
+      }
+
+      if (this.editableTestCard.comments) {
+        formData.append(
+          'comments',
+          JSON.stringify(this.editableTestCard.comments)
+        );
+      }
+
+      if (this.editableTestCard.isActive) {
+        formData.append('isActive', String(this.editableTestCard.isActive));
+      }
+
+      this.commonService
+        .updateTest(formData)
+        .subscribe({
+          next: (response) => {
+            console.log('Update success:', response);
+            this.closeModalEvent.emit();
+          },
+        });
     }
   }
-
   addQuestion() {
     if (this.editableTestCard) {
       this.editableTestCard.questions = this.editableTestCard.questions || [];
@@ -271,13 +272,19 @@ export class TestCardDetailComponent implements AfterViewInit {
     }
   }
 
-  async onFileChange(event: any) {
+  async onFileSelected(event: any) {
     const file = event.target.files[0];
-
-    /* const file = event.target.files[0];
-    const base64 = await this.commonService.fileToBase64(file);
-    this.editableTestCard!.cover = [base64]; */
-    console.log('file changed');
+    if (file) {
+      this.selectedFile = file;
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.imageUrl = e.target.result;
+        if (this.editableTestCard) {
+          this.editableTestCard.imageUrl = e.target.result;
+        }
+      };
+      reader.readAsDataURL(file);
+    }
   }
 
   removeChoice(questionIndex: number, choiceIndex: number) {
@@ -321,5 +328,13 @@ export class TestCardDetailComponent implements AfterViewInit {
 
   updateComments(comments: AdminTestCommentResponse[]) {
     this.editableTestCard!.comments = comments;
+  }
+
+  uploadImage() {
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.accept = 'image/*';
+    fileInput.onchange = (e) => this.onFileSelected(e);
+    fileInput.click();
   }
 }

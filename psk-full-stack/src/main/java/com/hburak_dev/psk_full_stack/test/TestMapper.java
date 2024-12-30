@@ -6,6 +6,8 @@ import com.hburak_dev.psk_full_stack.question.Question;
 import com.hburak_dev.psk_full_stack.question.QuestionMapper;
 
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -16,13 +18,16 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class TestMapper {
 
+          @Value("${server.port}")
+    private String serverPort;
+
         private final QuestionMapper questionMapper;
         private final CommentMapper commentMapper;
 
         public PublicTestResponse toPublicTestResponse(Test test) {
                 return PublicTestResponse.builder()
                                 .id(test.getId())
-                                .cover(test.getCover())
+                                .imageUrl(test.getImageUrl())
                                 .questions(test.getQuestions().stream()
                                                 .map(questionMapper::toPublicQuestionResponse)
                                                 .collect(Collectors.toList()))
@@ -36,7 +41,7 @@ public class TestMapper {
                                 .testId(test.getId())
                                 .title(test.getTitle())
                                 .subTitle(test.getSubTitle())
-                                .cover(test.getCover())
+                                .imageUrl(test.getImageUrl())
                                 .questions(test.getQuestions().stream()
                                                 .map(questionMapper::toMyQuestionResponse)
                                                 .collect(Collectors.toList()))
@@ -47,7 +52,6 @@ public class TestMapper {
                 Test test = Test.builder()
                                 .title(publicTestRequest.getTitle())
                                 .subTitle(publicTestRequest.getSubTitle())
-                                .cover(publicTestRequest.getCover())
                                 .isActive(publicTestRequest.getIsActive())
                                 .build();
 
@@ -82,7 +86,7 @@ public class TestMapper {
                                 .id(test.getId())
                                 .title(test.getTitle())
                                 .subTitle(test.getSubTitle())
-                                .cover(test.getCover())
+                                .imageUrl(test.getImageUrl())
                                 .isActive(test.getIsActive())
                                 .questions(test.getQuestions().stream()
                                                 .map(questionMapper::toPublicQuestionAdminResponse)
@@ -96,7 +100,7 @@ public class TestMapper {
                                 .testId(test.getId())
                                 .title(test.getTitle())
                                 .subTitle(test.getSubTitle())
-                                .cover(test.getCover())
+                                .imageUrl(test.getImageUrl())
                                 .userId(test.getUser().getId())
                                 .questions(test.getQuestions().stream()
                                                 .map(questionMapper::toUserQuestionResponse)
@@ -109,11 +113,16 @@ public class TestMapper {
         }
 
         public AdminTestResponse toAdminTestResponse(Test test) {
+                String imageUrl = null;
+                if (test.getImageUrl() != null) {
+                        imageUrl = String.format("http://localhost:%s/api/v3/files/test/download/%s",
+                                        serverPort, test.getImageUrl());
+                }
                 return AdminTestResponse.builder()
                                 .id(test.getId())
                                 .title(test.getTitle())
                                 .subTitle(test.getSubTitle())
-                                .cover(test.getCover())
+                                .imageUrl(imageUrl)
                                 .isActive(test.getIsActive())
                                 .comments(test.getComments().stream()
                                                 .map(commentMapper::toAdminCommentResponse)

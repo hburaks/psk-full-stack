@@ -85,7 +85,7 @@ export class AdminTestCardComponent {
         testId: testId,
         title: test.title,
         subTitle: test.subTitle,
-        cover: test.cover,
+        imageUrl: test.imageUrl,
         questions: test.questions,
       };
       this.testAddedEvent.emit(mappedTest);
