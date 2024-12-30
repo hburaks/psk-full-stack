@@ -17,7 +17,7 @@ export class CommonService {
   private apiUrl = 'http://localhost:8088/api';
 
   sessionStatusMap: { [key: string]: string } = {
-    AWAITING_PSYCHOLOGIST_APPROVAL: 'Terapist Onayı Bekleniyor',
+    AWAITING_THERAPIST_APPROVAL: 'Terapist Onayı Bekleniyor',
     APPOINTMENT_SCHEDULED: 'Randevu Alındı',
     COMPLETED: 'Gerçekleşti',
     CANCELED: 'İptal',

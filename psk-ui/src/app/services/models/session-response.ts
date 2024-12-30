@@ -7,5 +7,10 @@ export interface SessionResponse {
   noteForUser?: string;
   sessionId?: number;
   sessionLink?: string;
-  sessionStatus?: 'AWAITING_PSYCHOLOGIST_APPROVAL' | 'APPOINTMENT_SCHEDULED' | 'COMPLETED' | 'CANCELED' | 'UNAVAILABLE';
+  sessionStatus?:
+    | 'AWAITING_THERAPIST_APPROVAL'
+    | 'APPOINTMENT_SCHEDULED'
+    | 'COMPLETED'
+    | 'CANCELED'
+    | 'UNAVAILABLE';
 }

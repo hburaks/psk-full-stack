@@ -31,7 +31,7 @@ export class MySessionsComponent {
   }
 
   isSessionCancelable(status: string): boolean {
-    return status === 'AWAITING_PSYCHOLOGIST_APPROVAL';
+    return status === 'AWAITING_THERAPIST_APPROVAL';
   }
 
   cancelSession(sessionId: number) {

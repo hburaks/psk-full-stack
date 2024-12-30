@@ -59,7 +59,7 @@
         <a *ngFor="let status of statusList" [class.active]="status === session?.sessionStatus"
           [class.btn-primary]="status === session?.sessionStatus"
           [class.btn-primary-hovered]="status === session?.sessionStatus"
-          [class.btn-primary-custom]="status !== session?.sessionStatus" (click)="changeStatus(status)" class="btn sm-f py-auto d-flex align-items-center justify-content-center"
+          [class.btn-primary-custom]="status !== session?.sessionStatus" (click)="changeStatus(status)" class="btn sm-f py-auto d-flex align-items-center justify-content-center" 
           aria-current="page">{{statusMap[status]}}</a>
       </div>
     </div>

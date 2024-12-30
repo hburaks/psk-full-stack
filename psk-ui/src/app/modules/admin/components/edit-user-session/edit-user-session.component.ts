@@ -162,7 +162,7 @@ export class EditUserSessionComponent {
     const sessionStatusRequest: SessionStatusRequest = {
       sessionId: this.session!.sessionId,
       sessionStatusType: status as
-        | 'AWAITING_PSYCHOLOGIST_APPROVAL'
+        | 'AWAITING_THERAPIST_APPROVAL'
         | 'APPOINTMENT_SCHEDULED'
         | 'COMPLETED'
         | 'CANCELED'

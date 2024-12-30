@@ -82,8 +82,14 @@ public class SessionServiceImpl implements SessionService {
         }
 
         Session session = sessionMapper.toSession(fullHour, user);
-        session.setCreatedBy(user.getId()); // TODO: is this necessary
+        session.setCreatedBy(user.getId());
         Session savedSession = sessionRepository.save(session);
+
+        if (savedSession.getSessionStatus() == SessionStatusType.AWAITING_THERAPIST_APPROVAL) {
+            googleMeetService.createMeeting(savedSession);
+            savedSession = sessionRepository.save(savedSession);
+        }
+
         return savedSession.getId();
     }
 
@@ -121,7 +127,7 @@ public class SessionServiceImpl implements SessionService {
         Session session = Session.builder()
                 .date(fullHour)
                 .user(user)
-                .sessionStatus(SessionStatusType.APPOINTMENT_SCHEDULED)
+                .sessionStatus(SessionStatusType.AWAITING_THERAPIST_APPROVAL)
                 .isSessionPaid(false)
                 .isMock(false)
                 .createdBy(admin.getId())
