@@ -137,7 +137,11 @@ public class BlogServiceImpl implements BlogService {
         Blog blog = blogRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Bu ID ile blog bulunamadı :: " + id));
         if (blog.getImageFileName() != null) {
-            fileStorageService.deleteFile(blog.getImageFileName(), "blogs");
+            try {
+                fileStorageService.deleteFile(blog.getImageFileName(), "blogs");
+            } catch (Exception e) {
+                log.error("Blog resmi silinirken bir hata oluştu :: " + e.getMessage());
+            }
         }
         blogRepository.deleteById(id);
 
