@@ -8,8 +8,8 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { BlogRequest, BlogResponse } from 'src/app/services/models';
-import { HttpClient } from '@angular/common/http';
 import { CommonService } from 'src/app/custom-services/common-service/common.service';
+import { BlogService } from 'src/app/services/services/blog.service';
 
 @Component({
   selector: 'app-generic-card-detail',
@@ -38,7 +38,7 @@ export class GenericCardDetailComponent implements OnInit, OnChanges {
 
   selectedFile: File | null = null;
 
-  constructor(private commonService: CommonService) {}
+  constructor(private blogService: BlogService) {}
 
   ngOnInit() {
     this.initializeBlogCard();
@@ -106,44 +106,58 @@ export class GenericCardDetailComponent implements OnInit, OnChanges {
   }
 
   saveBlog() {
-    const formData = new FormData();
-    if (this.title) {
-      formData.append('title', this.title);
-    }
-    if (this.subTitle) {
-      formData.append('subTitle', this.subTitle);
-    }
-    if (this.text) {
-      formData.append('text', this.text);
-    }
-    formData.append('shareable', String(this.shareable));
-
-    if (this.selectedFile instanceof File) {
-      formData.append('image', this.selectedFile);
-    }
+    const blogRequest: BlogRequest = {
+      title: this.title,
+      subTitle: this.subTitle,
+      text: this.text,
+      shareable: this.shareable,
+    };
     if (!this.blogCard?.id) {
-      this.commonService.saveBlog(formData).subscribe({
+      this.blogService.saveBlog({ body: blogRequest }).subscribe({
         next: (response) => {
           console.log('Save success:', response);
           this.isBlogEditable = false;
           this.endEditingEvent.emit();
+          this.saveBlogImage(response);
         },
         error: (error) => {
           console.log('Save error:', error);
         },
       });
     } else {
-      this.commonService.updateBlog(this.blogCard.id, formData).subscribe({
+      this.blogService
+        .updateBlog({ id: this.blogCard.id, body: blogRequest })
+        .subscribe({
+          next: (response) => {
+            this.saveBlogImage(this.blogCard!.id!);
+          },
+          error: (error) => {
+            console.log('Update error:', error);
+          },
+        });
+    }
+  }
+  saveBlogImage(blogId: number) {
+    if (!this.selectedFile) {
+      this.isBlogEditable = false;
+      this.endEditingEvent.emit();
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('file', this.selectedFile);
+
+    this.blogService
+      .uploadFile({ blogId: blogId, body: { file: this.selectedFile } })
+      .subscribe({
         next: (response) => {
-          console.log('Update success:', response);
           this.isBlogEditable = false;
           this.endEditingEvent.emit();
         },
         error: (error) => {
-          console.log('Update error:', error);
+          console.log('Save image error:', error);
         },
       });
-    }
   }
 
   updateSubTitle(event: any) {

@@ -16,6 +16,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Objects;
@@ -41,14 +42,22 @@ public class BlogServiceImpl implements BlogService {
         User user = ((User) connectedUser.getPrincipal());
         Blog blog = blogMapper.toBlog(request);
 
-        if (request.getImage() != null && !request.getImage().isEmpty()) {
-            String fileName = fileStorageService.storeFile(request.getImage(), "blogs");
-            blog.setImageFileName(fileName);
-        }
-
         blog.setCreatedBy(user.getId());
         Blog savedBlog = blogRepository.save(blog);
         return savedBlog.getId();
+    }
+
+    @Override
+    public String uploadImage(MultipartFile file, Integer blogId) {
+        Blog blog = blogRepository.findById(blogId)
+                .orElseThrow(() -> new EntityNotFoundException("Bu ID ile blog bulunamadı :: " + blogId));
+        if (blog.getImageFileName() != null) {
+            fileStorageService.deleteFile(blog.getImageFileName(), "blogs");
+        }
+        String fileName = fileStorageService.storeFile(file, "blogs");
+        blog.setImageFileName(fileName);
+        blogRepository.save(blog);
+        return fileName;
     }
 
     @Override
@@ -97,23 +106,13 @@ public class BlogServiceImpl implements BlogService {
         if (!existingBlog.getCreatedBy().equals(user.getId())) {
             throw new RuntimeException("Blog güncellemek için gerekli yetkiye sahip değilsiniz");
         }
-
-        if (request.getImage() != null && !request.getImage().isEmpty()) {
-
-            String fileName = fileStorageService.storeFile(request.getImage(), "blogs");
-
-            if (existingBlog.getImageFileName() != null) {
-                fileStorageService.deleteFile(existingBlog.getImageFileName(), "blogs");
-            }
-            existingBlog.setImageFileName(fileName);
-        }
-
         if (request.getTitle() != null)
             existingBlog.setTitle(request.getTitle());
         if (request.getSubTitle() != null)
             existingBlog.setSubTitle(request.getSubTitle());
         if (request.getText() != null)
             existingBlog.setText(request.getText());
+
         existingBlog.setShareable(request.isShareable());
 
         return blogRepository.save(existingBlog).getId();
@@ -135,14 +134,15 @@ public class BlogServiceImpl implements BlogService {
     @Override
     @Transactional
     public ResponseEntity<Boolean> removeSelectedBlog(Integer id) {
-        if (blogRepository.existsById(id)) {
-            blogRepository.deleteById(id);
-            log.info("{} ID'sine sahip blog silindi", id);
-            return ResponseEntity.ok(true);
-        } else {
-            log.warn("{} ID'sine sahip blog bulunamadı", id);
-            return ResponseEntity.status(404).body(false);
+        Blog blog = blogRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Bu ID ile blog bulunamadı :: " + id));
+        if (blog.getImageFileName() != null) {
+            fileStorageService.deleteFile(blog.getImageFileName(), "blogs");
         }
+        blogRepository.deleteById(id);
+
+        log.info("{} ID'sine sahip blog silindi", id);
+        return ResponseEntity.ok(true);
     }
 
     @Override

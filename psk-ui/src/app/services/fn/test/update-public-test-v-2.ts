@@ -12,10 +12,10 @@ import { AdminTestResponse } from '../../models/admin-test-response';
 import { PublicTestRequest } from '../../models/public-test-request';
 
 export interface UpdatePublicTestV2$Params {
-      body: PublicTestRequest
+      body?: PublicTestRequest
 }
 
-export function updatePublicTestV2(http: HttpClient, rootUrl: string, params: UpdatePublicTestV2$Params, context?: HttpContext): Observable<StrictHttpResponse<AdminTestResponse>> {
+export function updatePublicTestV2(http: HttpClient, rootUrl: string, params?: UpdatePublicTestV2$Params, context?: HttpContext): Observable<StrictHttpResponse<AdminTestResponse>> {
   const rb = new RequestBuilder(rootUrl, updatePublicTestV2.PATH, 'post');
   if (params) {
     rb.body(params.body, 'application/json');

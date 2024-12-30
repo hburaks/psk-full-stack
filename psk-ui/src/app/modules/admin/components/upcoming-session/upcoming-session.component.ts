@@ -36,6 +36,11 @@ export class UpcomingSessionComponent {
     this.showEditSessionModal = true;
   }
 
+  receiveShowEditSessionModal(showEditSessionModal: boolean) {
+    this.showEditSessionModal = showEditSessionModal;
+    this.getUpcomingSession();
+  }
+
   receiveAddedTest(test: UserTestForAdminResponse | null) {
     if (test) {
       this.testResults = [...this.testResults, test];

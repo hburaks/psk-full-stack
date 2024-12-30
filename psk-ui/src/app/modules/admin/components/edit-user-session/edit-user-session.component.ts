@@ -59,7 +59,6 @@ export class EditUserSessionComponent {
 
   closeModal() {
     this.showEditSessionModal.emit(false);
-    window.location.reload();
   }
 
   editNoteForUser() {
@@ -125,8 +124,7 @@ export class EditUserSessionComponent {
         })
         .subscribe({
           next: (response: number) => {
-            //this.showEditSessionModal.emit(false);
-            window.location.reload();
+            this.showEditSessionModal.emit(false);
           },
           error: (error) => {
             this.toastErrorMessage = 'Seans oluşturulurken bir hata oluştu';
@@ -147,7 +145,7 @@ export class EditUserSessionComponent {
         })
         .subscribe({
           next: () => {
-            window.location.reload();
+            this.showEditSessionModal.emit(false);
           },
           error: (error) => {
             this.toastErrorMessage =

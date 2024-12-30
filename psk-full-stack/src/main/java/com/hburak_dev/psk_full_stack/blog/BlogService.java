@@ -3,10 +3,13 @@ package com.hburak_dev.psk_full_stack.blog;
 import com.hburak_dev.psk_full_stack.common.PageResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface BlogService {
 
     Integer saveBlog(BlogRequest request, Authentication connectedUser);
+
+    String uploadImage(MultipartFile file, Integer blogId);
 
     PageResponse<BlogResponse> findAllBlogsShareable(int page, int size);
 

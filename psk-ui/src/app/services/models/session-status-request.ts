@@ -4,10 +4,5 @@
 
 export interface SessionStatusRequest {
   sessionId?: number;
-  sessionStatusType?:
-    | 'AWAITING_THERAPIST_APPROVAL'
-    | 'APPOINTMENT_SCHEDULED'
-    | 'COMPLETED'
-    | 'CANCELED'
-    | 'UNAVAILABLE';
+  sessionStatusType?: 'AWAITING_THERAPIST_APPROVAL' | 'APPOINTMENT_SCHEDULED' | 'COMPLETED' | 'CANCELED' | 'UNAVAILABLE';
 }

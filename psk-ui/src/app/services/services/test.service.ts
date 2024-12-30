@@ -107,7 +107,7 @@ export class TestService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  updatePublicTestV2$Response(params: UpdatePublicTestV2$Params, context?: HttpContext): Observable<StrictHttpResponse<AdminTestResponse>> {
+  updatePublicTestV2$Response(params?: UpdatePublicTestV2$Params, context?: HttpContext): Observable<StrictHttpResponse<AdminTestResponse>> {
     return updatePublicTestV2(this.http, this.rootUrl, params, context);
   }
 
@@ -117,7 +117,7 @@ export class TestService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  updatePublicTestV2(params: UpdatePublicTestV2$Params, context?: HttpContext): Observable<AdminTestResponse> {
+  updatePublicTestV2(params?: UpdatePublicTestV2$Params, context?: HttpContext): Observable<AdminTestResponse> {
     return this.updatePublicTestV2$Response(params, context).pipe(
       map((r: StrictHttpResponse<AdminTestResponse>): AdminTestResponse => r.body)
     );
