@@ -125,6 +125,7 @@ export class EditUserSessionComponent {
         })
         .subscribe({
           next: (response: number) => {
+            //this.showEditSessionModal.emit(false);
             window.location.reload();
           },
           error: (error) => {

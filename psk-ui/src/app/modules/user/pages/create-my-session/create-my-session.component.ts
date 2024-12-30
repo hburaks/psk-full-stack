@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 
 @Component({
   selector: 'app-create-my-session',
@@ -8,5 +8,10 @@ import { Component } from '@angular/core';
 export class CreateMySessionComponent {
   closeModal() {
     console.log('closeModal');
+  }
+  @Output() isShowAddSessionModal = new EventEmitter<boolean>();
+
+  showAddSessionModal(isShowAddSessionModal: boolean) {
+    this.isShowAddSessionModal.emit(isShowAddSessionModal);
   }
 }

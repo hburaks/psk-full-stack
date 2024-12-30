@@ -31,7 +31,7 @@ export class WeeklySessionCalendarComponent {
   weeklySessionCalendar: DailyCalendarResponse[] = [];
 
   @Output() dateToUpdateSession = new EventEmitter<string | null>();
-
+  @Output() isShowAddSessionModal = new EventEmitter<boolean>();
   approveModalText: string = '';
   approveModalHeader: string = '';
   approveModalDate: string | null = null;
@@ -79,7 +79,8 @@ export class WeeklySessionCalendarComponent {
       .createMySession({ date: date || '' })
       .subscribe({
         next: (response: number) => {
-          window.location.reload();
+          this.isShowAddSessionModal.emit(false);
+          //window.location.reload();
         },
         error: (error) => {
           this.toastErrorMessage = 'Seans oluşturulurken bir hata oluştu';
