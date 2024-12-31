@@ -15,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -29,12 +28,6 @@ public class BlogServiceImpl implements BlogService {
     private final BlogRepository blogRepository;
     private final BlogMapper blogMapper;
     private final FileStorageService fileStorageService;
-
-    @Value("${server.servlet.context-path}")
-    private String contextPath;
-
-    @Value("${server.port}")
-    private String serverPort;
 
     @Override
     @Transactional
@@ -66,7 +59,7 @@ public class BlogServiceImpl implements BlogService {
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
         Page<Blog> blogs = blogRepository.findAllShareableBlogs(pageable);
         List<BlogResponse> blogsResponse = blogs.stream()
-                .map(blog -> toBlogResponse(blog))
+                .map(blogMapper::toBlogResponse)
                 .toList();
         return new PageResponse<>(
                 blogsResponse,
@@ -84,7 +77,7 @@ public class BlogServiceImpl implements BlogService {
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
         Page<Blog> blogs = blogRepository.findAllBlogs(pageable);
         List<BlogResponse> blogsResponse = blogs.stream()
-                .map(blog -> toBlogResponse(blog))
+                .map(blogMapper::toBlogResponse)
                 .toList();
         return new PageResponse<>(
                 blogsResponse,
@@ -152,24 +145,8 @@ public class BlogServiceImpl implements BlogService {
     @Override
     @Transactional
     public BlogResponse findBlogById(Integer id) {
-        return toBlogResponse(blogRepository.findById(id)
+        return blogMapper.toBlogResponse(blogRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Bu ID ile blog bulunamadı :: " + id)));
     }
 
-    private BlogResponse toBlogResponse(Blog blog) {
-        String imageUrl = null;
-        if (blog.getImageFileName() != null) {
-            imageUrl = String.format("http://localhost:%s/api/v3/files/blog/download/%s",
-                    serverPort, blog.getImageFileName());
-        }
-
-        return BlogResponse.builder()
-                .id(blog.getId())
-                .title(blog.getTitle())
-                .text(blog.getText())
-                .subTitle(blog.getSubTitle())
-                .shareable(blog.isShareable())
-                .imageUrl(imageUrl)
-                .build();
-    }
 }

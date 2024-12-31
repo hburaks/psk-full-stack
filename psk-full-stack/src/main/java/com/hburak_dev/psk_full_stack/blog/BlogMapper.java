@@ -1,10 +1,7 @@
 package com.hburak_dev.psk_full_stack.blog;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
-
-import com.hburak_dev.psk_full_stack.service.FileStorageService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -24,7 +21,7 @@ public class BlogMapper {
                 .build();
     }
 
-    private BlogResponse toBlogResponse(Blog blog) {
+    public BlogResponse toBlogResponse(Blog blog) {
         String imageUrl = null;
         if (blog.getImageFileName() != null) {
             imageUrl = String.format("http://localhost:%s/api/v3/files/blog/download/%s",
@@ -40,5 +37,4 @@ public class BlogMapper {
                 .imageUrl(imageUrl)
                 .build();
     }
-
 }
