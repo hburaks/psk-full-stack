@@ -15,7 +15,7 @@
         <div class="login" *ngIf="isActivateAccount">
           <div *ngIf="isActivationSubmitted else codeForm">
             <div class="activation-message" *ngIf="isActivationOkay; else activationError">
-              <div class="alert alert-success text-center" role="alert">
+              <div class="alert alert-primary text-center" role="alert">
                 <h3>Aktivasyon Başarılı!</h3>
                 <p>Hesabınız başarıyla aktive edildi.</p>
               </div>

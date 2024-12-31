@@ -14,7 +14,7 @@ public interface SessionService {
 
     Integer createUserSession(LocalDateTime date, Authentication connectedUser);
 
-    Integer createSessionForUserV2(LocalDateTime date, Integer userId);
+    Integer createSessionForUserV2(LocalDateTime date, Integer userId, Authentication connectedUser);
 
     ResponseEntity<Boolean> cancelUserSession(Integer id, Authentication connectedUser);
 

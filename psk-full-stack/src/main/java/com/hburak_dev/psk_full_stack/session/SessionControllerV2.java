@@ -3,6 +3,7 @@ package com.hburak_dev.psk_full_stack.session;
 import com.hburak_dev.psk_full_stack.common.PageResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.Authentication;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -66,9 +67,9 @@ public class SessionControllerV2 {
 
     @PostMapping("/create")
     public Integer createSessionForUserV2(
-            @RequestParam("date") LocalDateTime date, @RequestParam Integer userId) {
+            @RequestParam("date") LocalDateTime date, @RequestParam Integer userId, Authentication connectedUser) {
 
-        return sessionService.createSessionForUserV2(date, userId);
+        return sessionService.createSessionForUserV2(date, userId, connectedUser);
     }
 
     @GetMapping("/upcoming-session")

@@ -10,7 +10,7 @@ services:
     volumes:
       - postgres:/data/postgres
     ports:
-      - 5433:5432
+      - 5432:5432
     networks:
       - spring-demo
     restart: unless-stopped
@@ -20,10 +20,43 @@ services:
     ports:
       - 1080:1080
       - 1025:1025
+
+  psk-api:
+    container_name: psk-api
+    image: psk/psk:1.0.0-f
+    environment:
+      EMAIL_HOST_NAME: ${EMAIL_HOST_NAME}
+      EMAIL_USER_NAME: ${EMAIL_USER_NAME}
+      EMAIL_PASSWORD: ${EMAIL_PASSWORD}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+      GOOGLE_REFRESH_TOKEN: ${GOOGLE_REFRESH_TOKEN}
+      THERAPIST_EMAIL: ${THERAPIST_EMAIL}
+    ports:
+      - 8088:8088
+    volumes:
+      - psk-api-storage:/app/uploads
+    networks:
+      - spring-demo
+    depends_on:
+      - postgres
+
+  psk-ui:
+    container_name: psk-ui
+    image: psk/psk-ui:1.0.0
+    ports:
+      - 8080:80
+    networks:
+      - spring-demo
+    depends_on:
+      - psk-api
+
 networks:
   spring-demo:
     driver: bridge
 
 volumes:
   postgres:
+    driver: local
+  psk-api-storage:
     driver: local
