@@ -1,12 +1,9 @@
 package com.hburak_dev.psk_full_stack.test;
 
-import com.hburak_dev.psk_full_stack.comment.AdminTestCommentRequest;
 import com.hburak_dev.psk_full_stack.comment.Comment;
 import com.hburak_dev.psk_full_stack.comment.CommentMapper;
-import com.hburak_dev.psk_full_stack.question.PublicTestQuestionRequest;
 import com.hburak_dev.psk_full_stack.question.Question;
 import com.hburak_dev.psk_full_stack.question.QuestionMapper;
-import com.hburak_dev.psk_full_stack.user.User;
 
 import lombok.RequiredArgsConstructor;
 
