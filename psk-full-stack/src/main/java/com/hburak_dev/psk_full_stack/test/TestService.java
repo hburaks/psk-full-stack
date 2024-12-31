@@ -32,9 +32,14 @@ public interface TestService {
     ResponseEntity<Boolean> saveMyTestAnswer(MyAnswerRequest myAnswerRequest, Authentication connectedUser);
 
     /**
+     * Creates public test
+     */
+    AdminTestResponse savePublicTestV2(PublicTestRequest publicTestRequest, Authentication connectedUser);
+
+    /**
      * Creates & Updates public test
      */
-    AdminTestResponse updatePublicTestV2(PublicTestRequest publicTestRequest, Authentication connectedUser);
+    AdminTestResponse updatePublicTestV2(PublicTestRequest publicTestRequest);
 
     /**
      * Update public test availability value
@@ -75,5 +80,17 @@ public interface TestService {
      * Uploads image for test
      */
     String uploadImage(MultipartFile file, Integer testId);
+
+    /**
+     * Updates public test question
+     */
+    Boolean updatePublicTestQuestionsV2(PublicTestQuestionListRequest publicTestQuestionListRequest,
+            Authentication connectedUser);
+
+    /**
+     * Updates public test comment
+     */
+    Boolean updatePublicTestCommentsV2(PublicTestCommentListRequest publicTestCommentListRequest,
+            Authentication connectedUser);
 
 }

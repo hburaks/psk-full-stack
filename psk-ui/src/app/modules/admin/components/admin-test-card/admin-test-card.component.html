@@ -2,8 +2,10 @@
 
 <div *ngIf="testResults.length > 0" class="row  justify-content-center mt-3 g-3">
   <div class="col-md-4 col-sm-6 test-card-container mb-4" *ngFor="let testCard of testResults; let i = index">
-    <div class="test-circle mx-auto"></div>
-    <!-- TODO:change with real data <img src="{{testCard.cover}}" class="card-img-top card-image"> -->
+    <div class="test-circle mx-auto">
+      <img *ngIf="testCard.imageUrl" [src]="testCard.imageUrl" alt="Test image"
+        style="width: 100%; height: 100%; object-fit: cover;">
+    </div>
     <div
       class="card test-card card-body test-card-body test-card-body-large d-flex flex-column justify-content-between">
       <h5 class="card-title text-center mb-0">{{testCard.title}}</h5>
@@ -24,8 +26,10 @@
 
 <div *ngIf="publicTests.length > 0" class="row justify-content-center mt-3 g-3">
   <div class="col-md-4 col-sm-6 test-card-container mb-4" *ngFor="let testCard of publicTests; let i = index">
-    <div class="test-circle mx-auto"></div>
-    <!-- TODO:change with real data <img src="{{testCard.cover}}" class="card-img-top card-image"> -->
+    <div class="test-circle mx-auto">
+      <img *ngIf="testCard.imageUrl" [src]="testCard.imageUrl" alt="Test image"
+        style="width: 100%; height: 100%; object-fit: cover;">
+    </div>
     <div class="card test-card card-body test-card-body test-card-body-large d-flex justify-content-between">
       <h5 class="card-title text-center">{{testCard.title}}</h5>
       <p class="card-text text-secondary">{{testCard.subTitle}}</p>

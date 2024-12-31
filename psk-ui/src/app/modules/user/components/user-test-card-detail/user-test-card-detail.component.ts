@@ -8,10 +8,7 @@ import { TestService } from 'src/app/services/services/test.service';
   styleUrls: ['./user-test-card-detail.component.scss'],
 })
 export class UserTestCardDetailComponent {
-
-  constructor(private testService: TestService) {
-
-  }
+  constructor(private testService: TestService) {}
 
   @Input() testCard!: MyTestResponse;
 
@@ -21,7 +18,7 @@ export class UserTestCardDetailComponent {
 
   questions?: MyAnswerQuestionRequest[] = [];
 
-  selectChoice(questionIndex: number, choiceIndex: number, questionId: number) {
+  selectChoice(questionIndex: number, choiceIndex: number, id: number) {
     let chosenAnswer:
       | 'ANSWER_A'
       | 'ANSWER_B'
@@ -33,32 +30,34 @@ export class UserTestCardDetailComponent {
     else if (choiceIndex === 2) chosenAnswer = 'ANSWER_C';
     else if (choiceIndex === 3) chosenAnswer = 'ANSWER_D';
     else chosenAnswer = 'ANSWER_E';
-    if (this.questions?.find((q) => q.questionId === questionId)) {
+    if (this.questions?.find((q) => q.id === id)) {
       this.questions = this.questions.map((q) =>
-        q.questionId === questionId ? { ...q, chosenAnswer: chosenAnswer } : q
+        q.id === id ? { ...q, chosenAnswer: chosenAnswer } : q
       );
     } else {
       this.questions?.push({
         chosenAnswer: chosenAnswer,
-        questionId: questionId,
+        id: id,
       });
     }
     this.selectedChoices[questionIndex] = choiceIndex;
   }
 
   completeTest() {
-    this.testService.saveMyTestAnswer({
-      body: {
-        testId: this.testCard.testId,
-        questions: this.questions,
-      },
-    }).subscribe({
-      next: (res) => {
-        this.onCompleteTest.emit();
-      },
-      error: (error) => {
-        console.log(error);
-      }
-    });
+    this.testService
+      .saveMyTestAnswer({
+        body: {
+          testId: this.testCard.testId,
+          questions: this.questions,
+        },
+      })
+      .subscribe({
+        next: (res) => {
+          this.onCompleteTest.emit();
+        },
+        error: (error) => {
+          console.log(error);
+        },
+      });
   }
 }

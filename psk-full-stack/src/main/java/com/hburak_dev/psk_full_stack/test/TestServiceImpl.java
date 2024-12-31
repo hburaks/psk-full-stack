@@ -2,11 +2,14 @@ package com.hburak_dev.psk_full_stack.test;
 
 import com.hburak_dev.psk_full_stack.choice.Choice;
 import com.hburak_dev.psk_full_stack.choice.ChoiceMapper;
+import com.hburak_dev.psk_full_stack.choice.ChoiceRepository;
 import com.hburak_dev.psk_full_stack.comment.*;
 import com.hburak_dev.psk_full_stack.question.*;
 import com.hburak_dev.psk_full_stack.service.FileStorageService;
 import com.hburak_dev.psk_full_stack.user.User;
 import com.hburak_dev.psk_full_stack.user.UserRepository;
+
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -28,15 +31,19 @@ public class TestServiceImpl implements TestService {
 
     private final CommentMapper commentMapper;
 
+    private final ChoiceRepository choiceRepository;
+
     private final TestMapper testMapper;
 
-    private final QuestionMapper questionMapper;
-
     private final ChoiceMapper choiceMapper;
+
+    private final CommentRepository commentRepository;
 
     private final QuestionRepository questionRepository;
 
     private final FileStorageService fileStorageService;
+
+    private final QuestionMapper questionMapper;
 
     @Override
     public List<PublicTestResponse> getAllPublicTests() {
@@ -120,7 +127,7 @@ public class TestServiceImpl implements TestService {
 
         for (MyAnswerQuestionRequest questionRequest : myAnswerRequest.getQuestions()) {
             Question question = questions.stream()
-                    .filter(q -> q.getId().equals(questionRequest.getQuestionId()))
+                    .filter(q -> q.getId().equals(questionRequest.getId()))
                     .findFirst()
                     .orElseThrow(() -> new RuntimeException("Soru bulunamadı"));
 
@@ -135,89 +142,143 @@ public class TestServiceImpl implements TestService {
     }
 
     @Override
-    public AdminTestResponse updatePublicTestV2(PublicTestRequest publicTestRequest,
-                    Authentication connectedUser) {
+    public AdminTestResponse savePublicTestV2(PublicTestRequest publicTestRequest, Authentication connectedUser) {
+        User user = (User) connectedUser.getPrincipal();
+        Test test = testMapper.toTest(publicTestRequest, user.getId());
+        testRepository.save(test);
+        return testMapper.toAdminTestResponse(test);
+    }
+
+    @Override
+    public AdminTestResponse updatePublicTestV2(PublicTestRequest publicTestRequest) {
+
+
+        Test testToUpdate = testRepository.findById(publicTestRequest.getTestId())
+                .orElseThrow(() -> new RuntimeException("Test bulunamadı"));
+
+        if (publicTestRequest.getIsActive() != null) {
+            testToUpdate.setIsActive(publicTestRequest.getIsActive());
+        }
+        if (publicTestRequest.getSubTitle() != null) {
+            testToUpdate.setSubTitle(publicTestRequest.getSubTitle());
+        }
+        if (publicTestRequest.getTitle() != null) {
+            testToUpdate.setTitle(publicTestRequest.getTitle());
+        }
+
+        testRepository.save(testToUpdate);
+        return testMapper.toAdminTestResponse(testToUpdate);
+    }
+
+    @Override
+    @Transactional
+    public Boolean updatePublicTestCommentsV2(PublicTestCommentListRequest publicTestCommentListRequest,
+            Authentication connectedUser) {
 
         User user = (User) connectedUser.getPrincipal();
 
-        if (publicTestRequest.getTestId() != null) {
-            Test testToUpdate = testRepository.findById(publicTestRequest.getTestId())
-                    .orElseThrow(() -> new RuntimeException("Test bulunamadı"));
+        Test testToUpdate = testRepository.findById(publicTestCommentListRequest.getTestId())
+                .orElseThrow(() -> new RuntimeException("Test bulunamadı"));
 
-                    if (publicTestRequest.getIsActive() != null) {
-                testToUpdate.setIsActive(publicTestRequest.getIsActive());
-            }
-            if (publicTestRequest.getSubTitle() != null) {
-                testToUpdate.setSubTitle(publicTestRequest.getSubTitle());
-            }
-            if (publicTestRequest.getTitle() != null) {
-                testToUpdate.setTitle(publicTestRequest.getTitle());
-            }
+        List<Comment> existingComments = testToUpdate.getComments();
+        List<Comment> updatedComments = new ArrayList<>();
 
-            if (publicTestRequest.getPublicTestQuestionRequestList() != null) {
-                List<Question> existingQuestions = testToUpdate.getQuestions();
-                List<Question> updatedQuestions = new ArrayList<>();
+        List<Comment> commentsToDelete = existingComments.stream()
+                .filter(c -> !publicTestCommentListRequest.getComments().stream()
+                        .anyMatch(cr -> cr.getCommentId().equals(c.getId())))
+                .collect(Collectors.toList());
 
-                for (PublicTestQuestionRequest questionRequest : publicTestRequest.getPublicTestQuestionRequestList()) {
-                    if (questionRequest.getQuestionId() != null) {
-                        Question existingQuestion = existingQuestions.stream()
-                                .filter(q -> q.getId().equals(questionRequest.getQuestionId()))
-                                .findFirst()
-                                .orElseThrow(() -> new RuntimeException("Question not found"));
-
-                        existingQuestion.setText(questionRequest.getText());
-                        updateQuestionChoices(existingQuestion, questionRequest, user.getId());
-                        updatedQuestions.add(existingQuestion);
-                    } else {
-                        Question newQuestion = questionMapper.toQuestion(questionRequest, user.getId(), testToUpdate);
-                        updatedQuestions.add(newQuestion);
-                    }
-                }
-
-                testToUpdate.setQuestions(updatedQuestions);
-            }
-
-            if (publicTestRequest.getComments() != null) {
-                List<Comment> existingComments = testToUpdate.getComments();
-                List<Comment> updatedComments = new ArrayList<>();
-
-                for (AdminTestCommentRequest commentRequest : publicTestRequest.getComments()) {
-                    if (commentRequest.getCommentId() != null) {
-                        Comment existingComment = existingComments.stream()
-                                .filter(c -> c.getId().equals(commentRequest.getCommentId()))
-                                .findFirst()
-                                .orElseThrow(() -> new RuntimeException("Comment not found"));
-
-                        existingComment = commentMapper.updateComment(existingComment, commentRequest);
-                        existingComment.setCreatedBy(user.getId());
-                        updatedComments.add(existingComment);
-                    } else {
-                        Comment newComment = commentMapper.toComment(commentRequest, testToUpdate);
-                        newComment.setCreatedBy(user.getId());
-                        updatedComments.add(newComment);
-                    }
-                }
-
-                testToUpdate.setComments(updatedComments);
-            }
-
-            testRepository.save(testToUpdate);
-            return testMapper.toAdminTestResponse(testToUpdate);
-        } else {
-            Test test = testMapper.toTest(publicTestRequest, user.getId());
-            testRepository.save(test);
-            return testMapper.toAdminTestResponse(test);
+        for (Comment comment : commentsToDelete) {
+            commentRepository.delete(comment);
         }
+
+        existingComments.removeAll(commentsToDelete);
+
+        for (AdminTestCommentRequest commentRequest : publicTestCommentListRequest.getComments()) {
+            if (commentRequest.getCommentId() != null) {
+                Comment existingComment = existingComments.stream()
+                        .filter(c -> c.getId().equals(commentRequest.getCommentId()))
+                        .findFirst()
+                        .orElseThrow(() -> new RuntimeException("Comment not found"));
+
+                existingComment = commentMapper.updateComment(existingComment, commentRequest);
+                existingComment.setCreatedBy(user.getId());
+                updatedComments.add(existingComment);
+            } else {
+                Comment newComment = commentMapper.toComment(commentRequest, testToUpdate);
+                newComment.setCreatedBy(user.getId());
+                updatedComments.add(newComment);
+            }
+        }
+
+        testToUpdate.setComments(updatedComments);
+        return true;
+    }
+
+    @Override
+    @Transactional
+    public Boolean updatePublicTestQuestionsV2(PublicTestQuestionListRequest publicTestQuestionListRequest,
+            Authentication connectedUser) {
+
+        User user = (User) connectedUser.getPrincipal();
+
+        Test testToUpdate = testRepository.findById(publicTestQuestionListRequest.getTestId())
+                .orElseThrow(() -> new RuntimeException("Test bulunamadı"));
+
+        List<Question> existingQuestions = testToUpdate.getQuestions();
+        List<Question> updatedQuestions = new ArrayList<>();
+
+        List<Question> questionsToDelete = existingQuestions.stream()
+                .filter(q -> publicTestQuestionListRequest.getPublicTestQuestionRequestList().stream()
+                        .noneMatch(qr -> qr.getId() != null && qr.getId().equals(q.getId())))
+                .collect(Collectors.toList());
+
+        for (Question question : questionsToDelete) {
+            deleteQuestion(question);
+        }
+        existingQuestions.removeAll(questionsToDelete);
+
+        for (PublicTestQuestionRequest questionRequest : publicTestQuestionListRequest
+                .getPublicTestQuestionRequestList()) {
+            Question existingQuestion = existingQuestions.stream()
+                    .filter(q -> q.getId().equals(questionRequest.getId()))
+                    .findFirst()
+                    .orElse(null);
+
+            if (existingQuestion == null) {
+                existingQuestion = questionMapper.toQuestion(questionRequest, user.getId(), testToUpdate);
+            }
+
+            if (existingQuestion.getId() != null) {
+                updateQuestionChoices(existingQuestion, questionRequest, user.getId());
+            }
+            updatedQuestions.add(existingQuestion);
+
+        }
+
+        testToUpdate.getQuestions().clear();
+        updatedQuestions.forEach(q -> q.setTest(testToUpdate));
+        testToUpdate.getQuestions().addAll(updatedQuestions);
+
+        testRepository.save(testToUpdate);
+        return true;
     }
 
     private void updateQuestionChoices(Question question, PublicTestQuestionRequest questionRequest, Integer userId) {
         List<Choice> existingChoices = question.getChoices();
         List<Choice> updatedChoices = new ArrayList<>();
 
+        Set<Integer> choicesToDelete = question.getChoices().stream()
+                .map(Choice::getId)
+                .filter(id -> questionRequest.getPublicChoiceRequestList().stream()
+                        .noneMatch(choiceRequest -> choiceRequest.getId() != null
+                                && choiceRequest.getId().equals(id)))
+                .collect(Collectors.toSet());
+
         for (PublicChoiceRequest choiceRequest : questionRequest.getPublicChoiceRequestList()) {
-            if (choiceRequest.getChoiceId() != null) {
+            if (choiceRequest.getId() != null) {
                 Choice existingChoice = existingChoices.stream()
-                        .filter(c -> c.getId().equals(choiceRequest.getChoiceId()))
+                        .filter(c -> c.getId().equals(choiceRequest.getId()))
                         .findFirst()
                         .orElseThrow(() -> new RuntimeException("Choice not found"));
 
@@ -230,7 +291,25 @@ public class TestServiceImpl implements TestService {
             }
         }
 
+        choicesToDelete.forEach(id -> {
+            Choice choice = existingChoices.stream()
+                    .filter(c -> c.getId().equals(id))
+                    .findFirst()
+                    .orElseThrow(() -> new RuntimeException("Choice not found"));
+            choiceRepository.delete(choice);
+        });
+
         question.setChoices(updatedChoices);
+    }
+
+    private void deleteQuestion(Question question) {
+        try {
+            choiceRepository.deleteAll(question.getChoices());
+            questionRepository.delete(question);
+        } catch (Exception e) {
+            log.error("Error deleting question", e);
+            throw new RuntimeException("Error deleting question");
+        }
     }
 
     @Override
@@ -365,4 +444,5 @@ public class TestServiceImpl implements TestService {
         testRepository.save(test);
         return fileName;
     }
+
 }

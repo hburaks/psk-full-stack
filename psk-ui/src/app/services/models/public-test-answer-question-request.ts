@@ -4,5 +4,5 @@
 
 export interface PublicTestAnswerQuestionRequest {
   chosenAnswer?: 'ANSWER_A' | 'ANSWER_B' | 'ANSWER_C' | 'ANSWER_D' | 'ANSWER_E';
-  questionId?: number;
+  id?: number;
 }

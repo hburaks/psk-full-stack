@@ -5,6 +5,6 @@
 import { PublicChoiceRequest } from '../models/public-choice-request';
 export interface PublicTestQuestionRequest {
   publicChoiceRequestList?: Array<PublicChoiceRequest>;
-  questionId?: number;
+  id?: number;
   text?: string;
 }

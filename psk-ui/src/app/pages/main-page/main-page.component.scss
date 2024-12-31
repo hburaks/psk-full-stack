@@ -1,3 +1,11 @@
+.test-circle {
+  width: 180px;
+  height: 180px;
+  border: 0.4rem solid #7749f8;
+  border-radius: 50%;
+  margin-bottom: 1rem;
+}
+
 .logo-circle {
   width: 180px;
   height: 180px;
@@ -48,13 +56,7 @@
   white-space: nowrap;
 }
 
-.test-circle {
-  width: 180px;
-  height: 180px;
-  border: 0.4rem solid #7749f8;
-  border-radius: 50%;
-  margin-bottom: 1rem;
-}
+
 .table-header {
   @media screen and (max-width: 480px) {
     padding-inline: 6px !important;

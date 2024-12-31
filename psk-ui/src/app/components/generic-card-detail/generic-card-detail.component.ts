@@ -115,7 +115,6 @@ export class GenericCardDetailComponent implements OnInit, OnChanges {
     if (!this.blogCard?.id) {
       this.blogService.saveBlog({ body: blogRequest }).subscribe({
         next: (response) => {
-          console.log('Save success:', response);
           this.isBlogEditable = false;
           this.endEditingEvent.emit();
           this.saveBlogImage(response);

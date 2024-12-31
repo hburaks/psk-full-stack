@@ -51,7 +51,7 @@
   </div>
   <div class="mx-0 row justify-content-center">
     <div class="col-12">
-      <app-test-card-list *ngIf="!isScreenSmall" [testCardList]="fetchedTestList" [isMainPage]="true"></app-test-card-list>
+      <app-test-card-list *ngIf="!isScreenSmall" [testCardList]="fetchedTestList" [isEditPage]="false"></app-test-card-list>
       <div *ngIf="isScreenSmall" id="carouselTestIndicators" class="carousel carousel-dark slide">
         <div class="col-12 mb-4">
           <h2>Testler</h2>
@@ -59,8 +59,10 @@
         <div class="carousel-inner">
           <div class="carousel-item" [ngClass]="{ 'active': i === 0 }"
             *ngFor="let testCard of testCardList; let i = index">
-            <div class="test-circle mx-auto"> </div>
-            <!--           <img src="{{testCard.cover}}" class="d-block w-100"> -->
+            <div class="test-circle mx-auto">
+              <img *ngIf="testCard.imageUrl" [src]="testCard.imageUrl" alt="Test image"
+                style="width: 100%; height: 100%; object-fit: cover;">
+            </div>
             <div class="card border-0 test-card">
               <div class="card-body test-card-body">
                 <div>

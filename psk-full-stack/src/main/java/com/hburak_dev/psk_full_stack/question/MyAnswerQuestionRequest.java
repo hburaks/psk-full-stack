@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 public class MyAnswerQuestionRequest {
 
-    private Integer questionId;
+    private Integer id;
 
     private AnswerType chosenAnswer;
 

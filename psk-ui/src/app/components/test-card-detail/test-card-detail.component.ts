@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http';
 import {
   AfterViewInit,
   Component,
@@ -7,8 +6,11 @@ import {
   EventEmitter,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { CommonService } from 'src/app/custom-services/common-service/common.service';
 import { FindBlogById$Params } from 'src/app/services/fn/blog/find-blog-by-id';
+import { SavePublicTestV2$Params } from 'src/app/services/fn/test/save-public-test-v-2';
+import { UpdatePublicTestCommentsV2$Params } from 'src/app/services/fn/test/update-public-test-comments-v-2';
+import { UpdatePublicTestQuestionsV2$Params } from 'src/app/services/fn/test/update-public-test-questions-v-2';
+import { UpdatePublicTestV2$Params } from 'src/app/services/fn/test/update-public-test-v-2';
 import {
   AdminTestCommentRequest,
   PublicChoiceRequest,
@@ -22,7 +24,7 @@ import {
   AdminTestResponse,
   AdminTestCommentResponse,
 } from 'src/app/services/models';
-import { FileControllerService, TestService } from 'src/app/services/services';
+import { TestService } from 'src/app/services/services';
 declare var bootstrap: any;
 
 @Component({
@@ -39,6 +41,8 @@ export class TestCardDetailComponent implements AfterViewInit {
 
   @Output() closeModalEvent = new EventEmitter<void>();
 
+  updateTestCard: PublicTestRequest = {} as PublicTestRequest;
+
   testCard: PublicTestResponse | null = null;
   selectedChoices: { [key: number]: number } = {};
   testResult: PublicTestAnswerCommentResponse | null = null;
@@ -51,15 +55,9 @@ export class TestCardDetailComponent implements AfterViewInit {
     'Kendinizi daha iyi tanımak için tasarlanmış çeşitli psikolojik testlerimizi deneyebilirsiniz. Bu testler kişilik özellikleri, duygusal durum ve davranış kalıplarınız hakkında içgörü kazanmanıza yardımcı olacaktır.';
 
   selectedFile: File | null = null;
-  imageUrl: string = '';
+  @Input() imageUrl: string = '';
 
-  private apiUrl = 'http://localhost:8088/api';
-
-  constructor(
-    private route: ActivatedRoute,
-    private testService: TestService,
-    private commonService: CommonService
-  ) {
+  constructor(private route: ActivatedRoute, private testService: TestService) {
     this.cardId = this.route.snapshot.params['id'];
   }
 
@@ -67,6 +65,11 @@ export class TestCardDetailComponent implements AfterViewInit {
     if (!this.editableTestCard && !this.isEditPage) {
       this.getTestDetail();
     }
+    this.updateTestCard = {
+      title: this.editableTestCard?.title,
+      subTitle: this.editableTestCard?.subTitle,
+      isActive: this.editableTestCard?.isActive,
+    };
   }
 
   getTestDetail() {
@@ -74,11 +77,12 @@ export class TestCardDetailComponent implements AfterViewInit {
     this.testService.getPublicTestById(params).subscribe({
       next: (test: PublicTestResponse) => {
         this.testCard = test;
+        this.imageUrl = test.imageUrl!;
       },
     });
   }
 
-  selectChoice(questionIndex: number, choiceIndex: number, questionId: number) {
+  selectChoice(questionIndex: number, choiceIndex: number, id: number) {
     let chosenAnswer:
       | 'ANSWER_A'
       | 'ANSWER_B'
@@ -90,14 +94,14 @@ export class TestCardDetailComponent implements AfterViewInit {
     else if (choiceIndex === 2) chosenAnswer = 'ANSWER_C';
     else if (choiceIndex === 3) chosenAnswer = 'ANSWER_D';
     else chosenAnswer = 'ANSWER_E';
-    if (this.questions?.find((q) => q.questionId === questionId)) {
+    if (this.questions?.find((q) => q.id === id)) {
       this.questions = this.questions.map((q) =>
-        q.questionId === questionId ? { ...q, chosenAnswer: chosenAnswer } : q
+        q.id === id ? { ...q, chosenAnswer: chosenAnswer } : q
       );
     } else {
       this.questions?.push({
         chosenAnswer: chosenAnswer,
-        questionId: questionId,
+        id: id,
       });
     }
     this.selectedChoices[questionIndex] = choiceIndex;
@@ -134,7 +138,7 @@ export class TestCardDetailComponent implements AfterViewInit {
     choiceResponse: PublicChoiceResponse
   ): PublicChoiceRequest {
     return {
-      choiceId: choiceResponse.id,
+      id: choiceResponse.id,
       text: choiceResponse.text,
       answerType: choiceResponse.answerType,
     };
@@ -152,7 +156,7 @@ export class TestCardDetailComponent implements AfterViewInit {
     questionResponse: PublicQuestionResponse
   ): PublicTestQuestionRequest {
     return {
-      questionId: questionResponse.id,
+      id: questionResponse.id,
       text: questionResponse.text,
       publicChoiceRequestList: this.choiceResponseListToRequestMapper(
         questionResponse.publicChoiceResponseList || []
@@ -168,55 +172,67 @@ export class TestCardDetailComponent implements AfterViewInit {
     );
   }
 
-  saveChanges() {
-    if (this.editableTestCard) {
-      const formData = new FormData();
+  saveOrUpdateTestInfo() {
+    if (this.editableTestCard?.id) {
+      this.updateTestCard.testId = this.editableTestCard.id;
+      if (
+        this.updateTestCard.title ||
+        this.updateTestCard.subTitle ||
+        this.updateTestCard.isActive
+      ) {
+        const params: UpdatePublicTestV2$Params = {
+          body: this.updateTestCard!,
+        };
 
-      if (this.editableTestCard.id) {
-        formData.append('testId', String(this.editableTestCard.id));
-      }
-
-      if (this.editableTestCard.title) {
-        formData.append('title', this.editableTestCard.title);
-      }
-
-      if (this.editableTestCard.subTitle) {
-        formData.append('subTitle', this.editableTestCard.subTitle);
-      }
-
-
-      if (this.selectedFile) {
-        formData.append('image', this.selectedFile);
-      }
-
-      if (this.editableTestCard.questions) {
-        formData.append(
-          'publicTestQuestionRequestList',
-          JSON.stringify(this.editableTestCard.questions)
-        );
-      }
-
-      if (this.editableTestCard.comments) {
-        formData.append(
-          'comments',
-          JSON.stringify(this.editableTestCard.comments)
-        );
-      }
-
-      if (this.editableTestCard.isActive) {
-        formData.append('isActive', String(this.editableTestCard.isActive));
-      }
-
-      this.commonService
-        .updateTest(formData)
-        .subscribe({
-          next: (response) => {
-            console.log('Update success:', response);
-            this.closeModalEvent.emit();
+        this.testService.updatePublicTestV2(params).subscribe({
+          next: (response: AdminTestResponse) => {
+            if (this.selectedFile && this.updateTestCard.testId) {
+              this.uploadImageToServer(this.updateTestCard.testId!);
+            } else {
+              this.closeModalEvent.emit();
+            }
           },
         });
+      } else if (this.selectedFile) {
+        const formData = new FormData();
+        formData.append('testId', String(this.editableTestCard.id));
+        formData.append('image', this.selectedFile);
+        this.uploadImageToServer(this.updateTestCard.testId!);
+      }
+    } else {
+      this.saveTest();
     }
   }
+
+  saveTest() {
+    const params: SavePublicTestV2$Params = {
+      body: this.updateTestCard!,
+    };
+    this.testService.savePublicTestV2(params).subscribe({
+      next: (response: AdminTestResponse) => {
+        if (this.selectedFile) {
+          this.uploadImageToServer(response.id!);
+        }
+        this.closeModalEvent.emit();
+      },
+    });
+  }
+
+  uploadImageToServer(id: number) {
+    this.testService
+      .uploadImage({
+        testId: id,
+        body: {
+          file: this.selectedFile!,
+        },
+      })
+      .subscribe({
+        next: (response) => {
+          this.closeModalEvent.emit();
+        },
+      });
+  }
+
   addQuestion() {
     if (this.editableTestCard) {
       this.editableTestCard.questions = this.editableTestCard.questions || [];
@@ -262,7 +278,7 @@ export class TestCardDetailComponent implements AfterViewInit {
     const choice: PublicChoiceRequest = {
       text: '',
       answerType: answerType,
-      choiceId: undefined,
+      id: undefined,
     };
 
     if (this.editableTestCard && this.editableTestCard.questions) {
@@ -293,31 +309,6 @@ export class TestCardDetailComponent implements AfterViewInit {
     ].publicChoiceResponseList?.splice(choiceIndex, 1);
   }
 
-  checkQuestionAnswerType(testRequest: PublicTestRequest) {
-    testRequest.publicTestQuestionRequestList?.forEach((question) => {
-      question.publicChoiceRequestList?.forEach((choice, choiceIndex) => {
-        switch (choiceIndex) {
-          case 0:
-            choice.answerType = 'ANSWER_A';
-            break;
-          case 1:
-            choice.answerType = 'ANSWER_B';
-            break;
-          case 2:
-            choice.answerType = 'ANSWER_C';
-            break;
-          case 3:
-            choice.answerType = 'ANSWER_D';
-            break;
-          case 4:
-            choice.answerType = 'ANSWER_E';
-            break;
-        }
-      });
-    });
-    return testRequest;
-  }
-
   removeQuestion(questionIndex: number) {
     this.editableTestCard!.questions?.splice(questionIndex, 1);
   }
@@ -328,6 +319,51 @@ export class TestCardDetailComponent implements AfterViewInit {
 
   updateComments(comments: AdminTestCommentResponse[]) {
     this.editableTestCard!.comments = comments;
+  }
+
+  updateTestComments() {
+    const params: UpdatePublicTestCommentsV2$Params = {
+      body: {
+        comments: this.editableTestCard!.comments,
+        testId: this.editableTestCard!.id,
+      },
+    };
+    this.testService.updatePublicTestCommentsV2(params).subscribe({
+      next: (response: boolean) => {
+        console.log('Update success:', response);
+      },
+    });
+  }
+
+  updateTestQuestions() {
+    this.editableTestCard!.questions = this.editableTestCard!.questions?.map(
+      (q) => {
+        const publicChoiceRequestList: PublicChoiceRequest[] =
+          q.publicChoiceResponseList?.map((c) => ({
+            id: c.id,
+            text: c.text,
+            answerType: c.answerType,
+          })) ?? [];
+        return {
+          ...q,
+          publicChoiceRequestList: publicChoiceRequestList,
+        };
+      }
+    );
+
+    console.log(this.editableTestCard!.questions);
+
+    const params: UpdatePublicTestQuestionsV2$Params = {
+      body: {
+        publicTestQuestionRequestList: this.editableTestCard!.questions,
+        testId: this.editableTestCard!.id,
+      },
+    };
+    this.testService.updatePublicTestQuestionsV2(params).subscribe({
+      next: (response: boolean) => {
+        console.log('Update success:', response);
+      },
+    });
   }
 
   uploadImage() {

@@ -38,7 +38,7 @@
         </div>
       </div>
     </div>
-    <div *ngIf="isUpcomingSession" class="row mx-1 g-2">
+    <div *ngIf="isUpcomingSession && upcomingSession.sessionLink" class="row mx-1 g-2">
       <button (click)="goToSession()" class="btn btn-primary">Seansa Git</button>
     </div>
   </div>

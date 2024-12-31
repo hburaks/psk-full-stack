@@ -1,8 +1,6 @@
 package com.hburak_dev.psk_full_stack.test;
 
-import com.hburak_dev.psk_full_stack.comment.Comment;
 import com.hburak_dev.psk_full_stack.comment.CommentMapper;
-import com.hburak_dev.psk_full_stack.question.Question;
 import com.hburak_dev.psk_full_stack.question.QuestionMapper;
 
 import lombok.RequiredArgsConstructor;
@@ -11,7 +9,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,7 +24,8 @@ public class TestMapper {
         public PublicTestResponse toPublicTestResponse(Test test) {
                 return PublicTestResponse.builder()
                                 .id(test.getId())
-                                .imageUrl(test.getImageUrl())
+                                .imageUrl(String.format("http://localhost:%s/api/v3/files/test/download/%s",
+                                                serverPort, test.getImageUrl()))
                                 .questions(test.getQuestions().stream()
                                                 .map(questionMapper::toPublicQuestionResponse)
                                                 .collect(Collectors.toList()))
@@ -55,24 +53,9 @@ public class TestMapper {
                                 .isActive(publicTestRequest.getIsActive())
                                 .build();
 
-                if (publicTestRequest.getPublicTestQuestionRequestList() != null) {
-                        List<Question> questions = publicTestRequest.getPublicTestQuestionRequestList().stream()
-                                        .map(questionRequest -> questionMapper.toQuestion(questionRequest, userId,
-                                                        test))
-                                        .collect(Collectors.toList());
-                        test.setQuestions(questions);
-                } else {
-                        test.setQuestions(new ArrayList<>());
-                }
+                test.setQuestions(new ArrayList<>());
 
-                if (publicTestRequest.getComments() != null) {
-                        List<Comment> comments = publicTestRequest.getComments().stream()
-                                        .map(comment -> commentMapper.toComment(comment, test))
-                                        .collect(Collectors.toList());
-                        test.setComments(comments);
-                } else {
-                        test.setComments(new ArrayList<>());
-                }
+                test.setComments(new ArrayList<>());
                 test.setCreatedBy(userId);
 
                 return test;

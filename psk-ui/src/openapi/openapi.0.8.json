@@ -186,7 +186,7 @@
         "operationId": "uploadImage",
         "parameters": [
           {
-            "name": "testId   ",
+            "name": "testId",
             "in": "query",
             "required": true,
             "schema": {
@@ -307,7 +307,92 @@
                 "$ref": "#/components/schemas/PublicTestRequest"
               }
             }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminTestResponse"
+                }
+              }
+            }
           }
+        }
+      }
+    },
+    "/v2/test/update-question": {
+      "post": {
+        "tags": ["Test"],
+        "operationId": "updatePublicTestQuestionsV2",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PublicTestQuestionListRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/test/update-comment": {
+      "post": {
+        "tags": ["Test"],
+        "operationId": "updatePublicTestCommentsV2",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PublicTestCommentListRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/test/save": {
+      "post": {
+        "tags": ["Test"],
+        "operationId": "savePublicTestV2",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PublicTestRequest"
+              }
+            }
+          },
+          "required": true
         },
         "responses": {
           "200": {
@@ -1664,7 +1749,7 @@
       "PublicTestAnswerQuestionRequest": {
         "type": "object",
         "properties": {
-          "questionId": {
+          "id": {
             "type": "integer",
             "format": "int32"
           },
@@ -1703,62 +1788,6 @@
           }
         }
       },
-      "AdminTestCommentRequest": {
-        "type": "object",
-        "properties": {
-          "commentId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "score": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "title": {
-            "type": "string"
-          },
-          "text": {
-            "type": "string"
-          },
-          "imageUrl": {
-            "type": "string"
-          }
-        }
-      },
-      "PublicChoiceRequest": {
-        "type": "object",
-        "properties": {
-          "choiceId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "answerType": {
-            "type": "string",
-            "enum": ["ANSWER_A", "ANSWER_B", "ANSWER_C", "ANSWER_D", "ANSWER_E"]
-          },
-          "text": {
-            "type": "string"
-          }
-        }
-      },
-      "PublicTestQuestionRequest": {
-        "type": "object",
-        "properties": {
-          "questionId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "text": {
-            "type": "string"
-          },
-          "publicChoiceRequestList": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/PublicChoiceRequest"
-            }
-          }
-        }
-      },
       "PublicTestRequest": {
         "type": "object",
         "properties": {
@@ -1771,22 +1800,6 @@
           },
           "subTitle": {
             "type": "string"
-          },
-          "image": {
-            "type": "string",
-            "format": "binary"
-          },
-          "publicTestQuestionRequestList": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/PublicTestQuestionRequest"
-            }
-          },
-          "comments": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/AdminTestCommentRequest"
-            }
           },
           "isActive": {
             "type": "boolean"
@@ -1844,6 +1857,92 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/AdminTestCommentResponse"
+            }
+          }
+        }
+      },
+      "PublicChoiceRequest": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "answerType": {
+            "type": "string",
+            "enum": ["ANSWER_A", "ANSWER_B", "ANSWER_C", "ANSWER_D", "ANSWER_E"]
+          },
+          "text": {
+            "type": "string"
+          }
+        }
+      },
+      "PublicTestQuestionListRequest": {
+        "type": "object",
+        "properties": {
+          "testId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "publicTestQuestionRequestList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PublicTestQuestionRequest"
+            }
+          }
+        }
+      },
+      "PublicTestQuestionRequest": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "text": {
+            "type": "string"
+          },
+          "publicChoiceRequestList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PublicChoiceRequest"
+            }
+          }
+        }
+      },
+      "AdminTestCommentRequest": {
+        "type": "object",
+        "properties": {
+          "commentId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "score": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "title": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "imageUrl": {
+            "type": "string"
+          }
+        }
+      },
+      "PublicTestCommentListRequest": {
+        "type": "object",
+        "properties": {
+          "testId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "comments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AdminTestCommentRequest"
             }
           }
         }
@@ -1969,7 +2068,7 @@
       "MyAnswerQuestionRequest": {
         "type": "object",
         "properties": {
-          "questionId": {
+          "id": {
             "type": "integer",
             "format": "int32"
           },
@@ -2386,7 +2485,7 @@
       "MyChoiceResponse": {
         "type": "object",
         "properties": {
-          "choiceId": {
+          "id": {
             "type": "integer",
             "format": "int32"
           },
@@ -2402,7 +2501,7 @@
       "MyQuestionResponse": {
         "type": "object",
         "properties": {
-          "questionId": {
+          "id": {
             "type": "integer",
             "format": "int32"
           },

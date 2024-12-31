@@ -5,6 +5,6 @@
 import { MyChoiceResponse } from '../models/my-choice-response';
 export interface MyQuestionResponse {
   choices?: Array<MyChoiceResponse>;
-  questionId?: number;
+  id?: number;
   text?: string;
 }

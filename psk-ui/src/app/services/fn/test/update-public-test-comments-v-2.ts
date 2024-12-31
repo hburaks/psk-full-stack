@@ -8,15 +8,14 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { AdminTestResponse } from '../../models/admin-test-response';
-import { PublicTestRequest } from '../../models/public-test-request';
+import { PublicTestCommentListRequest } from '../../models/public-test-comment-list-request';
 
-export interface UpdatePublicTestV2$Params {
-      body: PublicTestRequest
+export interface UpdatePublicTestCommentsV2$Params {
+      body: PublicTestCommentListRequest
 }
 
-export function updatePublicTestV2(http: HttpClient, rootUrl: string, params: UpdatePublicTestV2$Params, context?: HttpContext): Observable<StrictHttpResponse<AdminTestResponse>> {
-  const rb = new RequestBuilder(rootUrl, updatePublicTestV2.PATH, 'post');
+export function updatePublicTestCommentsV2(http: HttpClient, rootUrl: string, params: UpdatePublicTestCommentsV2$Params, context?: HttpContext): Observable<StrictHttpResponse<boolean>> {
+  const rb = new RequestBuilder(rootUrl, updatePublicTestCommentsV2.PATH, 'post');
   if (params) {
     rb.body(params.body, 'application/json');
   }
@@ -26,9 +25,9 @@ export function updatePublicTestV2(http: HttpClient, rootUrl: string, params: Up
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<AdminTestResponse>;
+      return (r as HttpResponse<any>).clone({ body: String((r as HttpResponse<any>).body) === 'true' }) as StrictHttpResponse<boolean>;
     })
   );
 }
 
-updatePublicTestV2.PATH = '/v2/test/update';
+updatePublicTestCommentsV2.PATH = '/v2/test/update-comment';
