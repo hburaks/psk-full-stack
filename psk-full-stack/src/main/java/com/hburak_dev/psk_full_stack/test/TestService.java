@@ -3,6 +3,7 @@ package com.hburak_dev.psk_full_stack.test;
 import com.hburak_dev.psk_full_stack.comment.PublicTestAnswerCommentResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -13,9 +14,9 @@ public interface TestService {
      */
     List<PublicTestResponse> getAllPublicTests();
 
-
     /**
-     * Checks the answers of the public user and creates comment depending on the answer
+     * Checks the answers of the public user and creates comment depending on the
+     * answer
      */
     PublicTestAnswerCommentResponse checkPublicTestAnswer(PublicTestAnswerRequest publicTestAnswerRequest);
 
@@ -25,7 +26,8 @@ public interface TestService {
     List<MyTestResponse> getAllMyTests(Authentication connectedUser);
 
     /**
-     * Sends the answers of the test to the psychologist and gets the rest of the tests
+     * Sends the answers of the test to the psychologist and gets the rest of the
+     * tests
      */
     ResponseEntity<Boolean> saveMyTestAnswer(MyAnswerRequest myAnswerRequest, Authentication connectedUser);
 
@@ -34,18 +36,15 @@ public interface TestService {
      */
     AdminTestResponse updatePublicTestV2(PublicTestRequest publicTestRequest, Authentication connectedUser);
 
-
     /**
      * Update public test availability value
      */
     PublicTestAdminResponse updatePublicTestAvailabilityV2(Integer testId, Boolean isAvailable);
 
-
     /**
      * Admin gets all test that assigned to the user
      */
     List<UserTestForAdminResponse> getAllTestsAssignedToUserV2(Integer userId);
-
 
     /**
      * Admin assigns test to the user
@@ -71,5 +70,10 @@ public interface TestService {
      * Gets all tests
      */
     List<AdminTestResponse> getAllTest();
+
+    /**
+     * Uploads image for test
+     */
+    String uploadImage(MultipartFile file, Integer testId);
 
 }

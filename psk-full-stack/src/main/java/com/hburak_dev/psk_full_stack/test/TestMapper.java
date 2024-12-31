@@ -1,9 +1,12 @@
 package com.hburak_dev.psk_full_stack.test;
 
+import com.hburak_dev.psk_full_stack.comment.AdminTestCommentRequest;
 import com.hburak_dev.psk_full_stack.comment.Comment;
 import com.hburak_dev.psk_full_stack.comment.CommentMapper;
+import com.hburak_dev.psk_full_stack.question.PublicTestQuestionRequest;
 import com.hburak_dev.psk_full_stack.question.Question;
 import com.hburak_dev.psk_full_stack.question.QuestionMapper;
+import com.hburak_dev.psk_full_stack.user.User;
 
 import lombok.RequiredArgsConstructor;
 
@@ -18,8 +21,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class TestMapper {
 
-          @Value("${server.port}")
-    private String serverPort;
+        @Value("${server.port}")
+        private String serverPort;
 
         private final QuestionMapper questionMapper;
         private final CommentMapper commentMapper;

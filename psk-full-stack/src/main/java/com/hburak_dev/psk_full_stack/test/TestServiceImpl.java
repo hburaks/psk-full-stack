@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -143,14 +144,7 @@ public class TestServiceImpl implements TestService {
             Test testToUpdate = testRepository.findById(publicTestRequest.getTestId())
                     .orElseThrow(() -> new RuntimeException("Test bulunamadı"));
 
-            if (publicTestRequest.getImage() != null && !publicTestRequest.getImage().isEmpty()) {
-                if (testToUpdate.getImageUrl() != null) {
-                    fileStorageService.deleteFile(testToUpdate.getImageUrl(), "tests");
-                }
-                String fileName = fileStorageService.storeFile(publicTestRequest.getImage(), "tests");
-                testToUpdate.setImageUrl(fileName);
-            }
-            if (publicTestRequest.getIsActive() != null) {
+                    if (publicTestRequest.getIsActive() != null) {
                 testToUpdate.setIsActive(publicTestRequest.getIsActive());
             }
             if (publicTestRequest.getSubTitle() != null) {
@@ -209,15 +203,11 @@ public class TestServiceImpl implements TestService {
 
             testRepository.save(testToUpdate);
             return testMapper.toAdminTestResponse(testToUpdate);
+        } else {
+            Test test = testMapper.toTest(publicTestRequest, user.getId());
+            testRepository.save(test);
+            return testMapper.toAdminTestResponse(test);
         }
-
-        Test test = testMapper.toTest(publicTestRequest, user.getId());
-        if (publicTestRequest.getImage() != null && !publicTestRequest.getImage().isEmpty()) {
-            String fileName = fileStorageService.storeFile(publicTestRequest.getImage(), "tests");
-            test.setImageUrl(fileName);
-        }
-        testRepository.save(test);
-        return testMapper.toAdminTestResponse(test);
     }
 
     private void updateQuestionChoices(Question question, PublicTestQuestionRequest questionRequest, Integer userId) {
@@ -361,5 +351,18 @@ public class TestServiceImpl implements TestService {
         return tests.stream()
                 .map(testMapper::toAdminTestResponse)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public String uploadImage(MultipartFile file, Integer testId) {
+        Test test = testRepository.findById(testId)
+                .orElseThrow(() -> new RuntimeException("Test bulunamadı"));
+        if (test.getImageUrl() != null) {
+            fileStorageService.deleteFile(test.getImageUrl(), "tests");
+        }
+        String fileName = fileStorageService.storeFile(file, "tests");
+        test.setImageUrl(fileName);
+        testRepository.save(test);
+        return fileName;
     }
 }
