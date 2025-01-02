@@ -152,7 +152,6 @@ public class TestServiceImpl implements TestService {
     @Override
     public AdminTestResponse updatePublicTestV2(PublicTestRequest publicTestRequest) {
 
-
         Test testToUpdate = testRepository.findById(publicTestRequest.getTestId())
                 .orElseThrow(() -> new RuntimeException("Test bulunamadı"));
 
@@ -203,16 +202,39 @@ public class TestServiceImpl implements TestService {
 
                 existingComment = commentMapper.updateComment(existingComment, commentRequest);
                 existingComment.setCreatedBy(user.getId());
+
                 updatedComments.add(existingComment);
+                commentRepository.save(existingComment);
             } else {
                 Comment newComment = commentMapper.toComment(commentRequest, testToUpdate);
                 newComment.setCreatedBy(user.getId());
                 updatedComments.add(newComment);
+                commentRepository.save(newComment);
             }
+
         }
 
         testToUpdate.setComments(updatedComments);
+        testRepository.save(testToUpdate);
         return true;
+    }
+
+    @Override
+    public String uploadImageForComment(MultipartFile file, Integer commentId) {
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new RuntimeException("Comment bulunamadı"));
+
+        return saveCommentImage(file, comment);
+    }
+
+    private String saveCommentImage(MultipartFile file, Comment comment) {
+        if (comment.getImageUrl() != null) {
+            fileStorageService.deleteFile(comment.getImageUrl(), "comments");
+        }
+        String fileName = fileStorageService.storeFile(file, "comments");
+        comment.setImageUrl(fileName);
+        commentRepository.save(comment);
+        return fileName;
     }
 
     @Override

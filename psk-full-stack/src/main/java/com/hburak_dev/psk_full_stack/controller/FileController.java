@@ -32,4 +32,12 @@ public class FileController {
                 .contentType(MediaType.IMAGE_JPEG)
                 .body(resource);
     }
+
+    @GetMapping("/comment/download/{fileName}")
+    public ResponseEntity<Resource> downloadCommentImage(@PathVariable String fileName) {
+        Resource resource = fileStorageService.loadFileAsResource(fileName, "comments");
+        return ResponseEntity.ok()
+                .contentType(MediaType.IMAGE_JPEG)
+                .body(resource);
+    }
 }

@@ -4,7 +4,6 @@
 
 export interface AdminTestCommentRequest {
   commentId?: number;
-  imageUrl?: string;
   score?: number;
   text?: string;
   title?: string;

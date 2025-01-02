@@ -93,4 +93,10 @@ public interface TestService {
     Boolean updatePublicTestCommentsV2(PublicTestCommentListRequest publicTestCommentListRequest,
             Authentication connectedUser);
 
+    /**
+     * /**
+     * Uploads image for comment
+     */
+    String uploadImageForComment(MultipartFile file, Integer commentId);
+
 }

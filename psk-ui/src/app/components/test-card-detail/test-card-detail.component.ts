@@ -194,9 +194,6 @@ export class TestCardDetailComponent implements AfterViewInit {
           },
         });
       } else if (this.selectedFile) {
-        const formData = new FormData();
-        formData.append('testId', String(this.editableTestCard.id));
-        formData.append('image', this.selectedFile);
         this.uploadImageToServer(this.updateTestCard.testId!);
       }
     } else {
@@ -321,10 +318,11 @@ export class TestCardDetailComponent implements AfterViewInit {
     this.editableTestCard!.comments = comments;
   }
 
+
   updateTestComments() {
     const params: UpdatePublicTestCommentsV2$Params = {
       body: {
-        comments: this.editableTestCard!.comments,
+        comments: this.comments,
         testId: this.editableTestCard!.id,
       },
     };
@@ -350,8 +348,6 @@ export class TestCardDetailComponent implements AfterViewInit {
         };
       }
     );
-
-    console.log(this.editableTestCard!.questions);
 
     const params: UpdatePublicTestQuestionsV2$Params = {
       body: {

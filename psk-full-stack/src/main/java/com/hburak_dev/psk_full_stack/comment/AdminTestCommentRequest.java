@@ -1,5 +1,7 @@
 package com.hburak_dev.psk_full_stack.comment;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,5 +19,4 @@ public class AdminTestCommentRequest {
 
     private String text;
 
-    private String imageUrl;
 }

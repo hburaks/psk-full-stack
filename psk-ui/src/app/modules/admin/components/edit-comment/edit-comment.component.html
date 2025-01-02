@@ -9,7 +9,7 @@
     <div class="row mt-4 mb-4">
       <div class="test-logo mt-0 col-4">
         <div class="test-circle mx-auto">
-          <img *ngIf="comment?.imageUrl" [src]="comment?.imageUrl" alt="Test image"
+          <img *ngIf="comment?.imageUrl" [src]="comment.imageUrl" alt="Test image"
             style="width: 100%; height: 100%; object-fit: cover;">
         </div>
       </div>
@@ -19,7 +19,7 @@
             (ngModelChange)="onCommentChange(i)" />
           <input [(ngModel)]="comment!.text" class="form-control fw-light mt-2 text-secondary" placeholder="Metin"
             (ngModelChange)="onCommentChange(i)" />
-          <input type="file" class="form-control mt-2" (change)="onFileChange($event, i)" />
+          <button class="btn btn-primary mt-2" (click)="uploadImage(i)">Fotoğrafı Değiştir</button>
           <div class="mt-2 d-flex align-items-center">
             <p class="me-2 my-auto">Skor: </p>
             <input type="number" [(ngModel)]="comment!.score" class="form-control"

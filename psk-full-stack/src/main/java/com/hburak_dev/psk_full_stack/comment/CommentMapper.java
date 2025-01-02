@@ -1,13 +1,16 @@
 package com.hburak_dev.psk_full_stack.comment;
 
-
 import java.util.Arrays;
 import com.hburak_dev.psk_full_stack.test.Test;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
 public class CommentMapper {
+    @Value("${server.port}")
+    private String serverPort;
+
     public PublicTestAnswerCommentResponse toPublicTestAnswerCommentResponse(Comment resultComment) {
         return PublicTestAnswerCommentResponse.builder()
                 .title(resultComment.getTitle())
@@ -29,10 +32,6 @@ public class CommentMapper {
 
         if (adminTestCommentRequest.getTitle() != null) {
             comment.setTitle(adminTestCommentRequest.getTitle());
-        }
-
-        if (adminTestCommentRequest.getImageUrl() != null) {
-            comment.setImageUrl(adminTestCommentRequest.getImageUrl());
         }
 
         if (adminTestCommentRequest.getCommentId() != null) {
@@ -61,10 +60,6 @@ public class CommentMapper {
             comment.setTitle(adminTestCommentRequest.getTitle());
         }
 
-        if (adminTestCommentRequest.getImageUrl() != null) {
-            comment.setImageUrl(adminTestCommentRequest.getImageUrl());
-        }
-
         if (adminTestCommentRequest.getCommentId() != null) {
             comment.setId(adminTestCommentRequest.getCommentId());
         }
@@ -86,12 +81,17 @@ public class CommentMapper {
     }
 
     public AdminTestCommentResponse toAdminCommentResponse(Comment comment) {
+        String imageUrl = null;
+        if (comment.getImageUrl() != null) {
+            imageUrl = String.format("http://localhost:%s/api/v3/files/comment/download/%s",
+                    serverPort, comment.getImageUrl());
+        }
         return AdminTestCommentResponse.builder()
                 .commentId(comment.getId())
                 .score(comment.getScore())
                 .title(comment.getTitle())
                 .text(comment.getText())
-                .imageUrl(comment.getImageUrl())
+                .imageUrl(imageUrl)
                 .build();
     }
 }

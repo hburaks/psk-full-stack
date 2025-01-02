@@ -13,6 +13,8 @@ import { StrictHttpResponse } from '../strict-http-response';
 
 import { downloadBlogFile } from '../fn/file-controller/download-blog-file';
 import { DownloadBlogFile$Params } from '../fn/file-controller/download-blog-file';
+import { downloadCommentImage } from '../fn/file-controller/download-comment-image';
+import { DownloadCommentImage$Params } from '../fn/file-controller/download-comment-image';
 import { downloadTestFile } from '../fn/file-controller/download-test-file';
 import { DownloadTestFile$Params } from '../fn/file-controller/download-test-file';
 
@@ -43,6 +45,31 @@ export class FileControllerService extends BaseService {
    */
   downloadTestFile(params: DownloadTestFile$Params, context?: HttpContext): Observable<Blob> {
     return this.downloadTestFile$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Blob>): Blob => r.body)
+    );
+  }
+
+  /** Path part for operation `downloadCommentImage()` */
+  static readonly DownloadCommentImagePath = '/v3/files/comment/download/{fileName}';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `downloadCommentImage()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  downloadCommentImage$Response(params: DownloadCommentImage$Params, context?: HttpContext): Observable<StrictHttpResponse<Blob>> {
+    return downloadCommentImage(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `downloadCommentImage$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  downloadCommentImage(params: DownloadCommentImage$Params, context?: HttpContext): Observable<Blob> {
+    return this.downloadCommentImage$Response(params, context).pipe(
       map((r: StrictHttpResponse<Blob>): Blob => r.body)
     );
   }

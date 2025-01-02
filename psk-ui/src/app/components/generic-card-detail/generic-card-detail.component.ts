@@ -8,7 +8,6 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { BlogRequest, BlogResponse } from 'src/app/services/models';
-import { CommonService } from 'src/app/custom-services/common-service/common.service';
 import { BlogService } from 'src/app/services/services/blog.service';
 
 @Component({

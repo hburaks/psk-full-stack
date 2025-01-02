@@ -33,6 +33,18 @@ public class TestControllerV2 {
         }
     }
 
+    @PostMapping(value = "/upload-image-for-comment", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<HttpStatus> uploadImageForComment(@RequestParam("file") MultipartFile file,
+            @RequestParam("commentId") Integer commentId) {
+        try {
+            testService.uploadImageForComment(file, commentId);
+            return ResponseEntity.ok(HttpStatus.OK);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @PostMapping("/save")
     public ResponseEntity<AdminTestResponse> savePublicTestV2(@RequestBody PublicTestRequest publicTestRequest,
             Authentication connectedUser) {
