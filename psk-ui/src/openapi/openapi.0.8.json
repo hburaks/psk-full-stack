@@ -1431,6 +1431,44 @@
         }
       }
     },
+    "/v2/sessions/{id}": {
+      "get": {
+        "tags": ["session-controller-v-2"],
+        "operationId": "getSessionByIdV2",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "userId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionResponseV2"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v2/sessions/users-with-sessions": {
       "get": {
         "tags": ["session-controller-v-2"],

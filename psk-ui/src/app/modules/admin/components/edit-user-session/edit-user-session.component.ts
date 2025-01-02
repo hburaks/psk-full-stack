@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonService } from 'src/app/custom-services/common-service/common.service';
 import { SessionPsychologistNoteRequest } from 'src/app/services/models/session-psychologist-note-request';
+import { SessionResponse } from 'src/app/services/models/session-response';
 import { SessionResponseV2 } from 'src/app/services/models/session-response-v-2';
 import { SessionStatusRequest } from 'src/app/services/models/session-status-request';
 import { SessionUserNoteRequest } from 'src/app/services/models/session-user-note-request';
@@ -15,6 +16,8 @@ export class EditUserSessionComponent {
   @Input() session: SessionResponseV2 | null = null;
   @Input() userId: number | null = null;
   @Output() showEditSessionModal = new EventEmitter<boolean>();
+
+  updatedSession: SessionResponseV2 | null = null;
 
   isAddSession: boolean = false;
 
@@ -31,14 +34,25 @@ export class EditUserSessionComponent {
   toastErrorMessage: string = '';
   showToast: boolean = false;
 
+  @Output() sessionToUpdate = new EventEmitter<SessionResponse | null>();
+
   constructor(
     private sessionControllerV2Service: SessionControllerV2Service,
     private commonService: CommonService
   ) {
+    
+  }
+
+  ngOnInit() {
     this.statusMap = this.commonService.sessionStatusMap;
     this.statusList = Object.keys(this.statusMap).filter(
       (status) => status !== 'UNAVAILABLE'
     );
+    this.updatedSession = this.session;
+  }
+
+  updateSession(session: SessionResponse | null) {
+    this.updatedSession = session;
   }
 
   updateDateToUpdateSession(date: string | null) {
@@ -144,8 +158,15 @@ export class EditUserSessionComponent {
           },
         })
         .subscribe({
-          next: () => {
+          next: (response: number) => {
             this.showEditSessionModal.emit(false);
+            this.sessionControllerV2Service
+              .getSessionByIdV2({ id: response, userId: this.userId! })
+              .subscribe({
+                next: (response: SessionResponseV2) => {
+                  this.sessionToUpdate.emit(response);
+                },
+              });
           },
           error: (error) => {
             this.toastErrorMessage =
@@ -157,9 +178,15 @@ export class EditUserSessionComponent {
   }
 
   changeStatus(status: string) {
+    this.selectedStatus = status;
+  }
+
+  selectedStatus: string = '';
+
+  updateSessionWithSelectedStatus() {
     const sessionStatusRequest: SessionStatusRequest = {
       sessionId: this.session!.sessionId,
-      sessionStatusType: status as
+      sessionStatusType: this.selectedStatus as
         | 'AWAITING_THERAPIST_APPROVAL'
         | 'APPOINTMENT_SCHEDULED'
         | 'COMPLETED'

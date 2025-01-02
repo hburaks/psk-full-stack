@@ -7,7 +7,8 @@ import {
 } from '@angular/core';
 import { DailyCalendarResponse } from 'src/app/services/models/daily-calendar-response';
 import { HourlySessionResponse } from 'src/app/services/models/hourly-session-response';
-import { SessionControllerService } from 'src/app/services/services';
+import { SessionResponse } from 'src/app/services/models/session-response';
+import { SessionControllerService, SessionControllerV2Service } from 'src/app/services/services';
 import { SessionControllerV3Service } from 'src/app/services/services/session-controller-v-3.service';
 
 @Component({
@@ -27,11 +28,14 @@ export class WeeklySessionCalendarComponent {
   showAddSessionModal: boolean = false;
 
   @Input() isEdit: boolean = false;
+  @Input() userId: number | null = null;
   @Input() isCreateMySession: boolean = false;
+  @Input() session: SessionResponse | null = null;
   weeklySessionCalendar: DailyCalendarResponse[] = [];
 
   @Output() dateToUpdateSession = new EventEmitter<string | null>();
   @Output() isShowAddSessionModal = new EventEmitter<boolean>();
+  @Output() sessionToUpdate = new EventEmitter<SessionResponse | null>();
   approveModalText: string = '';
   approveModalHeader: string = '';
   approveModalDate: string | null = null;
@@ -41,7 +45,8 @@ export class WeeklySessionCalendarComponent {
 
   constructor(
     private sessionControllerV3Service: SessionControllerV3Service,
-    private sessionControllerService: SessionControllerService
+    private sessionControllerService: SessionControllerService,
+    private sessionControllerV2Service: SessionControllerV2Service
   ) {
     this.updateScreenSize();
     this.getWeeklySessions();
@@ -50,10 +55,6 @@ export class WeeklySessionCalendarComponent {
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
     this.updateScreenSize();
-  }
-
-  addSession(date: string | null) {
-    this.dateToUpdateSession.emit(date);
   }
 
   editSession(date: string | null) {
@@ -80,7 +81,7 @@ export class WeeklySessionCalendarComponent {
       .subscribe({
         next: (response: number) => {
           this.isShowAddSessionModal.emit(false);
-          //window.location.reload();
+          this.getWeeklySessions();
         },
         error: (error) => {
           this.toastErrorMessage = 'Seans oluşturulurken bir hata oluştu';
@@ -275,10 +276,64 @@ export class WeeklySessionCalendarComponent {
   approveModal() {
     if (this.isCreateMySession) {
       this.createMySession(this.approveModalDate);
-    } else {
-      this.dateToUpdateSession.emit(this.approveModalDate);
+    } else if (this.isEdit) {
+      this.updateSessionDate();
     }
   }
+
+  addSession() {
+    if (this.isCreateMySession && this.userId && this.approveModalDate) {
+      this.sessionControllerV2Service
+        .createSessionForUserV2({
+          date: this.approveModalDate!,
+          userId: this.userId,
+        })
+        .subscribe({
+          next: (response: number) => {},
+          error: (error) => {
+            this.toastErrorMessage = 'Seans oluşturulurken bir hata oluştu';
+            this.showToast = true;
+          },
+        });
+    }
+  }
+
+  updateSessionDate() {
+    if (this.approveModalDate && this.session) {
+      this.sessionControllerV2Service
+        .updateSessionDateV2({
+          body: {
+            date: this.approveModalDate,
+            sessionId: this.session!.sessionId,
+          },
+        })
+        .subscribe({
+          next: (response: number) => {
+            this.sessionControllerV2Service.getSessionByIdV2({
+              id: response,
+              userId: this.userId!,
+            }).subscribe({
+              next: (response: SessionResponse) => {
+                this.session = response;
+                this.getWeeklySessions();
+                this.sessionToUpdate.emit(response);
+              },
+              error: (error) => {
+                this.toastErrorMessage =
+                  'Seans tarihi güncellenirken bir hata oluştu';
+                this.showToast = true;
+              },
+            });
+          },
+          error: (error) => {
+            this.toastErrorMessage =
+              'Seans tarihi güncellenirken bir hata oluştu';
+            this.showToast = true;
+          },
+        });
+    }
+  }
+
   isSessionDateInFuture(date: string): boolean {
     const sessionDate = new Date(date);
     const currentDate = new Date();

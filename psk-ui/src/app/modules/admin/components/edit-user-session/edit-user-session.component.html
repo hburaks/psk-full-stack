@@ -16,9 +16,9 @@
   <div class="col px-0">
     <div *ngIf="!isAddSession" class="my-1 row row-about align-items-center g-5 mx-0">
       <div class="col-md-8 col-12 mt-0 about-text px-0">
-        <p class="fs-5 mb-0 fw-bold">{{session?.userForSessionResponse?.firstname}}
-          {{session?.userForSessionResponse?.lastname}}</p>
-        <p class="fs-5 mb-0 fw-bold">Gelecek Seans: {{session?.date | date:'dd.MM.yyyy / HH:mm'}}</p>
+        <p class="fs-5 mb-0 fw-bold">{{updatedSession?.userForSessionResponse?.firstname}}
+          {{updatedSession?.userForSessionResponse?.lastname}}</p>
+        <p class="fs-5 mb-0 fw-bold">Gelecek Seans: {{updatedSession?.date | date:'dd.MM.yyyy / HH:mm'}}</p>
         <p class=" mt-2 text-primary mb-0">Danışanın Seans Notu:
         </p>
         <p class="fw-light text-secondary mb-2">
@@ -52,7 +52,8 @@
       </div>
     </div>
     <div class="row mx-1 g-2 mt-4">
-      <app-weekly-session-calendar [isEdit]="true" (dateToUpdateSession)="updateDateToUpdateSession($event)"></app-weekly-session-calendar>
+      <app-weekly-session-calendar [userId]="userId" [isEdit]="true" (dateToUpdateSession)="updateDateToUpdateSession($event)"
+        [session]="session" (sessionToUpdate)="updateSession($event)"></app-weekly-session-calendar>
     </div>
     <div *ngIf="!isAddSession" class="row mx-1 g-2 mt-4">
       <div class="btn-group">
@@ -60,7 +61,25 @@
           [class.btn-primary]="status === session?.sessionStatus"
           [class.btn-primary-hovered]="status === session?.sessionStatus"
           [class.btn-primary-custom]="status !== session?.sessionStatus" (click)="changeStatus(status)" class="btn sm-f py-auto d-flex align-items-center justify-content-center" 
-          aria-current="page">{{statusMap[status]}}</a>
+          aria-current="page" data-bs-toggle="modal" data-bs-target="#blogModal">{{statusMap[status]}}</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="blogModal" tabindex="-1" aria-labelledby="blogModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="blogModalLabel">Seans Statüsünü Değiştir</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Seans statüsünü "{{statusMap[selectedStatus]}}" yapmak istediğinizden emin misiniz?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Vazgeç</button>
+        <button data-bs-dismiss="modal" (click)="updateSessionWithSelectedStatus()" type="button" class="btn btn-primary">Onayla</button>
       </div>
     </div>
   </div>

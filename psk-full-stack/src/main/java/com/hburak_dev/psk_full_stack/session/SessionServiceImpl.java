@@ -458,4 +458,11 @@ public class SessionServiceImpl implements SessionService {
         }
         return sessionMapper.toSessionResponse(session);
     }
+
+    @Override
+    public SessionResponseV2 getSessionByIdV2(Integer id) {
+        Session session = sessionRepository.findById(id)
+                .orElseThrow(() -> new SessionNotFoundException("Bu id ile seans bulunamadı: " + id));
+        return sessionMapper.toSessionResponseV2(session);
+    }
 }
