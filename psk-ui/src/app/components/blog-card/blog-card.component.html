@@ -1,7 +1,6 @@
 <div class="card">
   <div class="image-gradient-container">
-    <img src="https://i.ibb.co/qj44W4n/Auth-bg.jpg" class="blog-card-image card-img-top card-image">
-    <!-- TODO:change with real data <img src="{{blogCard.cover}}"  class="blog-card-image card-img-top card-image"> -->
+    <img [src]="blogCard?.imageUrl" class="blog-card-image card-img-top card-image">
   </div>
   <div class="card-body blog-card d-flex flex-column justify-content-between">
     <div>

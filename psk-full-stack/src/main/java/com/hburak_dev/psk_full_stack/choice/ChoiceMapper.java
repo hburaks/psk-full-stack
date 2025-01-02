@@ -18,7 +18,7 @@ public class ChoiceMapper {
 
     public MyChoiceResponse toMyChoiceResponse(Choice choice) {
         return MyChoiceResponse.builder()
-                .choiceId(choice.getId())
+                .id(choice.getId())
                 .answerType(choice.getAnswerType())
                 .text(choice.getText())
                 .build();
@@ -54,8 +54,8 @@ public class ChoiceMapper {
                 throw new IllegalArgumentException("AnswerType cannot be null");
             }
 
-            if (publicChoiceRequest.getChoiceId() != null) {
-                choice.setId(publicChoiceRequest.getChoiceId());
+            if (publicChoiceRequest.getId() != null) {
+                choice.setId(publicChoiceRequest.getId());
             } else {
                 choice.setCreatedBy(userId);
             }

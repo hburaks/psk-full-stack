@@ -4,17 +4,25 @@
       <div class="col">
         <div class="card-body my-1 row">
           <div class="test-logo mt-0 col-4">
-            <div class="test-circle mx-auto"></div>
+            <div class="test-circle mx-auto">
+              <img *ngIf="(imageUrl)" [src]="imageUrl" alt="Test image"
+                style="width: 100%; height: 100%; object-fit: cover;">
+            </div>
           </div>
           <div class="col-8 d-flex flex-column justify-content-center about-text">
             <ng-container *ngIf="isEditPage; else viewMode">
-              <input [(ngModel)]="editableTestCard!.title" class="form-control fs-5 fw-bold" placeholder="Başlık" />
-              <input [(ngModel)]="editableTestCard!.subTitle" class="form-control fw-light mt-2 text-secondary"
+              <input [(ngModel)]="updateTestCard!.title" class="form-control fs-5 fw-bold" placeholder="Başlık" />
+              <input [(ngModel)]="updateTestCard!.subTitle" class="form-control fw-light mt-2 text-secondary"
                 placeholder="Alt başlık" />
-              <input type="file" class="form-control mt-2" (change)="onFileChange($event)" />
               <div class="mt-2 d-flex align-items-start">
                 <p class="me-2">Aktiflik Durumu: </p>
-                <input type="checkbox" [(ngModel)]="editableTestCard!.isActive" class="form-check-input" />
+                <input type="checkbox" [(ngModel)]="updateTestCard!.isActive" class="form-check-input" />
+              </div>
+              <div *ngIf="isEditPage">
+                <button class="btn btn-primary mt-2" (click)="uploadImage()">Fotoğrafı Değiştir</button>
+              </div>
+              <div *ngIf="isEditPage" class="col-12 text-end">
+                <button class="btn btn-primary mt-4" (click)="saveOrUpdateTestInfo()">Test Bilgilerini Kaydet</button>
               </div>
             </ng-container>
             <ng-template #viewMode>
@@ -63,12 +71,17 @@
         <button class="btn btn-primary-custom" (click)="addQuestion()">Soru Ekle</button>
       </div>
     </div>
+    <div class="row mx-0 px-md-5 px-sm-2">
+      <div *ngIf="isEditPage" class="col-12 text-end">
+        <button class="btn btn-primary mt-4" (click)="updateTestQuestions()">Test Sorularını Kaydet</button>
+      </div>
+    </div>
     <div class="row mx-0 mt-2 pt-4 px-md-5 px-sm-2" *ngIf="isEditPage">
       <app-edit-comment (updateModalEvent)="updateComments($event)" [comments]="editableTestCard?.comments"></app-edit-comment>
     </div>
     <div class="row mx-0 px-md-5 px-sm-2">
       <div *ngIf="isEditPage" class="col-12 text-end">
-        <button class="btn btn-primary mt-4" (click)="saveChanges()">Testi Kaydet</button>
+        <button class="btn btn-primary mt-4" (click)="updateTestComments()">Değerlendirmeleri Kaydet</button>
       </div>
       <div *ngIf="!isEditPage" class="col-12 text-end">
         <button class="btn btn-primary" (click)="getResult()">Testi Tamamla</button>

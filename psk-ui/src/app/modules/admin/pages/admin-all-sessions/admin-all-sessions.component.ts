@@ -25,6 +25,10 @@ export class AdminAllSessionsComponent {
     this.showEditSessionModal = true;
   }
 
+  receiveShowEditSessionModal(showEditSessionModal: boolean) {
+    this.showEditSessionModal = showEditSessionModal;
+  }
+
   getAllSessions(pageAdd: number) {
     this.currentPage = this.currentPage + pageAdd;
     this.sessionControllerV2Service

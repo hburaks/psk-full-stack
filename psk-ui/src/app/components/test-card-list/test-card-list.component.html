@@ -8,14 +8,13 @@
   <div class="row g-3">
     <ng-container *ngIf="!isEditPage">
       <div *ngFor="let testCard of testCardList; let i = index" class="col-md-4 col-sm-6">
-        <app-test-card [testCard]="testCard"></app-test-card>
+        <app-test-card [testCard]="testCard" [isEditPage]="isEditPage" [imageUrl]="testCard.imageUrl!"></app-test-card>
       </div>
     </ng-container>
     <ng-container *ngIf="isEditPage">
       <div *ngFor="let testCard of adminTestList; let i = index" class="col-md-4 col-sm-6">
         <app-test-card [testCard]="testCard" [isEditPage]="isEditPage" (editTestEvent)="editTest($event)"
-          (deleteTestEvent)="deleteTest($event)">
-        </app-test-card>
+          (deleteTestEvent)="deleteTest($event)" [imageUrl]="testCard.imageUrl || ''"></app-test-card>
       </div>
     </ng-container>
     <app-empty-card class="col-md-4 col-sm-6 empty-card-container "

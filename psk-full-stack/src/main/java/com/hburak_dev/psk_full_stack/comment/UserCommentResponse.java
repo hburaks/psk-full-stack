@@ -15,6 +15,5 @@ public class UserCommentResponse {
 
     private String text;
 
-    byte[] cover;
-
+    private String imageUrl;
 }

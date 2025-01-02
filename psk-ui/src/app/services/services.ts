@@ -9,3 +9,4 @@ export { SessionControllerV2Service } from './services/session-controller-v-2.se
 export { SessionControllerService } from './services/session-controller.service';
 export { AuthenticationService } from './services/authentication.service';
 export { SessionControllerV3Service } from './services/session-controller-v-3.service';
+export { FileControllerService } from './services/file-controller.service';

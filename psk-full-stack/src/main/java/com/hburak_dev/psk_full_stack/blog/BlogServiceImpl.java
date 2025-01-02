@@ -2,6 +2,7 @@ package com.hburak_dev.psk_full_stack.blog;
 
 import com.hburak_dev.psk_full_stack.common.PageResponse;
 import com.hburak_dev.psk_full_stack.exception.OperationNotPermittedException;
+import com.hburak_dev.psk_full_stack.service.FileStorageService;
 import com.hburak_dev.psk_full_stack.user.User;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Objects;
@@ -25,15 +27,30 @@ public class BlogServiceImpl implements BlogService {
 
     private final BlogRepository blogRepository;
     private final BlogMapper blogMapper;
+    private final FileStorageService fileStorageService;
 
     @Override
     @Transactional
     public Integer saveBlog(BlogRequest request, Authentication connectedUser) {
         User user = ((User) connectedUser.getPrincipal());
         Blog blog = blogMapper.toBlog(request);
+
         blog.setCreatedBy(user.getId());
         Blog savedBlog = blogRepository.save(blog);
         return savedBlog.getId();
+    }
+
+    @Override
+    public String uploadImage(MultipartFile file, Integer blogId) {
+        Blog blog = blogRepository.findById(blogId)
+                .orElseThrow(() -> new EntityNotFoundException("Bu ID ile blog bulunamadı :: " + blogId));
+        if (blog.getImageFileName() != null) {
+            fileStorageService.deleteFile(blog.getImageFileName(), "blogs");
+        }
+        String fileName = fileStorageService.storeFile(file, "blogs");
+        blog.setImageFileName(fileName);
+        blogRepository.save(blog);
+        return fileName;
     }
 
     @Override
@@ -51,8 +68,7 @@ public class BlogServiceImpl implements BlogService {
                 blogs.getTotalElements(),
                 blogs.getTotalPages(),
                 blogs.isFirst(),
-                blogs.isLast()
-        );
+                blogs.isLast());
     }
 
     @Override
@@ -70,8 +86,7 @@ public class BlogServiceImpl implements BlogService {
                 blogs.getTotalElements(),
                 blogs.getTotalPages(),
                 blogs.isFirst(),
-                blogs.isLast()
-        );
+                blogs.isLast());
     }
 
     @Override
@@ -81,28 +96,20 @@ public class BlogServiceImpl implements BlogService {
                 .orElseThrow(() -> new RuntimeException("Bu ID ile blog bulunamadı :: " + id));
 
         User user = (User) authentication.getPrincipal();
-
         if (!existingBlog.getCreatedBy().equals(user.getId())) {
             throw new RuntimeException("Blog güncellemek için gerekli yetkiye sahip değilsiniz");
         }
-
-        if (request.getTitle() != null) {
+        if (request.getTitle() != null)
             existingBlog.setTitle(request.getTitle());
-        }
-        if (request.getSubTitle() != null) {
+        if (request.getSubTitle() != null)
             existingBlog.setSubTitle(request.getSubTitle());
-        }
-        if (request.getText() != null) {
+        if (request.getText() != null)
             existingBlog.setText(request.getText());
-        }
-        if (request.getCover() != null) {
-            existingBlog.setCover(request.getCover());
-        }
+
         existingBlog.setShareable(request.isShareable());
 
         return blogRepository.save(existingBlog).getId();
     }
-
 
     @Override
     public Integer updateShareableStatus(Integer id, Authentication connectedUser) {
@@ -120,14 +127,19 @@ public class BlogServiceImpl implements BlogService {
     @Override
     @Transactional
     public ResponseEntity<Boolean> removeSelectedBlog(Integer id) {
-        if (blogRepository.existsById(id)) {
-            blogRepository.deleteById(id);
-            log.info("{} ID'sine sahip blog silindi", id);
-            return ResponseEntity.ok(true);
-        } else {
-            log.warn("{} ID'sine sahip blog bulunamadı", id);
-            return ResponseEntity.status(404).body(false);
+        Blog blog = blogRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Bu ID ile blog bulunamadı :: " + id));
+        if (blog.getImageFileName() != null) {
+            try {
+                fileStorageService.deleteFile(blog.getImageFileName(), "blogs");
+            } catch (Exception e) {
+                log.error("Blog resmi silinirken bir hata oluştu :: " + e.getMessage());
+            }
         }
+        blogRepository.deleteById(id);
+
+        log.info("{} ID'sine sahip blog silindi", id);
+        return ResponseEntity.ok(true);
     }
 
     @Override
@@ -136,4 +148,5 @@ public class BlogServiceImpl implements BlogService {
         return blogMapper.toBlogResponse(blogRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Bu ID ile blog bulunamadı :: " + id)));
     }
+
 }

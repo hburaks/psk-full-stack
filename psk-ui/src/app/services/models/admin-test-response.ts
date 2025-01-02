@@ -6,8 +6,8 @@ import { AdminTestCommentResponse } from '../models/admin-test-comment-response'
 import { PublicQuestionAdminResponse } from '../models/public-question-admin-response';
 export interface AdminTestResponse {
   comments?: Array<AdminTestCommentResponse>;
-  cover?: Array<string>;
   id?: number;
+  imageUrl?: string;
   isActive?: boolean;
   questions?: Array<PublicQuestionAdminResponse>;
   subTitle?: string;

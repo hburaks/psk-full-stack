@@ -36,6 +36,11 @@ export class UpcomingSessionComponent {
     this.showEditSessionModal = true;
   }
 
+  receiveShowEditSessionModal(showEditSessionModal: boolean) {
+    this.showEditSessionModal = showEditSessionModal;
+    this.getUpcomingSession();
+  }
+
   receiveAddedTest(test: UserTestForAdminResponse | null) {
     if (test) {
       this.testResults = [...this.testResults, test];
@@ -100,9 +105,8 @@ export class UpcomingSessionComponent {
 
   goToSession() {
     //TODO
-    if (this.upcomingSession?.googleMeetLink) {
-      window.open(this.upcomingSession.googleMeetLink, '_blank');
-      console.log(this.upcomingSession.googleMeetLink);
+    if (this.upcomingSession?.sessionLink) {
+      window.open(this.upcomingSession.sessionLink, '_blank');
     } else {
       this.toastErrorMessage = 'Google Meet linki henüz oluşturulmamış';
       this.showToast = true;

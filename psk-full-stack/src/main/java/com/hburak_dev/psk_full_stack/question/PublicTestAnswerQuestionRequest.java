@@ -10,7 +10,7 @@ import lombok.Setter;
 @Builder
 public class PublicTestAnswerQuestionRequest {
 
-    private Integer questionId;
+    private Integer id;
 
     private AnswerType chosenAnswer;
 

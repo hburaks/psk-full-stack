@@ -12,7 +12,7 @@ import java.util.List;
 @Builder
 public class MyQuestionResponse {
 
-    private Integer questionId;
+    private Integer id;
 
     private String text;
 

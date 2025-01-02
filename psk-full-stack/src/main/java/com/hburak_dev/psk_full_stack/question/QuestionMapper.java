@@ -27,7 +27,7 @@ public class QuestionMapper {
 
         public MyQuestionResponse toMyQuestionResponse(Question question) {
                 return MyQuestionResponse.builder()
-                                .questionId(question.getId())
+                                .id(question.getId())
                                 .text(question.getText())
                                 .choices(question.getChoices().stream()
                                                 .map(choiceMapper::toMyChoiceResponse)
@@ -38,9 +38,10 @@ public class QuestionMapper {
         public Question toQuestion(PublicTestQuestionRequest publicTestQuestionRequest, Integer userId, Test test) {
                 Question question = new Question();
 
-                if (publicTestQuestionRequest.getQuestionId() == null) {
+                if (publicTestQuestionRequest.getId() == null) {
                         question.setCreatedBy(userId);
                 }
+
 
                 if (publicTestQuestionRequest != null) {
                         if (publicTestQuestionRequest.getText() != null) {
@@ -61,8 +62,8 @@ public class QuestionMapper {
                                 }
                         }
 
-                        if (publicTestQuestionRequest.getQuestionId() != null) {
-                                question.setId(publicTestQuestionRequest.getQuestionId());
+                        if (publicTestQuestionRequest.getId() != null) {
+                                question.setId(publicTestQuestionRequest.getId());
                         }
 
                         question.setTest(test);

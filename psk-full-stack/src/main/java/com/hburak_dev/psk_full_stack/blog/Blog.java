@@ -27,7 +27,7 @@ public class Blog extends BaseEntity {
     @Column(length = 3000)
     private String text;
 
-    byte[] cover;
-
     private boolean shareable;
+
+    private String imageFileName;
 }

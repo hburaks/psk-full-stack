@@ -4,6 +4,6 @@
 
 export interface PublicChoiceRequest {
   answerType?: 'ANSWER_A' | 'ANSWER_B' | 'ANSWER_C' | 'ANSWER_D' | 'ANSWER_E';
-  choiceId?: number;
+  id?: number;
   text?: string;
 }

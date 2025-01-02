@@ -10,7 +10,7 @@ import lombok.Setter;
 @Builder
 public class MyChoiceResponse {
 
-    private Integer choiceId;
+    private Integer id;
 
     private AnswerType answerType;
 

@@ -9,7 +9,7 @@ export interface UserTestForAdminResponse {
 [key: string]: number;
 };
   comments?: Array<UserCommentResponse>;
-  cover?: Array<string>;
+  imageUrl?: string;
   lastModifiedDate?: string;
   questions?: Array<UserQuestionResponse>;
   subTitle?: string;

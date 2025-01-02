@@ -4,7 +4,9 @@
       <div class="col">
         <div class="card-body my-1 row">
           <div class="test-logo mt-0 col-4">
-            <div class="test-circle mx-auto"></div>
+            <div class="test-circle mx-auto">
+              <img *ngIf="testCard.imageUrl" [src]="testCard.imageUrl" alt="Test image">
+            </div>
           </div>
           <div class="col-8 d-flex flex-column justify-content-center about-text">
               <p class="fs-5 fw-bold">{{testCard.title}}</p>
@@ -20,7 +22,7 @@
           <div class="simple alert" [ngClass]="{
                                                             'alert-primary': selectedChoices[i] === j,
                                                             'alert-dark': selectedChoices[i] !== j
-                                                          }" (click)="selectChoice(i, j, question.questionId ?? 0)"
+                                                          }" (click)="selectChoice(i, j, question.id ?? 0)"
             *ngFor="let choice of question.choices; let j = index">
             {{j === 0 ? 'A) ' : j === 1 ? 'B) ' : j === 2 ? 'C) ' : j === 3 ? 'D) ' : 'E) '}}{{choice.text}}
           </div>

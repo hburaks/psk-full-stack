@@ -4,7 +4,7 @@
 
 export interface AdminTestCommentResponse {
   commentId?: number;
-  cover?: Array<string>;
+  imageUrl?: string;
   score?: number;
   text?: string;
   title?: string;

@@ -23,6 +23,8 @@ import { getAllSessionsV2 } from '../fn/session-controller-v-2/get-all-sessions-
 import { GetAllSessionsV2$Params } from '../fn/session-controller-v-2/get-all-sessions-v-2';
 import { getAllUsersWithSessionV2 } from '../fn/session-controller-v-2/get-all-users-with-session-v-2';
 import { GetAllUsersWithSessionV2$Params } from '../fn/session-controller-v-2/get-all-users-with-session-v-2';
+import { getSessionByIdV2 } from '../fn/session-controller-v-2/get-session-by-id-v-2';
+import { GetSessionByIdV2$Params } from '../fn/session-controller-v-2/get-session-by-id-v-2';
 import { getUpcomingSessionsV2 } from '../fn/session-controller-v-2/get-upcoming-sessions-v-2';
 import { GetUpcomingSessionsV2$Params } from '../fn/session-controller-v-2/get-upcoming-sessions-v-2';
 import { makeAvailableV2 } from '../fn/session-controller-v-2/make-available-v-2';
@@ -242,6 +244,31 @@ export class SessionControllerV2Service extends BaseService {
    */
   addNoteToSessionForPsychologistV2(params: AddNoteToSessionForPsychologistV2$Params, context?: HttpContext): Observable<SessionResponseV2> {
     return this.addNoteToSessionForPsychologistV2$Response(params, context).pipe(
+      map((r: StrictHttpResponse<SessionResponseV2>): SessionResponseV2 => r.body)
+    );
+  }
+
+  /** Path part for operation `getSessionByIdV2()` */
+  static readonly GetSessionByIdV2Path = '/v2/sessions/{id}';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getSessionByIdV2()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getSessionByIdV2$Response(params: GetSessionByIdV2$Params, context?: HttpContext): Observable<StrictHttpResponse<SessionResponseV2>> {
+    return getSessionByIdV2(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getSessionByIdV2$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getSessionByIdV2(params: GetSessionByIdV2$Params, context?: HttpContext): Observable<SessionResponseV2> {
+    return this.getSessionByIdV2$Response(params, context).pipe(
       map((r: StrictHttpResponse<SessionResponseV2>): SessionResponseV2 => r.body)
     );
   }

@@ -90,8 +90,7 @@
                 "$ref": "#/components/schemas/BlogRequest"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -547,8 +546,7 @@
                 "$ref": "#/components/schemas/BlogRequest"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -1325,15 +1323,12 @@
           "text": {
             "type": "string"
           },
-          "cover": {
-            "type": "array",
-            "items": {
-              "type": "string",
-              "format": "byte"
-            }
-          },
           "shareable": {
             "type": "boolean"
+          },
+          "image": {
+            "type": "string",
+            "format": "binary"
           }
         }
       },
@@ -1638,7 +1633,7 @@
           "isPaid": {
             "type": "boolean"
           },
-          "googleMeetLink": {
+          "sessionLink": {
             "type": "string"
           }
         }
@@ -1915,6 +1910,9 @@
           },
           "shareable": {
             "type": "boolean"
+          },
+          "imageUrl": {
+            "type": "string"
           }
         }
       },
@@ -2220,7 +2218,7 @@
           "noteForUser": {
             "type": "string"
           },
-          "googleMeetLink": {
+          "sessionLink": {
             "type": "string"
           }
         }

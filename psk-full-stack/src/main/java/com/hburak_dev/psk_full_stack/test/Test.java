@@ -27,14 +27,14 @@ public class Test extends BaseEntity {
 
     private String subTitle;
 
-    private String[] cover;
-
+    private String imageUrl;
+    
     private Boolean isActive;
 
     @Builder.Default
     private Boolean isCompleted = Boolean.FALSE;
 
-    @OneToMany(mappedBy = "test", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "test", cascade = CascadeType.ALL)
     private List<Question> questions;
 
     @ManyToOne

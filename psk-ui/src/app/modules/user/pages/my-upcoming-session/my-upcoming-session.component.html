@@ -1,4 +1,4 @@
-<div *ngIf="upcomingSession != null" class="row mx-0 card mb-5 py-4 px-md-5 px-sm-2">
+<div *ngIf="upcomingSession != null" class="row mx-0 card mb-5 py-4 pb-5 px-md-5 px-sm-2">
   <div class="col-12">
     <div *ngIf="isUpcomingSession" class="card-body about-card-body my-1 row row-about align-items-center g-5">
       <div class="col-md-8 col-12 mt-0 about-text">
@@ -38,7 +38,7 @@
         </div>
       </div>
     </div>
-    <div *ngIf="isUpcomingSession" class="row mx-1 g-2">
+    <div *ngIf="isUpcomingSession && upcomingSession.sessionLink" class="row mx-1 g-2">
       <button (click)="goToSession()" class="btn btn-primary">Seansa Git</button>
     </div>
   </div>
