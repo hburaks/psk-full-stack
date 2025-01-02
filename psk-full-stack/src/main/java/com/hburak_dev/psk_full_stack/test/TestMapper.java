@@ -35,11 +35,16 @@ public class TestMapper {
         }
 
         public MyTestResponse toMyTestResponse(Test test) {
+                String imageUrl = null;
+                if (test.getImageUrl() != null) {
+                        imageUrl = String.format("http://localhost:%s/api/v3/files/test/download/%s",
+                                        serverPort, test.getImageUrl());
+                }
                 return MyTestResponse.builder()
                                 .testId(test.getId())
                                 .title(test.getTitle())
                                 .subTitle(test.getSubTitle())
-                                .imageUrl(test.getImageUrl())
+                                .imageUrl(imageUrl)
                                 .questions(test.getQuestions().stream()
                                                 .map(questionMapper::toMyQuestionResponse)
                                                 .collect(Collectors.toList()))
@@ -65,11 +70,16 @@ public class TestMapper {
                 if (test.getQuestions().isEmpty()) {
                         test.setQuestions(new ArrayList<>());
                 }
+                String imageUrl = null;
+                if (test.getImageUrl() != null) {
+                        imageUrl = String.format("http://localhost:%s/api/v3/files/test/download/%s",
+                                        serverPort, test.getImageUrl());
+                }
                 return PublicTestAdminResponse.builder()
                                 .id(test.getId())
                                 .title(test.getTitle())
                                 .subTitle(test.getSubTitle())
-                                .imageUrl(test.getImageUrl())
+                                .imageUrl(imageUrl)
                                 .isActive(test.getIsActive())
                                 .questions(test.getQuestions().stream()
                                                 .map(questionMapper::toPublicQuestionAdminResponse)
@@ -78,12 +88,17 @@ public class TestMapper {
         }
 
         public UserTestForAdminResponse toUserTestForAdminResponse(Test test) {
+                String imageUrl = null;
+                if (test.getImageUrl() != null) {
+                        imageUrl = String.format("http://localhost:%s/api/v3/files/test/download/%s",
+                                        serverPort, test.getImageUrl());
+                }
 
                 return UserTestForAdminResponse.builder()
                                 .testId(test.getId())
                                 .title(test.getTitle())
                                 .subTitle(test.getSubTitle())
-                                .imageUrl(test.getImageUrl())
+                                .imageUrl(imageUrl)
                                 .userId(test.getUser().getId())
                                 .questions(test.getQuestions().stream()
                                                 .map(questionMapper::toUserQuestionResponse)
