@@ -21,7 +21,4 @@ export class TestResultComponent {
     this.imageUrl = this.testResult.imageUrl ?? '';
   }
 
-  getImage() {
-    return this.fileService.downloadTestFile({ fileName: this.imageUrl });
-  }
 }

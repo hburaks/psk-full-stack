@@ -12,10 +12,15 @@ public class CommentMapper {
     private String serverPort;
 
     public PublicTestAnswerCommentResponse toPublicTestAnswerCommentResponse(Comment resultComment) {
+        String imageUrl = null;
+        if (resultComment.getImageUrl() != null) {
+            imageUrl = String.format("http://localhost:%s/api/v3/files/comment/download/%s",
+                    serverPort, resultComment.getImageUrl());
+        }
         return PublicTestAnswerCommentResponse.builder()
                 .title(resultComment.getTitle())
                 .text(resultComment.getText())
-                .imageUrl(resultComment.getImageUrl())
+                .imageUrl(imageUrl)
                 .build();
     }
 
@@ -72,11 +77,16 @@ public class CommentMapper {
     }
 
     public UserCommentResponse toUserCommentResponse(Comment comment) {
+        String imageUrl = null;
+        if (comment.getImageUrl() != null) {
+            imageUrl = String.format("http://localhost:%s/api/v3/files/comment/download/%s",
+                    serverPort, comment.getImageUrl());
+        }
         return UserCommentResponse.builder()
                 .score(comment.getScore())
                 .title(comment.getTitle())
                 .text(comment.getText())
-                .imageUrl(comment.getImageUrl())
+                .imageUrl(imageUrl)
                 .build();
     }
 

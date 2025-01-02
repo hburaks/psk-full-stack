@@ -322,7 +322,7 @@ export class TestCardDetailComponent implements AfterViewInit {
   updateTestComments() {
     const params: UpdatePublicTestCommentsV2$Params = {
       body: {
-        comments: this.comments,
+        comments: this.editableTestCard!.comments,
         testId: this.editableTestCard!.id,
       },
     };

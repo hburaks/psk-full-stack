@@ -15,14 +15,14 @@
       </div>
       <div class="col-8 d-flex flex-column justify-content-center about-text">
         <ng-container>
-          <input [(ngModel)]="comment!.title" class="form-control fs-5 fw-bold" placeholder="Başlık"
+          <input [(ngModel)]="comment.title" class="form-control fs-5 fw-bold" placeholder="Başlık"
             (ngModelChange)="onCommentChange(i)" />
-          <input [(ngModel)]="comment!.text" class="form-control fw-light mt-2 text-secondary" placeholder="Metin"
+          <input [(ngModel)]="comment.text" class="form-control fw-light mt-2 text-secondary" placeholder="Metin"
             (ngModelChange)="onCommentChange(i)" />
-          <button class="btn btn-primary mt-2" (click)="uploadImage(i)">Fotoğrafı Değiştir</button>
+          <button *ngIf="comment.commentId" class="btn btn-primary mt-2" (click)="uploadImage(i)">Fotoğrafı Değiştir</button>
           <div class="mt-2 d-flex align-items-center">
             <p class="me-2 my-auto">Skor: </p>
-            <input type="number" [(ngModel)]="comment!.score" class="form-control"
+            <input type="number" [(ngModel)]="comment.score" class="form-control"
               (ngModelChange)="onCommentChange(i)" />
           </div>
         </ng-container>

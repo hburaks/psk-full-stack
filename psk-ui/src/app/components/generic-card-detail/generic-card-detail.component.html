@@ -3,11 +3,8 @@
     <h4 class="text-secondary">Blog Düzenle</h4>
   </div>
   <div class="about-logo mt-0 col-4">
-    <div class="logo-circle mx-auto">
-      <img *ngIf="imageUrl" [src]="imageUrl" alt="Preview image"
-        style="width: 100%; height: 100%; object-fit: cover;">
-      <img *ngIf="(!imageUrl) && blogCard?.imageUrl" [src]="blogCard!.imageUrl" alt="Blog image"
-        style="width: 100%; height: 100%; object-fit: cover;">
+    <div class="test-image mx-auto mb-2">
+      <img *ngIf="imageUrl" [src]="imageUrl" alt="Test image">
     </div>
     <div *ngIf="isBlogEditable || isEditable">
       <button class="btn btn-primary" (click)="uploadImage()">Fotoğrafı Değiştir</button>

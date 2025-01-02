@@ -15,6 +15,8 @@ export class EditCommentComponent {
 
   @Output() updateModalEvent = new EventEmitter<AdminTestCommentResponse[]>();
 
+  @Output() commentsToUpdate = new EventEmitter<AdminTestCommentResponse[]>();
+
 
 
   constructor(
@@ -51,6 +53,7 @@ export class EditCommentComponent {
 
   updateModal() {
     this.updateModalEvent.emit(this.comments);
+    this.commentsToUpdate.emit(this.comments);
   }
 
   uploadImage(index: number) {
