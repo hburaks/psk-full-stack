@@ -8,18 +8,21 @@
     </div>
     <div class="row mt-4 mb-4">
       <div class="test-logo mt-0 col-4">
-        <div class="test-circle mx-auto"></div>
+        <div class="test-circle mx-auto">
+          <img *ngIf="comment?.imageUrl" [src]="comment.imageUrl" alt="Test image"
+            style="width: 100%; height: 100%; object-fit: cover;">
+        </div>
       </div>
       <div class="col-8 d-flex flex-column justify-content-center about-text">
         <ng-container>
-          <input [(ngModel)]="comment!.title" class="form-control fs-5 fw-bold" placeholder="Başlık"
+          <input [(ngModel)]="comment.title" class="form-control fs-5 fw-bold" placeholder="Başlık"
             (ngModelChange)="onCommentChange(i)" />
-          <input [(ngModel)]="comment!.text" class="form-control fw-light mt-2 text-secondary" placeholder="Metin"
+          <input [(ngModel)]="comment.text" class="form-control fw-light mt-2 text-secondary" placeholder="Metin"
             (ngModelChange)="onCommentChange(i)" />
-          <input type="file" class="form-control mt-2" (change)="onFileChange($event, i)" />
+          <button *ngIf="comment.commentId" class="btn btn-primary mt-2" (click)="uploadImage(i)">Fotoğrafı Değiştir</button>
           <div class="mt-2 d-flex align-items-center">
             <p class="me-2 my-auto">Skor: </p>
-            <input type="number" [(ngModel)]="comment!.score" class="form-control"
+            <input type="number" [(ngModel)]="comment.score" class="form-control"
               (ngModelChange)="onCommentChange(i)" />
           </div>
         </ng-container>

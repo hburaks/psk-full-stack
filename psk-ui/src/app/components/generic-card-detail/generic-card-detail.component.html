@@ -3,7 +3,9 @@
     <h4 class="text-secondary">Blog Düzenle</h4>
   </div>
   <div class="about-logo mt-0 col-4">
-    <div class="logo-circle mx-auto"></div>
+    <div class="test-image mx-auto mb-2">
+      <img *ngIf="imageUrl" [src]="imageUrl" alt="Test image">
+    </div>
     <div *ngIf="isBlogEditable || isEditable">
       <button class="btn btn-primary" (click)="uploadImage()">Fotoğrafı Değiştir</button>
     </div>

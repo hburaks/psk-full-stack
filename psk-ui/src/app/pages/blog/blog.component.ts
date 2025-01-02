@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import { Component, AfterViewInit } from '@angular/core';
 import { CommonService } from 'src/app/custom-services/common-service/common.service';
 import { BlogResponse, PageResponseBlogResponse } from 'src/app/services/models';
 import { BlogService } from 'src/app/services/services';
@@ -8,9 +8,9 @@ import { BlogService } from 'src/app/services/services';
   templateUrl: './blog.component.html',
   styleUrls: ['./blog.component.scss'],
 })
-export class BlogComponent {
+export class BlogComponent implements AfterViewInit {
   blog: BlogResponse = {
-    cover: ['https://i.ibb.co/qj44W4n/Auth-bg.jpg'],
+    imageUrl: 'https://i.ibb.co/qj44W4n/Auth-bg.jpg',
     createdDate: '',
     id: 1,
     shareable: true,
@@ -22,6 +22,9 @@ export class BlogComponent {
   fetchedBlogList: BlogResponse[] = [this.blog, this.blog, this.blog];
 
   constructor(private blogService: BlogService, private commonService: CommonService) {
+  }
+
+  ngAfterViewInit() {
     this.getBlogList();
   }
 

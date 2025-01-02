@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { AdminNavItems } from 'src/app/components/user-nav-underline/user-nav-underline-enum';
+import { HeaderService } from 'src/app/modules/user/service/header.service';
 import { UserWithIncomingSessionResponse } from 'src/app/services/models/user-with-incoming-session-response';
 
 @Component({
@@ -9,9 +10,10 @@ import { UserWithIncomingSessionResponse } from 'src/app/services/models/user-wi
 })
 export class AdminPanelComponent {
   selectedNavItem: string = AdminNavItems.UPCOMING_SESSIONS;
-  
-  onSelectedNavItem(item: string) {
-    this.selectedNavItem = item;
+
+
+  constructor(private headerService: HeaderService) {
+    this.selectedNavItem = this.headerService.getActiveItem();
   }
   AdminNavItems = AdminNavItems;
 
@@ -19,5 +21,9 @@ export class AdminPanelComponent {
 
   onSelectedUser(user: UserWithIncomingSessionResponse | null) {
     this.selectedUser = user;
+  }
+
+  isActiveItem(item: string) {
+    return this.headerService.getActiveItem() === item;
   }
 }

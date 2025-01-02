@@ -2,8 +2,13 @@ package com.hburak_dev.psk_full_stack.test;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
 import org.springframework.security.core.Authentication;
 
 import java.util.List;
@@ -16,10 +21,53 @@ public class TestControllerV2 {
 
     private final TestService testService;
 
-    @PostMapping("/create")
-    public ResponseEntity<AdminTestResponse> createPublicTestV2(@RequestBody PublicTestRequest publicTestRequest,
+     @PostMapping(value = "/upload-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<HttpStatus> uploadImage(@RequestParam("file") MultipartFile file,
+            @RequestParam("testId") Integer testId) {
+        try {
+            testService.uploadImage(file, testId);
+            return ResponseEntity.ok(HttpStatus.OK);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping(value = "/upload-image-for-comment", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<HttpStatus> uploadImageForComment(@RequestParam("file") MultipartFile file,
+            @RequestParam("commentId") Integer commentId) {
+        try {
+            testService.uploadImageForComment(file, commentId);
+            return ResponseEntity.ok(HttpStatus.OK);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("/save")
+    public ResponseEntity<AdminTestResponse> savePublicTestV2(@RequestBody PublicTestRequest publicTestRequest,
             Authentication connectedUser) {
-        return ResponseEntity.ok(testService.createPublicTestV2(publicTestRequest, connectedUser));
+        return ResponseEntity.ok(testService.savePublicTestV2(publicTestRequest, connectedUser));
+    }
+
+    @PostMapping("/update")
+    public ResponseEntity<AdminTestResponse> updatePublicTestV2(@RequestBody PublicTestRequest publicTestRequest) {
+        return ResponseEntity.ok(testService.updatePublicTestV2(publicTestRequest));
+    }
+
+    @PostMapping("/update-question")
+    public ResponseEntity<Boolean> updatePublicTestQuestionsV2(
+            @RequestBody PublicTestQuestionListRequest publicTestQuestionListRequest,
+            Authentication connectedUser) {
+        return ResponseEntity.ok(testService.updatePublicTestQuestionsV2(publicTestQuestionListRequest, connectedUser));
+    }
+
+    @PostMapping("/update-comment")
+    public ResponseEntity<Boolean> updatePublicTestCommentsV2(
+            @RequestBody PublicTestCommentListRequest publicTestCommentListRequest,
+            Authentication connectedUser) {
+        return ResponseEntity.ok(testService.updatePublicTestCommentsV2(publicTestCommentListRequest, connectedUser));
     }
 
     @PutMapping("/update-availability")

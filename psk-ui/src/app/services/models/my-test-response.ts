@@ -4,7 +4,7 @@
 
 import { MyQuestionResponse } from '../models/my-question-response';
 export interface MyTestResponse {
-  cover?: Array<string>;
+  imageUrl?: string;
   questions?: Array<MyQuestionResponse>;
   subTitle?: string;
   testId?: number;

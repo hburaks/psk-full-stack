@@ -22,8 +22,7 @@ public class UserTestForAdminResponse {
 
     private String subTitle;
 
-    private String[] cover;
-
+    private String imageUrl;
     private Integer userId;
 
     private List<UserQuestionResponse> questions;

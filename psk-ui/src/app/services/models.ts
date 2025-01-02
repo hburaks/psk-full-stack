@@ -29,6 +29,8 @@ export { PublicTestAdminResponse } from './models/public-test-admin-response';
 export { PublicTestAnswerCommentResponse } from './models/public-test-answer-comment-response';
 export { PublicTestAnswerQuestionRequest } from './models/public-test-answer-question-request';
 export { PublicTestAnswerRequest } from './models/public-test-answer-request';
+export { PublicTestCommentListRequest } from './models/public-test-comment-list-request';
+export { PublicTestQuestionListRequest } from './models/public-test-question-list-request';
 export { PublicTestQuestionRequest } from './models/public-test-question-request';
 export { PublicTestRequest } from './models/public-test-request';
 export { PublicTestResponse } from './models/public-test-response';

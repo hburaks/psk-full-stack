@@ -17,6 +17,5 @@ public class AdminTestCommentResponse {
 
     private String text;
 
-    byte[] cover;
-
+    private String imageUrl;
 }

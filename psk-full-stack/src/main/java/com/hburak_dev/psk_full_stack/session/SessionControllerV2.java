@@ -77,5 +77,10 @@ public class SessionControllerV2 {
         return sessionService.getUpcomingSessionsV2();
     }
 
+    @GetMapping("/{id}")
+    public SessionResponseV2 getSessionByIdV2(@PathVariable Integer id, Integer userId) {
+        return sessionService.getSessionByIdV2(id);
+    }
+
 
 }

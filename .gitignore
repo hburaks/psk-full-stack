@@ -1,1 +1,4 @@
 .env
+psk-full-stack/uploads
+uploads
+uploads/*

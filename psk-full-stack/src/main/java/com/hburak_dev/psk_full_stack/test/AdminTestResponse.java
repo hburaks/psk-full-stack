@@ -19,8 +19,7 @@ public class AdminTestResponse {
 
     private String subTitle;
 
-    private String[] cover;
-
+    private String imageUrl;
     private Boolean isActive;
 
     private List<PublicQuestionAdminResponse> questions;

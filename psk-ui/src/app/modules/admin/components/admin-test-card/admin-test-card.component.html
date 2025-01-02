@@ -2,10 +2,11 @@
 
 <div *ngIf="testResults.length > 0" class="row  justify-content-center mt-3 g-3">
   <div class="col-md-4 col-sm-6 test-card-container mb-4" *ngFor="let testCard of testResults; let i = index">
-    <div class="test-circle mx-auto"></div>
-    <!-- TODO:change with real data <img src="{{testCard.cover}}" class="card-img-top card-image"> -->
+    <div class="test-circle mx-auto">
+      <img *ngIf="testCard.imageUrl" [src]="testCard.imageUrl" alt="Test image">
+    </div>
     <div
-      class="card test-card card-body test-card-body test-card-body-large d-flex flex-column justify-content-between">
+      class="card test-card card-body test-card-body test-card-body-large d-flex flex-column justify-content-between mt-2">
       <h5 class="card-title text-center mb-0">{{testCard.title}}</h5>
       <p *ngIf="!testCard.answerDistribution" class="card-text text-secondary">Test sonucu henüz alınmadı.</p>
       <button *ngIf="testCard.testId !== undefined && !testCard.answerDistribution"
@@ -24,8 +25,9 @@
 
 <div *ngIf="publicTests.length > 0" class="row justify-content-center mt-3 g-3">
   <div class="col-md-4 col-sm-6 test-card-container mb-4" *ngFor="let testCard of publicTests; let i = index">
-    <div class="test-circle mx-auto"></div>
-    <!-- TODO:change with real data <img src="{{testCard.cover}}" class="card-img-top card-image"> -->
+    <div class="test-circle mx-auto">
+      <img *ngIf="testCard.imageUrl" [src]="testCard.imageUrl" alt="Test image">
+    </div>
     <div class="card test-card card-body test-card-body test-card-body-large d-flex justify-content-between">
       <h5 class="card-title text-center">{{testCard.title}}</h5>
       <p class="card-text text-secondary">{{testCard.subTitle}}</p>

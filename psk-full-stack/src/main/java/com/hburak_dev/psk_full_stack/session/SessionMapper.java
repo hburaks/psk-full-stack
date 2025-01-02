@@ -33,7 +33,7 @@ public class SessionMapper {
                 return Session.builder()
                                 .date(date)
                                 .user(user)
-                                .sessionStatus(SessionStatusType.AWAITING_PSYCHOLOGIST_APPROVAL)
+                                .sessionStatus(SessionStatusType.AWAITING_THERAPIST_APPROVAL)
                                 .isSessionPaid(false)
                                 .isMock(false)
                                 .build();

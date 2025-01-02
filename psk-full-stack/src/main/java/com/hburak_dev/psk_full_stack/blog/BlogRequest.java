@@ -15,8 +15,6 @@ public class BlogRequest {
 
     private String text;
 
-    private byte[] cover;
-
     private boolean shareable;
 
 }

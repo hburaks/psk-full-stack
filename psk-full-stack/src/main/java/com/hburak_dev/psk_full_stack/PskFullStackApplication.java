@@ -242,7 +242,7 @@ public class PskFullStackApplication {
 							.createdBy(mockUser.getId())
 							.date(date1)
 							.user(mockUser)
-							.sessionStatus(SessionStatusType.AWAITING_PSYCHOLOGIST_APPROVAL)
+							.sessionStatus(SessionStatusType.AWAITING_THERAPIST_APPROVAL)
 							.isSessionPaid(true)
 							.isMock(true)
 							.build());
@@ -269,7 +269,7 @@ public class PskFullStackApplication {
 							.createdBy(mockUser.getId())
 							.date(date1)
 							.user(mockUser)
-							.sessionStatus(SessionStatusType.AWAITING_PSYCHOLOGIST_APPROVAL)
+							.sessionStatus(SessionStatusType.AWAITING_THERAPIST_APPROVAL)
 							.isSessionPaid(true)
 							.isMock(true)
 							.build());

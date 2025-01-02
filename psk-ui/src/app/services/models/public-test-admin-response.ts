@@ -4,8 +4,8 @@
 
 import { PublicQuestionAdminResponse } from '../models/public-question-admin-response';
 export interface PublicTestAdminResponse {
-  cover?: Array<string>;
   id?: number;
+  imageUrl?: string;
   isActive?: boolean;
   questions?: Array<PublicQuestionAdminResponse>;
   subTitle?: string;

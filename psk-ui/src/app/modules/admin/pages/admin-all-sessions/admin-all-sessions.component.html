@@ -1,7 +1,7 @@
 <div class="row mx-0 card mb-5 py-4 px-md-3 px-sm-1">
   <div *ngIf="showEditSessionModal" class="col-12">
     <app-edit-user-session [session]="selectedSession"
-      (showEditSessionModal)="showEditSessionModal = $event"></app-edit-user-session>
+      (showEditSessionModal)="receiveShowEditSessionModal($event)"></app-edit-user-session>
   </div>
   <div class="col-12">
     <app-admin-sessions [sessions]="sessions"

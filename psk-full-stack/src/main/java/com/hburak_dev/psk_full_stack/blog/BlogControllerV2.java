@@ -6,7 +6,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.http.MediaType;
+import org.springframework.http.HttpStatus;
 
 @RestController
 @RequestMapping("v2/blogs")
@@ -15,6 +17,19 @@ import org.springframework.web.bind.annotation.*;
 public class BlogControllerV2 {
 
     private final BlogServiceImpl service;
+
+    @PostMapping(value = "/upload-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<HttpStatus> uploadFile(@RequestParam("file") MultipartFile file,
+            @RequestParam("blogId") Integer blogId) {
+        try {
+            service.uploadImage(file, blogId);
+            return ResponseEntity.ok(HttpStatus.OK);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 
     @PostMapping("/save")
     public ResponseEntity<Integer> saveBlog(

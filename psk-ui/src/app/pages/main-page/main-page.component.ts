@@ -28,37 +28,18 @@ export class MainPageComponent implements OnInit {
     return Object.keys(obj);
   }
 
-  blog: BlogResponse = {
-    cover: ['https://i.ibb.co/qj44W4n/Auth-bg.jpg'],
-    createdDate: '',
-    id: 1,
-    shareable: true,
-    subTitle: 'Blog kartı için oluşturulmuş kısa bir örnek alt başlık içeriği.',
-    text: 'string',
-    title: 'Blog Yazısı',
-  };
+  
 
-  test: PublicTestResponse = {
-    cover: ['./assets/materials/logo-ex.svg'],
-    id: 1,
-    questions: [],
-    subTitle: 'Test kartı için oluşturulmuş kısa bir örnek alt başlık içeriği.',
-    title: 'Test',
-  };
+  blogCardList: BlogResponse[] = [];
+  fetchedBlogList: BlogResponse[] = [];
 
-  blogCardList: BlogResponse[] = [this.blog, this.blog];
-  fetchedBlogList: BlogResponse[] = [this.blog, this.blog];
+  testCardList: PublicTestResponse[] = [];
+  fetchedTestList: PublicTestResponse[] = [];
 
-  testCardList: PublicTestResponse[] = [this.test, this.test, this.test];
-  fetchedTestList: PublicTestResponse[] = [this.test, this.test, this.test];
-
-
-  //TODO: base64 ten resime dönüşüm sağlanmalı
 
   constructor(
     private blogService: BlogService,
     private testServiceV3: TestService,
-    private sessionControllerV3Service: SessionControllerV3Service,
     private commonService: CommonService,
     private tokenService: TokenService
   ) {}
@@ -121,6 +102,7 @@ export class MainPageComponent implements OnInit {
     this.testServiceV3.getAllPublicTests().subscribe({
       next: (publicTests: Array<PublicTestResponse>) => {
         this.fetchedTestList = publicTests || [];
+        console.log(this.fetchedTestList);
         this.updateTestListBasedOnScreenSize();
       },
       error: (err) => {

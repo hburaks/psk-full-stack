@@ -44,4 +44,6 @@ public interface SessionService {
 
     SessionResponse getUpcomingSession(Authentication connectedUser);
 
+    SessionResponseV2 getSessionByIdV2(Integer id);
+
 }

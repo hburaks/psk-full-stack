@@ -20,7 +20,6 @@ export class TestCardListComponent {
 
   adminTestList: AdminTestResponse[] = [];
 
-  @Input() isMainPage: boolean = false;
   @Input() isEditPage: boolean = false;
   @Output() editTestEvent = new EventEmitter<AdminTestResponse>();
 
@@ -83,13 +82,15 @@ export class TestCardListComponent {
   }
 
   fetchTestList() {
-    this.testService.getAllTest().subscribe({
-      next: (adminTests: Array<AdminTestResponse>) => {
-        this.adminTestList = adminTests || [];
-      },
-      error: (err: any) => {
-        console.error('Error fetching public tests', err);
-      },
-    });
+    if (this.isEditPage) {
+      this.testService.getAllTest().subscribe({
+        next: (adminTests: Array<AdminTestResponse>) => {
+          this.adminTestList = adminTests || [];
+        },
+        error: (err: any) => {
+          console.error('Error fetching public tests', err);
+        },
+      });
+    }
   }
 }

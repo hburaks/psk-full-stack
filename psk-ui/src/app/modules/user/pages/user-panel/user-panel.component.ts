@@ -1,6 +1,7 @@
 import {Component} from '@angular/core';
 import { UserNavItems } from 'src/app/components/user-nav-underline/user-nav-underline-enum';
 import { MyTestResponse } from 'src/app/services/models';
+import { HeaderService } from '../../service/header.service';
 
 @Component({
   selector: 'app-user-panel',
@@ -8,14 +9,17 @@ import { MyTestResponse } from 'src/app/services/models';
   styleUrls: ['./user-panel.component.scss'],
 })
 export class UserPanelComponent {
-  selectedNavItem: string = UserNavItems.MY_UPCOMING_SESSION;
-
+  selectedNavItem: string;
   selectedTest: MyTestResponse | null = null;
 
-  onSelectedNavItem(item: string) {
-    this.selectedNavItem = item;
-  }
   UserNavItems = UserNavItems;
+
+
+
+  constructor(private headerService: HeaderService) {
+    this.selectedNavItem = this.headerService.getActiveItem();
+  }
+
 
   startTest(test: MyTestResponse) {
     this.selectedTest = test;
@@ -23,5 +27,17 @@ export class UserPanelComponent {
 
   onCompleteTest() {
     this.selectedTest = null;
+  }
+
+  showAddSessionModal(isShowAddSessionModal: boolean) {
+    if (isShowAddSessionModal) {
+      this.headerService.setActiveItem(UserNavItems.CREATE_APPOINTMENT);
+    } else {
+      this.headerService.setActiveItem(UserNavItems.MY_UPCOMING_SESSION);
+    }
+  }
+
+  isActiveItem(item: string) {
+    return this.headerService.getActiveItem() === item;
   }
 }
