@@ -34,21 +34,9 @@ jobs:
           RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
           RENDER_SERVICE_ID: ${{ secrets.RENDER_BACKEND_SERVICE_ID }}
         run: |
-          echo "Deploying backend to Render..."
-          RESPONSE=$(curl -s -w "\n%{http_code}" -X POST "https://api.render.com/v1/services/$RENDER_SERVICE_ID/deploys" \
+          curl -X POST "https://api.render.com/v1/services/$RENDER_SERVICE_ID/deploys" \
             -H "Authorization: Bearer $RENDER_API_KEY" \
-            -H "Content-Type: application/json")
-          
-          HTTP_STATUS=$(echo "$RESPONSE" | tail -n1)
-          BODY=$(echo "$RESPONSE" | sed '$d')
-          
-          echo "Response body: $BODY"
-          echo "Status code: $HTTP_STATUS"
-          
-          if [ "$HTTP_STATUS" -ne 200 ]; then
-            echo "Deployment failed"
-            exit 1
-          fi
+            -H "Content-Type: application/json"
 
   build-and-deploy-frontend:
     needs: [build-and-deploy-backend]  # Wait for backend to deploy
@@ -78,18 +66,6 @@ jobs:
           RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
           RENDER_SERVICE_ID: ${{ secrets.RENDER_FRONTEND_SERVICE_ID }}
         run: |
-          echo "Deploying frontend to Render..."
-          RESPONSE=$(curl -s -w "\n%{http_code}" -X POST "https://api.render.com/v1/services/$RENDER_SERVICE_ID/deploys" \
+          curl -X POST "https://api.render.com/v1/services/$RENDER_SERVICE_ID/deploys" \
             -H "Authorization: Bearer $RENDER_API_KEY" \
-            -H "Content-Type: application/json")
-          
-          HTTP_STATUS=$(echo "$RESPONSE" | tail -n1)
-          BODY=$(echo "$RESPONSE" | sed '$d')
-          
-          echo "Response body: $BODY"
-          echo "Status code: $HTTP_STATUS"
-          
-          if [ "$HTTP_STATUS" -ne 200 ]; then
-            echo "Deployment failed"
-            exit 1
-          fi
+            -H "Content-Type: application/json"
