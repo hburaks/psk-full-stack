@@ -33,16 +33,6 @@ jobs:
           RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
           RENDER_SERVICE_ID: ${{ secrets.RENDER_BACKEND_SERVICE_ID }}
         run: |
-          if [ -z "$RENDER_API_KEY" ]; then
-            echo "Error: RENDER_API_KEY is not set"
-            exit 1
-          fi
-          
-          if [ -z "$RENDER_SERVICE_ID" ]; then
-            echo "Error: RENDER_SERVICE_ID is not set"
-            exit 1
-          fi
-          
           echo "Deploying backend to Render..."
           RESPONSE=$(curl -s -w "\n%{http_code}" -X POST "https://api.render.com/v1/services/$RENDER_SERVICE_ID/deploys" \
             -H "Authorization: Bearer $RENDER_API_KEY" \
@@ -87,16 +77,6 @@ jobs:
           RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
           RENDER_SERVICE_ID: ${{ secrets.RENDER_FRONTEND_SERVICE_ID }}
         run: |
-          if [ -z "$RENDER_API_KEY" ]; then
-            echo "Error: RENDER_API_KEY is not set"
-            exit 1
-          fi
-          
-          if [ -z "$RENDER_SERVICE_ID" ]; then
-            echo "Error: RENDER_SERVICE_ID is not set"
-            exit 1
-          fi
-          
           echo "Deploying frontend to Render..."
           RESPONSE=$(curl -s -w "\n%{http_code}" -X POST "https://api.render.com/v1/services/$RENDER_SERVICE_ID/deploys" \
             -H "Authorization: Bearer $RENDER_API_KEY" \
