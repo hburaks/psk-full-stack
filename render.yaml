@@ -4,8 +4,8 @@ services:
     env: docker
     plan: free
     rootDir: psk-full-stack
-    dockerfilePath: ../docker/backend/Dockerfile
-    buildCommand: docker build -t psk-backend -f ../docker/backend/Dockerfile .
+    dockerfilePath: Dockerfile
+    buildCommand: docker build -t psk-backend .
     autoDeploy: false
     envVars:
       - key: SPRING_PROFILES_ACTIVE
@@ -36,8 +36,8 @@ services:
     env: docker
     plan: free
     rootDir: psk-ui
-    dockerfilePath: ../docker/frontend/Dockerfile
-    buildCommand: docker build -t psk-frontend -f ../docker/frontend/Dockerfile .
+    dockerfilePath: Dockerfile
+    buildCommand: docker build -t psk-frontend .
     autoDeploy: false
     envVars:
       - key: API_URL

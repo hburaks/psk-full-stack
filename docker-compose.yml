@@ -23,7 +23,9 @@ services:
 
   psk-api:
     container_name: psk-api
-    image: psk/psk:1.0.0-f
+    build:
+      context: ./psk-full-stack
+      dockerfile: Dockerfile
     environment:
       EMAIL_HOST_NAME: ${EMAIL_HOST_NAME}
       EMAIL_USER_NAME: ${EMAIL_USER_NAME}
@@ -43,7 +45,9 @@ services:
 
   psk-ui:
     container_name: psk-ui
-    image: psk/psk-ui:1.0.0
+    build:
+      context: ./psk-ui
+      dockerfile: Dockerfile
     ports:
       - 8080:80
     networks:
