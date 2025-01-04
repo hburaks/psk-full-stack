@@ -11,7 +11,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class ApiConfiguration {
-  rootUrl: string = 'https://psk-backend-ac49.onrender.com/api/';
+  rootUrl: string = 'https://psk-backend-ac49.onrender.com/api';
 }
 
 /**

@@ -40,7 +40,7 @@ application:
     uploads:
       photos-output-path: /tmp/uploads
   cors:
-    origins: https://psk-frontend.onrender.com
+    origins: https://psk-frontend-mwqu.onrender.com
 server:
   port: 8088 
 google:
