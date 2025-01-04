@@ -51,6 +51,7 @@ jobs:
         with:
           node-version: '16'
           cache: 'npm'
+          cache-dependency-path: psk-ui/package-lock.json
           
       - name: Install and Build
         working-directory: ./psk-ui
