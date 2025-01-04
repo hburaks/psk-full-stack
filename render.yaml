@@ -50,3 +50,8 @@ services:
     envVars:
       - key: API_URL
         value: https://psk-backend.onrender.com
+
+databases:
+  - name: psk-db
+    region: frankfurt
+    plan: free
