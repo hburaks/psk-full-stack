@@ -10,16 +10,15 @@ services:
     envVars:
       - key: SPRING_PROFILES_ACTIVE
         value: prod
-      - key: DATABASE_URL
+      - key: JDBC_DATABASE_URL
         fromDatabase:
           name: psk-db
-          property: connectionString
-          # This will provide a URL like: postgres://user:password@host:5432/database
-      - key: POSTGRES_USER
+          property: jdbcUrl
+      - key: JDBC_DATABASE_USERNAME
         fromDatabase:
           name: psk-db
-          property: user
-      - key: POSTGRES_PASSWORD
+          property: username
+      - key: JDBC_DATABASE_PASSWORD
         fromDatabase:
           name: psk-db
           property: password
