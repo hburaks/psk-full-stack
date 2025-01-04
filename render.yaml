@@ -1,0 +1,48 @@
+services:
+  - type: web
+    name: psk-backend
+    env: docker
+    plan: free
+    dockerfilePath: docker/backend/Dockerfile
+    buildCommand: docker build -t psk-backend -f docker/backend/Dockerfile .
+    startCommand: docker run -p 8088:8088 psk-backend
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: DATABASE_URL
+        fromDatabase:
+          name: psk_db
+          property: connectionString
+      - key: EMAIL_HOST_NAME
+        sync: false
+      - key: EMAIL_USER_NAME
+        sync: false
+      - key: EMAIL_PASSWORD
+        sync: false
+      - key: JWT_SECRET_KEY
+        generateValue: true
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+      - key: GOOGLE_REFRESH_TOKEN
+        sync: false
+      - key: THERAPIST_EMAIL
+        sync: false
+
+  - type: web
+    name: psk-frontend
+    env: docker
+    plan: free
+    dockerfilePath: docker/frontend/Dockerfile
+    buildCommand: docker build -t psk-frontend -f docker/frontend/Dockerfile .
+    startCommand: docker run -p 80:80 psk-frontend
+    envVars:
+      - key: API_URL
+        value: https://psk-backend.onrender.com
+
+  - type: postgres
+    name: psk_db
+    databaseName: psk_fullstack_db
+    plan: free
+    ipAllowList: []
