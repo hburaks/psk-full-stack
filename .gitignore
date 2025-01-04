@@ -1,37 +1,25 @@
-# Environment files
+# Environment variables
 .env
 .env.*
 !.env.example
 
-# Upload directories
-uploads/
-psk-full-stack/uploads/
-
-# IDE and Editor files
+# IDE
 .idea/
 .vscode/
-*.swp
-*.swo
-.DS_Store
 
-# Build and Dependency directories
+# Dependencies
 node_modules/
+target/
+
+# Build outputs
 dist/
 build/
-target/
-*.class
 
 # Logs
 *.log
-logs/
 npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
 
-# Test coverage
-coverage/
-
-# Temporary files
-*.tmp
-*.temp
-.cache/
+# System Files
+.DS_Store
+Thumbs.db
+uploads/
