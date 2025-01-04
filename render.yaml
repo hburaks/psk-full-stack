@@ -41,7 +41,7 @@ services:
       - key: API_URL
         value: https://psk-backend.onrender.com
 
-  - type: postgresql
+  - type: pserv
     name: psk_db
     databaseName: psk_fullstack_db
     plan: free
