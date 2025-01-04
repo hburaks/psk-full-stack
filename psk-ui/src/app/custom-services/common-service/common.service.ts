@@ -4,6 +4,7 @@ import { TokenService } from '../token/token.service';
 import { BlogResponse } from '../../services/models';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { ApiConfiguration } from 'src/app/services/api-configuration';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +15,7 @@ export class CommonService {
 
   fetchedBlogList: BlogResponse[] = [];
 
-  private apiUrl = 'http://localhost:8088/api';
+  private _rootUrl?: string;
 
   sessionStatusMap: { [key: string]: string } = {
     AWAITING_THERAPIST_APPROVAL: 'Terapist Onayı Bekleniyor',
@@ -29,7 +30,11 @@ export class CommonService {
   );
   userStatus$ = this.userStatusSubject.asObservable();
 
-  constructor(private tokenService: TokenService, private http: HttpClient) {}
+  constructor(
+    private tokenService: TokenService,
+    private http: HttpClient,
+    protected config: ApiConfiguration
+  ) {}
 
   updateUserStatus(isLoggedIn: boolean) {
     this.userStatusSubject.next(isLoggedIn);
@@ -64,13 +69,13 @@ export class CommonService {
   }
 
   updateBlog(blogId: number, formData: FormData): Observable<number> {
-    return this.http.post<number>(`${this.apiUrl}/v2/blog/update`, formData);
+    return this.http.post<number>(`${this._rootUrl}/v2/blog/update`, formData);
   }
   saveBlog(formData: FormData): Observable<number> {
-    return this.http.post<number>(`${this.apiUrl}/v2/blog/save`, formData);
+    return this.http.post<number>(`${this._rootUrl}/v2/blog/save`, formData);
   }
 
   updateTest(formData: FormData): Observable<number> {
-    return this.http.post<number>(`${this.apiUrl}/v2/test/update`, formData);
+    return this.http.post<number>(`${this._rootUrl}/v2/test/update`, formData);
   }
 }
