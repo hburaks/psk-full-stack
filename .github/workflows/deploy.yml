@@ -24,21 +24,22 @@ jobs:
           cache: maven
           
       - name: Build with Maven
-        run: |
-          cd psk-full-stack
-          mvn clean package -DskipTests
+        working-directory: ./psk-full-stack
+        run: mvn clean package -DskipTests
           
       - name: Deploy to Render
         env:
           RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
           RENDER_SERVICE_ID: ${{ secrets.RENDER_BACKEND_SERVICE_ID }}
         run: |
+          # Trigger deploy through Blueprint
           curl -X POST "https://api.render.com/v1/services/$RENDER_SERVICE_ID/deploys" \
             -H "Authorization: Bearer $RENDER_API_KEY" \
-            -H "Content-Type: application/json"
+            -H "Content-Type: application/json" \
+            -d '{"clearCache": "do_not_clear"}'
 
   build-and-deploy-frontend:
-    needs: [build-and-deploy-backend]  # Wait for backend to deploy
+    needs: [build-and-deploy-backend]
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -65,6 +66,8 @@ jobs:
           RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
           RENDER_SERVICE_ID: ${{ secrets.RENDER_FRONTEND_SERVICE_ID }}
         run: |
+          # Trigger deploy through Blueprint
           curl -X POST "https://api.render.com/v1/services/$RENDER_SERVICE_ID/deploys" \
             -H "Authorization: Bearer $RENDER_API_KEY" \
-            -H "Content-Type: application/json"
+            -H "Content-Type: application/json" \
+            -d '{"clearCache": "do_not_clear"}'
