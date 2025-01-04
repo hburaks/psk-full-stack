@@ -1,0 +1,37 @@
+spring:
+  datasource:
+    url: ${DATABASE_URL}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  mail:
+    host: ${EMAIL_HOST_NAME}
+    port: 587
+    username: ${EMAIL_USER_NAME}
+    password: ${EMAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+application:
+  security:
+    jwt:
+      secret-key: ${JWT_SECRET_KEY}
+      expiration: 86400000
+      refresh-token:
+        expiration: 604800000
+  mailing:
+    frontend:
+      activation-url: https://psk-frontend.onrender.com/activate-account
+  file:
+    uploads:
+      photos-output-path: /tmp/uploads
+  cors:
+    origins: https://psk-frontend.onrender.com
+server:
+  port: 8088 
