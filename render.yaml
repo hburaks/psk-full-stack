@@ -41,5 +41,4 @@ services:
 
   - type: pserv
     name: psk_db
-    env: postgresql
     plan: free
