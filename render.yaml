@@ -43,6 +43,4 @@ services:
 
   - type: pserv
     name: psk_db
-    databaseName: psk_fullstack_db
     plan: free
-    ipAllowList: []
