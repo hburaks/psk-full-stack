@@ -3,8 +3,9 @@ services:
     name: psk-backend
     env: docker
     plan: free
-    dockerfilePath: docker/backend/Dockerfile
-    buildCommand: docker build -t psk-backend -f docker/backend/Dockerfile .
+    rootDir: psk-full-stack
+    dockerfilePath: ../docker/backend/Dockerfile
+    buildCommand: docker build -t psk-backend -f ../docker/backend/Dockerfile .
     envVars:
       - key: SPRING_PROFILES_ACTIVE
         value: prod
@@ -33,8 +34,9 @@ services:
     name: psk-frontend
     env: docker
     plan: free
-    dockerfilePath: docker/frontend/Dockerfile
-    buildCommand: docker build -t psk-frontend -f docker/frontend/Dockerfile .
+    rootDir: psk-ui
+    dockerfilePath: ../docker/frontend/Dockerfile
+    buildCommand: docker build -t psk-frontend -f ../docker/frontend/Dockerfile .
     envVars:
       - key: API_URL
         value: https://psk-backend.onrender.com
