@@ -35,7 +35,7 @@ application:
         expiration: 604800000
   mailing:
     frontend:
-      activation-url: https://psk-frontend.onrender.com/activate-account
+      activation-url: https://psk-frontend-mwqu.onrender.com/activate-account
   file:
     uploads:
       photos-output-path: /tmp/uploads
