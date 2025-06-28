@@ -4,7 +4,7 @@
   </div>
   <div class="about-logo mt-0 col-4">
     <div class="test-image mx-auto mb-2">
-      <img *ngIf="imageUrl" [src]="imageUrl" alt="Test image">
+      <img [src]="imageUrl ? imageUrl : 'assets/landscape-placeholder.svg'" alt="Test image">
     </div>
     <div *ngIf="isBlogEditable || isEditable">
       <button class="btn btn-primary" (click)="uploadImage()">Fotoğrafı Değiştir</button>
@@ -14,7 +14,7 @@
     <p *ngIf="!isEditable" class="fs-5 fw-bold">{{title}}</p>
     <div *ngIf="isBlogEditable">
       <h5 class="text-secondary">Blog Başlığını Düzenle</h5>
-      <textarea *ngIf="isBlogEditable" class="form-control" id="floatingTextarea"
+      <textarea *ngIf="isBlogEditable" class="form-control"
         (input)="updateTitle($event)">{{title}}</textarea>
     </div>
     <p *ngIf="!isEditable" class="fw-light mt-4 text-secondary" [ngClass]="{'text-center': isTextCenter}">
@@ -22,14 +22,14 @@
     </p>
     <div *ngIf="isBlogEditable" class="mt-4">
       <h5 class="text-secondary">Blog Alt Başlığını Düzenle</h5>
-      <textarea class="form-control" id="floatingTextarea" (input)="updateSubTitle($event)">{{subTitle}}</textarea>
+      <textarea class="form-control" (input)="updateSubTitle($event)">{{subTitle}}</textarea>
     </div>
     <p *ngIf="!isEditable" class="fw-light mt-4 text-secondary" [ngClass]="{'text-center': isTextCenter}">
       {{text}}
     </p>
     <div *ngIf="isBlogEditable">
       <h5 class="text-secondary">Blog Metnini Düzenle</h5>
-      <textarea class="form-control" id="floatingTextarea" (input)="updateText($event)">{{text}}</textarea>
+      <textarea class="form-control" (input)="updateText($event)">{{text}}</textarea>
     </div>
     <div *ngIf="isBlogEditable" class="mt-4">
       <div class="form-check form-switch d-flex align-items-center justify-content-center p-0">

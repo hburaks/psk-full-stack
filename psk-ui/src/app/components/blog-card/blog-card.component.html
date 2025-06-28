@@ -1,6 +1,7 @@
 <div class="card">
   <div class="image-gradient-container">
-    <img [src]="blogCard?.imageUrl" class="blog-card-image card-img-top card-image">
+    <img [src]="blogCard?.imageUrl ? blogCard?.imageUrl : 'assets/landscape-placeholder.svg'"
+         class="blog-card-image card-img-top card-image" alt="Blog Image">
   </div>
   <div class="card-body blog-card d-flex flex-column justify-content-between">
     <div>

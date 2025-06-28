@@ -2,9 +2,7 @@ package com.hburak_dev.psk_full_stack.test;
 
 import com.hburak_dev.psk_full_stack.comment.CommentMapper;
 import com.hburak_dev.psk_full_stack.question.QuestionMapper;
-
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -24,8 +22,9 @@ public class TestMapper {
         public PublicTestResponse toPublicTestResponse(Test test) {
                 return PublicTestResponse.builder()
                                 .id(test.getId())
-                                .imageUrl(String.format("http://localhost:%s/api/v3/files/test/download/%s",
-                                                serverPort, test.getImageUrl()))
+                        .imageUrl(test.getImageUrl() != null
+                                ? String.format("http://localhost:%s/api/v3/files/test/download/%s", serverPort, test.getImageUrl())
+                                : null)
                                 .questions(test.getQuestions().stream()
                                                 .map(questionMapper::toPublicQuestionResponse)
                                                 .collect(Collectors.toList()))
