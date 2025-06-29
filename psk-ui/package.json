@@ -4,7 +4,8 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "npm run replace-env && ng build --prod",
+    "replace-env": "sh ./replace-env.sh",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "api-gen": "ng-openapi-gen --input ./src/openapi/openapi.json --output ./src/app/services"
