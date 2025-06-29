@@ -14,7 +14,7 @@ public enum BusinessErrorCodes {
     BAD_CREDENTIALS(304, FORBIDDEN, "Email veya Şifre yanlış"),
     INVALID_ACTIVATION_TOKEN(305, BAD_REQUEST, "Aktivasyon kodu geçersiz"),
     SESSION_STATUS_ALREADY_UPDATED(306, BAD_REQUEST, "Seans zaten bu durumda"),
-    ;
+    SESSION_NOT_FOUND(307, NOT_FOUND, "Seans bulunamadı");
 
     @Getter
     private final int code;

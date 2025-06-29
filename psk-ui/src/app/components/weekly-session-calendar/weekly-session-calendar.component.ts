@@ -1,22 +1,17 @@
-import {
-  Component,
-  HostListener,
-  Input,
-  Output,
-  EventEmitter,
-} from '@angular/core';
-import { DailyCalendarResponse } from 'src/app/services/models/daily-calendar-response';
-import { HourlySessionResponse } from 'src/app/services/models/hourly-session-response';
-import { SessionResponse } from 'src/app/services/models/session-response';
-import { SessionControllerService, SessionControllerV2Service } from 'src/app/services/services';
-import { SessionControllerV3Service } from 'src/app/services/services/session-controller-v-3.service';
+import {Component, EventEmitter, HostListener, Input, OnInit, Output} from '@angular/core';
+import {DailyCalendarResponse} from 'src/app/services/models/daily-calendar-response';
+import {HourlySessionResponse} from 'src/app/services/models/hourly-session-response';
+import {SessionResponse} from 'src/app/services/models/session-response';
+import {SessionControllerService, SessionControllerV2Service} from 'src/app/services/services';
+import {SessionControllerV3Service} from 'src/app/services/services/session-controller-v-3.service';
+import {TokenService} from "../../custom-services/token/token.service";
 
 @Component({
   selector: 'app-weekly-session-calendar',
   templateUrl: './weekly-session-calendar.component.html',
   styleUrls: ['./weekly-session-calendar.component.scss'],
 })
-export class WeeklySessionCalendarComponent {
+export class WeeklySessionCalendarComponent implements OnInit {
   isScreenSmall: boolean = false;
   isScreenMedium: boolean = false;
   isScreenLarge: boolean = false;
@@ -39,6 +34,7 @@ export class WeeklySessionCalendarComponent {
   approveModalText: string = '';
   approveModalHeader: string = '';
   approveModalDate: string | null = null;
+  isUserLoggedIn: boolean = false;
 
   showToast: boolean = false;
   toastErrorMessage: string = '';
@@ -46,15 +42,36 @@ export class WeeklySessionCalendarComponent {
   constructor(
     private sessionControllerV3Service: SessionControllerV3Service,
     private sessionControllerService: SessionControllerService,
-    private sessionControllerV2Service: SessionControllerV2Service
+    private sessionControllerV2Service: SessionControllerV2Service,
+    private tokenService: TokenService
   ) {
     this.updateScreenSize();
-    this.getWeeklySessions();
+  }
+
+  ngOnInit() {
+    this.isUserLoggedIn = this.tokenService.isTokenValid();
+    if (this.hasSessionWeekEnded()) {
+      this.nextWeek();
+    } else {
+      this.getWeeklySessions();
+    }
   }
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
     this.updateScreenSize();
+  }
+
+  hasSessionWeekEnded(): boolean {
+    const currentDate = new Date();
+    const startOfWeek = new Date(this.currentSelectedWeek);
+    const dayOfWeek = startOfWeek.getDay(); // 0 (Sunday) to 6 (Saturday)
+    const daysToMonday = dayOfWeek === 0 ? -6 : 1 - dayOfWeek; // Adjust for Sunday
+    startOfWeek.setDate(startOfWeek.getDate() + daysToMonday);
+    const saturday = new Date(startOfWeek);
+    saturday.setDate(startOfWeek.getDate() + 5); // Move to Saturday
+    saturday.setHours(20, 0, 0, 0); // Set to 8:00 PM
+    return currentDate > saturday;
   }
 
   editSession(date: string | null) {
@@ -213,7 +230,7 @@ export class WeeklySessionCalendarComponent {
 
     this.sessionControllerV3Service.getWeeklyCalendar({ dateTime }).subscribe({
       next: (sessions: Array<DailyCalendarResponse>) => {
-        this.weeklySessionCalendar = sessions;
+        this.weeklySessionCalendar = [...sessions];
       },
       error: (error) => {
         this.toastErrorMessage = 'Seans takvimi yüklenirken bir hata oluştu';
@@ -339,4 +356,6 @@ export class WeeklySessionCalendarComponent {
     const currentDate = new Date();
     return sessionDate > currentDate;
   }
+
+  protected readonly localStorage = localStorage;
 }

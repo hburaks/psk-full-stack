@@ -23,6 +23,7 @@ services:
 
   psk-api:
     container_name: psk-api
+    platform: linux/amd64
     build:
       context: ./psk-full-stack
       dockerfile: Dockerfile

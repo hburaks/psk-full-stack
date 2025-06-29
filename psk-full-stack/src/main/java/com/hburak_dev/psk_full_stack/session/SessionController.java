@@ -5,7 +5,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -39,9 +38,6 @@ public class SessionController {
     @GetMapping("/upcoming-session")
     public ResponseEntity<SessionResponse> getUpcomingSession(Authentication connectedUser) {
         SessionResponse sessionResponse = sessionService.getUpcomingSession(connectedUser);
-        if (sessionResponse == null) {
-            return ResponseEntity.notFound().build();
-        }
         return ResponseEntity.ok(sessionResponse);
     }
 

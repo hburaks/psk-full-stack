@@ -1,16 +1,7 @@
-import { Component, EventEmitter, Output } from '@angular/core';
-import { CommonService } from 'src/app/custom-services/common-service/common.service';
-import {
-  MyTestResponse,
-  SessionResponse,
-  UserResponse,
-} from 'src/app/services/models';
-import {
-  SessionControllerService,
-  SessionControllerV3Service,
-  TestService,
-  UserService,
-} from 'src/app/services/services';
+import {Component, EventEmitter, Output} from '@angular/core';
+import {CommonService} from 'src/app/custom-services/common-service/common.service';
+import {MyTestResponse, SessionResponse, UserResponse,} from 'src/app/services/models';
+import {SessionControllerService, TestService, UserService,} from 'src/app/services/services';
 
 @Component({
   selector: 'app-my-upcoming-session',
@@ -75,10 +66,7 @@ export class MyUpcomingSessionComponent {
     this.userService.getUser().subscribe({
       next: (user) => {
         this.user = user;
-      },
-      error: (error) => {
-        console.log(error);
-      },
+      }
     });
   }
 

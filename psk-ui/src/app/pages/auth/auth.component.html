@@ -22,7 +22,6 @@
             </div>
             <ng-template #activationError>
               <div class="alert alert-danger text-center" role="alert">
-                <h3>Aktivasyon Başarısız!</h3>
                 <p>{{ activationMessage }}</p>
               </div>
             </ng-template>
@@ -36,7 +35,7 @@
               </code-input>
             </div>
           </ng-template>
-          <div class="d-grid">
+          <div *ngIf="isActivationSubmitted" class="d-grid">
             <button *ngIf="!isActivationOkay" class="btn btn-primary"
                     (click)="isActivationSubmitted = false; isActivationOkay= true">Tekrar Dene
             </button>

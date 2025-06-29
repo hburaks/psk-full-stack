@@ -6,7 +6,7 @@ import lombok.Getter;
 public enum SessionStatusType {
 
     AWAITING_THERAPIST_APPROVAL("Terapist Onayı Bekleniyor"),
-            APPOINTMENT_SCHEDULED("Randevu Alındı"),
+    APPOINTMENT_SCHEDULED("Randevu Alındı"),
     COMPLETED("Gerçekleşti"),
     CANCELED("İptal"),
     UNAVAILABLE("Müsait Değil");

@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
-import { CommonService } from 'src/app/custom-services/common-service/common.service';
-import { SessionResponse } from 'src/app/services/models/session-response';
-import { SessionControllerService } from 'src/app/services/services';
+import {Component} from '@angular/core';
+import {CommonService} from 'src/app/custom-services/common-service/common.service';
+import {SessionResponse} from 'src/app/services/models/session-response';
+import {SessionControllerService} from 'src/app/services/services';
 
 @Component({
   selector: 'app-my-sessions',
@@ -19,10 +19,7 @@ export class MySessionsComponent {
     this.sessionControllerService.getMySessions().subscribe({
       next: (res: Array<SessionResponse>) => {
         this.mySessions = res;
-      },
-      error: (error) => {
-        console.log(error);
-      },
+      }
     });
   }
 

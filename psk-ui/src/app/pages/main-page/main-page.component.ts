@@ -1,16 +1,12 @@
-import { Component, HostListener, OnInit } from '@angular/core';
-import { BlogService } from '../../services/services/blog.service';
-import { PageResponseBlogResponse } from '../../services/models/page-response-blog-response';
-import { BlogResponse } from '../../services/models/blog-response';
-import { PublicTestResponse } from '../../services/models/public-test-response';
-import { TestService } from '../../services/services/test.service';
-import { SessionControllerV3Service } from 'src/app/services/services';
-import {
-  DailyCalendarResponse,
-  HourlySessionResponse,
-} from 'src/app/services/models';
-import { CommonService } from 'src/app/custom-services/common-service/common.service';
-import { TokenService } from 'src/app/custom-services/token/token.service';
+import {Component, HostListener, OnInit} from '@angular/core';
+import {BlogService} from '../../services/services/blog.service';
+import {PageResponseBlogResponse} from '../../services/models/page-response-blog-response';
+import {BlogResponse} from '../../services/models/blog-response';
+import {PublicTestResponse} from '../../services/models/public-test-response';
+import {TestService} from '../../services/services/test.service';
+
+import {CommonService} from 'src/app/custom-services/common-service/common.service';
+import {TokenService} from 'src/app/custom-services/token/token.service';
 
 @Component({
   selector: 'app-main-page',
@@ -28,7 +24,6 @@ export class MainPageComponent implements OnInit {
     return Object.keys(obj);
   }
 
-  
 
   blogCardList: BlogResponse[] = [];
   fetchedBlogList: BlogResponse[] = [];
@@ -102,7 +97,6 @@ export class MainPageComponent implements OnInit {
     this.testServiceV3.getAllPublicTests().subscribe({
       next: (publicTests: Array<PublicTestResponse>) => {
         this.fetchedTestList = publicTests || [];
-        console.log(this.fetchedTestList);
         this.updateTestListBasedOnScreenSize();
       },
       error: (err) => {

@@ -3,9 +3,9 @@ import {AuthenticationService} from "../../services/services/authentication.serv
 import {AuthenticationRequest} from "../../services/models/authentication-request";
 import {AuthenticationResponse} from "../../services/models/authentication-response";
 import {ActivatedRoute, Router} from "@angular/router";
-import { TokenService } from '../../custom-services/token/token.service';
+import {TokenService} from '../../custom-services/token/token.service';
 import {RegistrationRequest} from "../../services/models/registration-request";
-import { CommonService } from 'src/app/custom-services/common-service/common.service';
+import {CommonService} from 'src/app/custom-services/common-service/common.service';
 
 @Component({
   selector: 'app-register',
@@ -56,12 +56,13 @@ export class AuthComponent {
 
   ngOnInit(): void {
     this.path = this.route.snapshot.url.toString();
+    console.log('Path:', this.path); // Debugging the path value
     this.updateContent(this.path);
   }
 
   updateContent(path: string | null): void {
     if (path === 'activate-account') {
-      this.initAcivateAccount();
+      this.initActivateAccount();
     } else if (path === 'login') {
       this.initLogin();
     } else if (path === 'register') {
@@ -84,8 +85,9 @@ export class AuthComponent {
     this.infoText = this.loginInfoText;
   }
 
-  initAcivateAccount(): void {
+  initActivateAccount(): void {
     this.isActivateAccount = true;
+    console.log('isActivateAccount:', this.isActivateAccount); // Debugging the flag
     this.isLogin = false;
     this.isRegister = false;
     this.infoText =
@@ -144,7 +146,7 @@ export class AuthComponent {
       })
       .subscribe({
         next: (res: any) => {
-          this.router.navigate(['login']);
+          this.router.navigate(['activate-account']);
         },
         error: (err) => {
           if (err.error.validationErrors) {
@@ -168,9 +170,9 @@ export class AuthComponent {
             'Hesabınız başarıyla aktive edildi.\nGiriş yapabilirsiniz.'
           );
           this.isActivationSubmitted = true;
+          this.isActivationOkay = true;
         },
         error: (err) => {
-          this.activationMessage.push('Sistem hatası oluştu.');
           this.isActivationSubmitted = true;
           this.isActivationOkay = false;
           const parsedErr = JSON.parse(err.error);
@@ -179,7 +181,6 @@ export class AuthComponent {
           } else {
             this.activationMessage.push(parsedErr.error);
           }
-          this.errorMsg.push('Sistem hatası oluştu.');
         },
       });
   }

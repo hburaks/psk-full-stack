@@ -1,7 +1,6 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://psk-backend.onrender.com/api',
-  googleClientId: '${GOOGLE_CLIENT_ID}',
+  apiUrl: 'process.env.API_URL',
   defaultLanguage: 'tr',
   supportedLanguages: ['en', 'tr'],
 };

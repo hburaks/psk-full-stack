@@ -11,11 +11,11 @@ services:
       - key: SPRING_PROFILES_ACTIVE
         value: prod
       - key: JDBC_DATABASE_HOST
-        value: dpg-cts8qlbqf0us73dqcmu0-a.frankfurt-postgres.render.com
+        sync: true
       - key: JDBC_DATABASE_PORT
-        value: 5432
+        sync: true
       - key: JDBC_DATABASE_NAME
-        value: psk_fullstack_db
+        sync: true
       - key: JDBC_DATABASE_USERNAME
         fromDatabase:
           name: psk-db
@@ -25,21 +25,21 @@ services:
           name: psk-db
           property: password
       - key: EMAIL_HOST_NAME
-        sync: false
+        sync: true
       - key: EMAIL_USER_NAME
-        sync: false
+        sync: true
       - key: EMAIL_PASSWORD
-        sync: false
+        sync: true
       - key: JWT_SECRET_KEY
         generateValue: true
       - key: GOOGLE_CLIENT_ID
-        sync: false
+        sync: true
       - key: GOOGLE_CLIENT_SECRET
-        sync: false
+        sync: true
       - key: GOOGLE_REFRESH_TOKEN
-        sync: false
+        sync: true
       - key: THERAPIST_EMAIL
-        sync: false
+        sync: true
 
   - type: web
     name: psk-frontend
@@ -51,7 +51,7 @@ services:
     autoDeploy: false
     envVars:
       - key: API_URL
-        value: https://psk-backend.onrender.com
+        sync: true
 
 databases:
   - name: psk-db

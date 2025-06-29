@@ -21,11 +21,13 @@
           [ngClass]="{'edit': isEdit && session?.available}">{{ formatSessionDate(session.date ||
           '') }}</p> -->
 
-        <p (click)="isEdit && session?.available && isSessionDateInFuture(session.date || '') ? editSession(session.date || null) : null"
-          [ngClass]="{'edit': isEdit && session?.available && isSessionDateInFuture(session.date || '') }" data-bs-toggle="modal"
-          data-bs-target="#sessionModal">
-          {{ formatSessionDate(session.date ||
-          '') }}
+        <p
+          (click)="isEdit && session?.available && isSessionDateInFuture(session.date || '') && isUserLoggedIn ? editSession(session.date || null) : null"
+          [ngClass]="{'edit': isEdit && session?.available && isSessionDateInFuture(session.date || '') }"
+          [class.no-pointer-cursor]="!session?.available || !isSessionDateInFuture(session.date || '') || !isUserLoggedIn"
+          [attr.data-bs-toggle]="session?.available && isSessionDateInFuture(session.date || '') && isUserLoggedIn ? 'modal' : null"
+          [attr.data-bs-target]="session?.available && isSessionDateInFuture(session.date || '') && isUserLoggedIn ? '#sessionModal' : null">
+          {{ formatSessionDate(session.date || '') }}
         </p>
       </div>
     </div>

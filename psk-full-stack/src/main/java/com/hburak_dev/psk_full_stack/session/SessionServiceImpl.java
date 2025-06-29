@@ -20,12 +20,7 @@ import org.springframework.stereotype.Service;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -83,12 +78,9 @@ public class SessionServiceImpl implements SessionService {
 
         Session session = sessionMapper.toSession(fullHour, user);
         session.setCreatedBy(user.getId());
+        session.setNoteForUser("Seans ücretinin ödenmesi için lütfen danışmanınızla iletişime geçiniz. Eğer ödeme yaptıysanız bu uyarıyı dikkate almayınız.");
         Session savedSession = sessionRepository.save(session);
 
-        if (savedSession.getSessionStatus() == SessionStatusType.AWAITING_THERAPIST_APPROVAL) {
-            googleMeetService.createMeeting(savedSession);
-            savedSession = sessionRepository.save(savedSession);
-        }
 
         return savedSession.getId();
     }
@@ -454,7 +446,7 @@ public class SessionServiceImpl implements SessionService {
                 LocalDateTime.now(),
                 SessionStatusType.CANCELED, user.getId());
         if (session == null) {
-            return null;
+            throw new SessionNotFoundException("No upcoming session found for the user");
         }
         return sessionMapper.toSessionResponse(session);
     }
