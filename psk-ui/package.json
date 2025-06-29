@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "npm run replace-env && ng build --prod",
+    "build": "npm run replace-env && run build --prod",
     "replace-env": "sh ./replace-env.sh",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
