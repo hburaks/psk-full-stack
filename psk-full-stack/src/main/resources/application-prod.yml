@@ -35,12 +35,12 @@ application:
         expiration: 604800001
   mailing:
     frontend:
-      activation-url: https://psk-frontend-mwqu.onrender.com/activate-account
+      activation-url: https://psk-full-stack.vercel.app/activate-account
   file:
     uploads:
       photos-output-path: /tmp/uploads
   cors:
-    origins: https://psk-frontend-mwqu.onrender.com
+    origins: https://psk-full-stack.vercel.app/
 server:
   port: 8088 
 google:
