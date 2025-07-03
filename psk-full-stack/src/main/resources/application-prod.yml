@@ -40,7 +40,7 @@ application:
     uploads:
       photos-output-path: /tmp/uploads
   cors:
-    origins: https://psk-full-stack.vercel.app/
+    origins: https://psk-full-stack-dek1m6p8f-hburaks-projects.vercel.app,https://psk-full-stack.vercel.app/
 server:
   port: 8088 
 google:
