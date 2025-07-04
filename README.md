@@ -1,4 +1,4 @@
-# PSK Full Stack 👩‍⚕️🗕️🧠
+# PSK Full Stack
 
 A secure, full-featured web platform for psychologists to manage sessions, patients, and assessments — built using **Spring Boot**, **PostgreSQL**, and **Angular**.
 
@@ -100,11 +100,11 @@ psk-full-stack/
 ### App Architecture
 ![Architecture](screenshots/architecture.png)
 
-### Login Page
-![Login Page](screenshots/login-page.png)
+### Sign Up Page
+![Sign Up Page](screenshots/signup-page.png)
 
-### Session Calendar
-![Session Calendar](screenshots/session-calendar.png)
+### Admin Session Management
+![Session Management](screenshots/admin-session-management-page.png)
 
 ### Test Management UI
 ![Test UI](screenshots/test-management.png)
