@@ -2,6 +2,7 @@ package com.hburak_dev.psk_full_stack.testtemplate;
 
 import com.hburak_dev.psk_full_stack.exception.TestTemplateNotFoundException;
 import com.hburak_dev.psk_full_stack.handler.BusinessErrorCodes;
+import com.hburak_dev.psk_full_stack.question.QuestionResponse;
 import com.hburak_dev.psk_full_stack.question.QuestionServiceInterface;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

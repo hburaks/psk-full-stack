@@ -18,17 +18,17 @@ public class UserAnswerController {
 
     private final UserAnswerServiceInterface userAnswerService;
 
-    @PostMapping("/{userTestId}/answers")
-    @Operation(summary = "Submit answer to a question")
-    public ResponseEntity<UserAnswerResponse> submitAnswer(
+    @PostMapping("/{userTestId}/submit-test")
+    @Operation(summary = "Submit all answers for a test and complete it")
+    public ResponseEntity<SubmitTestResponse> submitTest(
             @PathVariable Integer userTestId,
-            @Valid @RequestBody SubmitAnswerRequest request,
+            @Valid @RequestBody SubmitTestRequest request,
             Authentication connectedUser) {
         
         // Set the userTestId from path variable to ensure consistency
         request.setUserTestId(userTestId);
         
-        UserAnswerResponse response = userAnswerService.submitAnswer(request, connectedUser);
+        SubmitTestResponse response = userAnswerService.submitTest(request, connectedUser);
         return ResponseEntity.ok(response);
     }
 
@@ -40,22 +40,6 @@ public class UserAnswerController {
         
         List<UserAnswerResponse> responses = userAnswerService.getUserTestAnswers(userTestId, connectedUser);
         return ResponseEntity.ok(responses);
-    }
-
-    @PutMapping("/{userTestId}/answers/{questionId}")
-    @Operation(summary = "Update answer for a specific question")
-    public ResponseEntity<UserAnswerResponse> updateAnswer(
-            @PathVariable Integer userTestId,
-            @PathVariable Integer questionId,
-            @Valid @RequestBody SubmitAnswerRequest request,
-            Authentication connectedUser) {
-        
-        // Set the userTestId and questionId from path variables to ensure consistency
-        request.setUserTestId(userTestId);
-        request.setQuestionId(questionId);
-        
-        UserAnswerResponse response = userAnswerService.updateAnswer(userTestId, questionId, request, connectedUser);
-        return ResponseEntity.ok(response);
     }
 
 }

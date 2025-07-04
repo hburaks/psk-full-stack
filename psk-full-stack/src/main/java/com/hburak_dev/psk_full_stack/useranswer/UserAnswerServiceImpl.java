@@ -2,7 +2,7 @@ package com.hburak_dev.psk_full_stack.useranswer;
 
 import com.hburak_dev.psk_full_stack.user.User;
 import com.hburak_dev.psk_full_stack.usertest.UserTest;
-import com.hburak_dev.psk_full_stack.usertest.UserTestRepositoryService;
+import com.hburak_dev.psk_full_stack.usertest.UserTestServiceImpl;
 import com.hburak_dev.psk_full_stack.question.Question;
 import com.hburak_dev.psk_full_stack.question.QuestionRepository;
 import com.hburak_dev.psk_full_stack.exception.UserTestNotFoundException;
@@ -10,7 +10,6 @@ import com.hburak_dev.psk_full_stack.exception.UserTestAccessDeniedException;
 import com.hburak_dev.psk_full_stack.exception.UserTestAlreadyCompletedException;
 import com.hburak_dev.psk_full_stack.exception.QuestionNotFoundException;
 import com.hburak_dev.psk_full_stack.exception.InvalidAnswerFormatException;
-import com.hburak_dev.psk_full_stack.exception.AnswerNotFoundException;
 import com.hburak_dev.psk_full_stack.handler.BusinessErrorCodes;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +21,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.ArrayList;
 
 @Service
 @Slf4j
@@ -29,37 +29,10 @@ import java.util.stream.Collectors;
 public class UserAnswerServiceImpl implements UserAnswerServiceInterface {
 
     private final UserAnswerRepositoryService userAnswerRepositoryService;
-    private final UserTestRepositoryService userTestRepositoryService;
+    private final UserTestServiceImpl userTestRepositoryService;
     private final QuestionRepository questionRepository;
     private final UserAnswerMapper userAnswerMapper;
 
-    @Override
-    @Transactional
-    public UserAnswerResponse submitAnswer(SubmitAnswerRequest request, Authentication connectedUser) {
-        User user = (User) connectedUser.getPrincipal();
-        
-        // Validate user test access
-        UserTest userTest = validateUserTestAccess(request.getUserTestId(), user);
-        
-        // Validate question belongs to test template
-        Question question = validateQuestion(request.getQuestionId(), userTest.getTestTemplateId());
-        
-        // Validate answer format
-        validateAnswerFormat(request);
-        
-        // Save or update answer
-        UserAnswer userAnswer = userAnswerRepositoryService.saveAnswer(
-                userTest.getId().longValue(),
-                request.getQuestionId().longValue(),
-                request.getChoiceId() != null ? request.getChoiceId().longValue() : null,
-                request.getTextAnswer()
-        );
-        
-        log.info("User {} submitted answer for question {} in test {}", 
-                user.getId(), request.getQuestionId(), request.getUserTestId());
-        
-        return userAnswerMapper.toUserAnswerResponse(userAnswer);
-    }
 
     @Override
     @Transactional
@@ -76,43 +49,58 @@ public class UserAnswerServiceImpl implements UserAnswerServiceInterface {
                 .collect(Collectors.toList());
     }
 
+
     @Override
     @Transactional
-    public UserAnswerResponse updateAnswer(Integer userTestId, Integer questionId, SubmitAnswerRequest request, Authentication connectedUser) {
+    public SubmitTestResponse submitTest(SubmitTestRequest request, Authentication connectedUser) {
         User user = (User) connectedUser.getPrincipal();
         
         // Validate user test access
-        UserTest userTest = validateUserTestAccess(userTestId, user);
+        UserTest userTest = validateUserTestAccess(request.getUserTestId(), user);
         
-        // Validate question belongs to test template
-        Question question = validateQuestion(questionId, userTest.getTestTemplateId());
+        List<UserAnswerResponse> submittedAnswers = new ArrayList<>();
         
-        // Check if answer exists
-        Optional<UserAnswer> existingAnswer = userAnswerRepositoryService.getAnswerByUserTestAndQuestion(
-                userTest.getId().longValue(), questionId.longValue());
-        
-        if (existingAnswer.isEmpty()) {
-            throw new AnswerNotFoundException("Answer not found for question " + questionId + " in test " + userTestId, 
-                    BusinessErrorCodes.ANSWER_NOT_FOUND);
+        // Process all answers in batch
+        for (SubmitAnswerRequest answerRequest : request.getAnswers()) {
+            answerRequest.setUserTestId(request.getUserTestId());
+            
+            // Validate question belongs to test template
+            validateQuestion(answerRequest.getQuestionId(), userTest.getTestTemplateId());
+            
+            // Validate answer format
+            validateAnswerFormat(answerRequest);
+            
+            // Save answer
+            UserAnswer userAnswer = userAnswerRepositoryService.saveAnswer(
+                    userTest.getId().longValue(),
+                    answerRequest.getQuestionId().longValue(),
+                    answerRequest.getChoiceId() != null ? answerRequest.getChoiceId().longValue() : null,
+                    answerRequest.getTextAnswer()
+            );
+            
+            submittedAnswers.add(userAnswerMapper.toUserAnswerResponse(userAnswer));
         }
         
-        // Validate answer format
-        validateAnswerFormat(request);
+        // Mark test as completed
+        userTest.setIsCompleted(true);
+        userTest.setCompletedAt(LocalDateTime.now());
+        if (request.getPersonalNotes() != null) {
+            userTest.setPersonalNotes(request.getPersonalNotes());
+        }
         
-        // Update answer
-        UserAnswer userAnswer = userAnswerRepositoryService.saveAnswer(
-                userTest.getId().longValue(),
-                questionId.longValue(),
-                request.getChoiceId() != null ? request.getChoiceId().longValue() : null,
-                request.getTextAnswer()
-        );
+        UserTest completedTest = userTestRepositoryService.save(userTest);
         
-        log.info("User {} updated answer for question {} in test {}", 
-                user.getId(), questionId, userTestId);
+        log.info("User {} submitted test {} with {} answers", 
+                user.getId(), request.getUserTestId(), request.getAnswers().size());
         
-        return userAnswerMapper.toUserAnswerResponse(userAnswer);
+        return SubmitTestResponse.builder()
+                .userTestId(completedTest.getId())
+                .isCompleted(completedTest.getIsCompleted())
+                .completedAt(completedTest.getCompletedAt())
+                .submittedAnswers(submittedAnswers)
+                .personalNotes(completedTest.getPersonalNotes())
+                .build();
     }
-
 
     private UserTest validateUserTestAccess(Integer userTestId, User user) {
         Optional<UserTest> userTestOpt = userTestRepositoryService.findById(userTestId);
