@@ -3,6 +3,9 @@ package com.hburak_dev.psk_full_stack.handler;
 import com.hburak_dev.psk_full_stack.exception.ActivationTokenException;
 import com.hburak_dev.psk_full_stack.exception.SessionNotFoundException;
 import com.hburak_dev.psk_full_stack.exception.TestTemplateNotFoundException;
+import com.hburak_dev.psk_full_stack.exception.UserTestNotFoundException;
+import com.hburak_dev.psk_full_stack.exception.UserTestAccessDeniedException;
+import com.hburak_dev.psk_full_stack.exception.UserTestAlreadyCompletedException;
 import jakarta.mail.MessagingException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -132,6 +135,45 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(TestTemplateNotFoundException.class)
     public ResponseEntity<ExceptionResponse> handleTestTemplateNotFoundException(TestTemplateNotFoundException exp) {
+        return ResponseEntity
+                .status(exp.getErrorCode().getHttpStatus())
+                .body(
+                        ExceptionResponse.builder()
+                                .businessErrorCode(exp.getErrorCode().getCode())
+                                .businessErrorDescription(exp.getErrorCode().getDescription())
+                                .error(exp.getMessage())
+                                .build()
+                );
+    }
+
+    @ExceptionHandler(UserTestNotFoundException.class)
+    public ResponseEntity<ExceptionResponse> handleUserTestNotFoundException(UserTestNotFoundException exp) {
+        return ResponseEntity
+                .status(exp.getErrorCode().getHttpStatus())
+                .body(
+                        ExceptionResponse.builder()
+                                .businessErrorCode(exp.getErrorCode().getCode())
+                                .businessErrorDescription(exp.getErrorCode().getDescription())
+                                .error(exp.getMessage())
+                                .build()
+                );
+    }
+
+    @ExceptionHandler(UserTestAccessDeniedException.class)
+    public ResponseEntity<ExceptionResponse> handleUserTestAccessDeniedException(UserTestAccessDeniedException exp) {
+        return ResponseEntity
+                .status(exp.getErrorCode().getHttpStatus())
+                .body(
+                        ExceptionResponse.builder()
+                                .businessErrorCode(exp.getErrorCode().getCode())
+                                .businessErrorDescription(exp.getErrorCode().getDescription())
+                                .error(exp.getMessage())
+                                .build()
+                );
+    }
+
+    @ExceptionHandler(UserTestAlreadyCompletedException.class)
+    public ResponseEntity<ExceptionResponse> handleUserTestAlreadyCompletedException(UserTestAlreadyCompletedException exp) {
         return ResponseEntity
                 .status(exp.getErrorCode().getHttpStatus())
                 .body(
