@@ -1,5 +1,10 @@
 package com.hburak_dev.psk_full_stack.test;
 
+import com.hburak_dev.psk_full_stack.testtemplate.TestTemplateServiceInterface;
+import com.hburak_dev.psk_full_stack.testtemplate.TestTemplateResponse;
+import com.hburak_dev.psk_full_stack.usertest.UserTestServiceInterface;
+import com.hburak_dev.psk_full_stack.usertest.UserTestListResponse;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
@@ -16,10 +21,13 @@ import java.util.List;
 @RestController
 @RequestMapping("v2/test")
 @RequiredArgsConstructor
-@Tag(name = "Test")
+@Tag(name = "Test Admin (Legacy)", description = "Legacy admin test endpoints - use /v2/admin/test-templates and /v2/admin/user-tests instead")
+@Deprecated
 public class TestControllerV2 {
 
     private final TestService testService;
+    private final TestTemplateServiceInterface testTemplateService;
+    private final UserTestServiceInterface userTestService;
 
      @PostMapping(value = "/upload-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<HttpStatus> uploadImage(@RequestParam("file") MultipartFile file,
@@ -76,27 +84,44 @@ public class TestControllerV2 {
     }
 
     @GetMapping("/user-tests/{userId}")
-    public ResponseEntity<List<UserTestForAdminResponse>> getAllTestsAssignedToUserV2(@PathVariable Integer userId) {
-        return ResponseEntity.ok(testService.getAllTestsAssignedToUserV2(userId));
+    @Operation(summary = "Get tests assigned to user", 
+               description = "DEPRECATED: Use GET /v2/admin/user-tests instead")
+    @Deprecated
+    public ResponseEntity<String> getAllTestsAssignedToUserV2(@PathVariable Integer userId) {
+        return ResponseEntity.ok("This endpoint is deprecated. Please use GET /v2/admin/user-tests to get all user tests.");
     }
 
     @PostMapping("/assign-test")
-    public ResponseEntity<Boolean> assignTestToUserV2(@RequestParam Integer testId, @RequestParam Integer userId, Authentication connectedUser) {
-        return testService.assignTestToUserV2(testId, userId, connectedUser);
+    @Operation(summary = "Assign test to user", 
+               description = "DEPRECATED: Use POST /v2/admin/user-tests/assign instead")
+    @Deprecated
+    public ResponseEntity<String> assignTestToUserV2(@RequestParam Integer testId, @RequestParam Integer userId, Authentication connectedUser) {
+        return ResponseEntity.ok("This endpoint is deprecated. Please use POST /v2/admin/user-tests/assign with proper request body.");
     }
 
     @DeleteMapping("/remove-test-from-user")
-    public ResponseEntity<Boolean> removeTestFromUserV2(@RequestParam Integer testId) {
-        return testService.removeTestFromUserV2(testId);
+    @Operation(summary = "Remove test from user", 
+               description = "DEPRECATED: Delete the UserTest record directly")
+    @Deprecated
+    public ResponseEntity<String> removeTestFromUserV2(@RequestParam Integer testId) {
+        return ResponseEntity.ok("This endpoint is deprecated. UserTest records should be managed through the new UserTest endpoints.");
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<Boolean> deleteTestV2(@RequestParam Integer testId) {
-        return testService.deleteTestV2(testId);
+    @Operation(summary = "Delete test", 
+               description = "DEPRECATED: Use DELETE /v2/admin/test-templates/{id} instead")
+    @Deprecated
+    public ResponseEntity<String> deleteTestV2(@RequestParam Integer testId) {
+        return ResponseEntity.ok("This endpoint is deprecated. Please use DELETE /v2/admin/test-templates/{id} to delete test templates.");
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<AdminTestResponse>> getAllTest() {
-        return ResponseEntity.ok(testService.getAllTest());
+    @Operation(summary = "Get all tests", 
+               description = "DEPRECATED: Use GET /v2/admin/test-templates instead")
+    @Deprecated
+    public ResponseEntity<List<TestTemplateResponse>> getAllTest() {
+        // Redirect to TestTemplate structure
+        List<TestTemplateResponse> responses = testTemplateService.getAllTestTemplates();
+        return ResponseEntity.ok(responses);
     }
 }

@@ -13,7 +13,7 @@ import java.util.List;
 @RestController
 @RequestMapping("v1/user-tests")
 @RequiredArgsConstructor
-@Tag(name = "User Test")
+@Tag(name = "User Test", description = "User endpoints for managing assigned tests")
 public class UserTestController {
 
     private final UserTestServiceInterface userTestService;

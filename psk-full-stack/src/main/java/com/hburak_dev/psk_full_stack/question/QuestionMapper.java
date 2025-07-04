@@ -92,4 +92,20 @@ public class QuestionMapper {
                                                 .collect(Collectors.toList()))
                                 .build();
         }
+
+        public QuestionResponse toQuestionResponse(Question question) {
+                return QuestionResponse.builder()
+                                .id(question.getId())
+                                .text(question.getText())
+                                .testTemplateId(question.getTestTemplateId())
+                                .orderIndex(question.getOrderIndex())
+                                .userAnswer(question.getUserAnswer())
+                                .testTemplateTitle(question.getTestTemplate() != null ? question.getTestTemplate().getTitle() : null)
+                                .choices(question.getChoices())
+                                .createdDate(question.getCreatedDate())
+                                .lastModifiedDate(question.getLastModifiedDate())
+                                .createdBy(question.getCreatedBy())
+                                .lastModifiedBy(question.getLastModifiedBy())
+                                .build();
+        }
 }

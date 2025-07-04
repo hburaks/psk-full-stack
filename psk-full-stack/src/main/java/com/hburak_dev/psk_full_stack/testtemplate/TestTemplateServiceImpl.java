@@ -2,6 +2,7 @@ package com.hburak_dev.psk_full_stack.testtemplate;
 
 import com.hburak_dev.psk_full_stack.exception.TestTemplateNotFoundException;
 import com.hburak_dev.psk_full_stack.handler.BusinessErrorCodes;
+import com.hburak_dev.psk_full_stack.question.QuestionServiceInterface;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ public class TestTemplateServiceImpl implements TestTemplateServiceInterface {
 
     private final TestTemplateRepository testTemplateRepository;
     private final TestTemplateMapper testTemplateMapper;
+    private final QuestionServiceInterface questionService;
 
     @Override
     @Transactional
@@ -72,12 +74,11 @@ public class TestTemplateServiceImpl implements TestTemplateServiceInterface {
 
     @Override
     @Transactional
-    public List<Object> getTestTemplateQuestions(Integer id) {
+    public List<QuestionResponse> getTestTemplateQuestions(Integer id) {
         if (!testTemplateRepository.existsById(id)) {
             throw new TestTemplateNotFoundException("Test template not found with id: " + id, BusinessErrorCodes.TEST_TEMPLATE_NOT_FOUND);
         }
-        // TODO: Implement question retrieval logic when Question entity is available
-        return List.of();
+        return questionService.getQuestionsByTestTemplate(id.longValue());
     }
 
     // Repository methods (keep existing functionality)

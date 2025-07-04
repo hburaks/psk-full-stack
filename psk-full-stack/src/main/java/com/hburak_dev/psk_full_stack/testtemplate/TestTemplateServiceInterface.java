@@ -1,5 +1,7 @@
 package com.hburak_dev.psk_full_stack.testtemplate;
 
+import com.hburak_dev.psk_full_stack.question.QuestionResponse;
+
 import java.util.List;
 
 public interface TestTemplateServiceInterface {
@@ -14,5 +16,5 @@ public interface TestTemplateServiceInterface {
 
     void deleteTestTemplate(Integer id);
 
-    List<Object> getTestTemplateQuestions(Integer id);
+    List<QuestionResponse> getTestTemplateQuestions(Integer id);
 }

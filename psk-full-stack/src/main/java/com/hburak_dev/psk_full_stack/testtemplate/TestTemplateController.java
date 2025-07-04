@@ -1,5 +1,6 @@
 package com.hburak_dev.psk_full_stack.testtemplate;
 
+import com.hburak_dev.psk_full_stack.question.QuestionResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +13,7 @@ import java.util.List;
 @RestController
 @RequestMapping("v2/admin/test-templates")
 @RequiredArgsConstructor
-@Tag(name = "Test Template Admin")
+@Tag(name = "Test Template Admin", description = "Admin endpoints for managing test templates")
 public class TestTemplateController {
 
     private final TestTemplateServiceInterface testTemplateService;
@@ -56,9 +57,10 @@ public class TestTemplateController {
     }
 
     @GetMapping("/{id}/questions")
-    @Operation(summary = "Get test template questions")
-    public ResponseEntity<List<Object>> getTestTemplateQuestions(@PathVariable Integer id) {
-        List<Object> questions = testTemplateService.getTestTemplateQuestions(id);
+    @Operation(summary = "Get test template questions", 
+               description = "Get all questions for a test template ordered by order index")
+    public ResponseEntity<List<QuestionResponse>> getTestTemplateQuestions(@PathVariable Integer id) {
+        List<QuestionResponse> questions = testTemplateService.getTestTemplateQuestions(id);
         return ResponseEntity.ok(questions);
     }
 }
