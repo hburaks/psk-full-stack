@@ -18,7 +18,10 @@ public enum BusinessErrorCodes {
     TEST_TEMPLATE_NOT_FOUND(308, NOT_FOUND, "Test şablonu bulunamadı"),
     USER_TEST_NOT_FOUND(309, NOT_FOUND, "Kullanıcı testi bulunamadı"),
     USER_TEST_ACCESS_DENIED(310, FORBIDDEN, "Bu teste erişim yetkiniz bulunmamaktadır"),
-    USER_TEST_ALREADY_COMPLETED(311, BAD_REQUEST, "Test zaten tamamlanmış");
+    USER_TEST_ALREADY_COMPLETED(311, BAD_REQUEST, "Test zaten tamamlanmış"),
+    QUESTION_NOT_FOUND(312, NOT_FOUND, "Soru bulunamadı"),
+    INVALID_ANSWER_FORMAT(313, BAD_REQUEST, "Geçersiz cevap formatı"),
+    ANSWER_NOT_FOUND(314, NOT_FOUND, "Cevap bulunamadı");
 
     @Getter
     private final int code;
