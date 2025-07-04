@@ -2,6 +2,7 @@ package com.hburak_dev.psk_full_stack.handler;
 
 import com.hburak_dev.psk_full_stack.exception.ActivationTokenException;
 import com.hburak_dev.psk_full_stack.exception.SessionNotFoundException;
+import com.hburak_dev.psk_full_stack.exception.TestTemplateNotFoundException;
 import jakarta.mail.MessagingException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -127,6 +128,19 @@ public class GlobalExceptionHandler {
                 .error("Session Not Found")
                 .build();
         return new ResponseEntity<>(response, BAD_REQUEST);
+    }
+
+    @ExceptionHandler(TestTemplateNotFoundException.class)
+    public ResponseEntity<ExceptionResponse> handleTestTemplateNotFoundException(TestTemplateNotFoundException exp) {
+        return ResponseEntity
+                .status(exp.getErrorCode().getHttpStatus())
+                .body(
+                        ExceptionResponse.builder()
+                                .businessErrorCode(exp.getErrorCode().getCode())
+                                .businessErrorDescription(exp.getErrorCode().getDescription())
+                                .error(exp.getMessage())
+                                .build()
+                );
     }
 
 }
