@@ -41,18 +41,6 @@ services:
       - key: THERAPIST_EMAIL
         sync: true
 
-  - type: web
-    name: psk-frontend
-    env: docker
-    plan: free
-    rootDir: psk-ui
-    dockerfilePath: Dockerfile
-    buildCommand: docker build -t psk-frontend .
-    autoDeploy: false
-    envVars:
-      - key: API_URL
-        sync: true
-
 databases:
   - name: psk-db
     region: frankfurt
