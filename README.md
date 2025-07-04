@@ -2,7 +2,7 @@
 
 A secure, full-featured web platform for psychologists to manage sessions, patients, and assessments — built using **Spring Boot**, **PostgreSQL**, and **Angular**.
 
-## 🚀 Overview
+## Overview
 
 This application allows psychologists and clients to:
 - Manage appointment bookings (integrated with Google Calendar),
@@ -15,16 +15,16 @@ This application allows psychologists and clients to:
 
 ---
 
-## 🧐 Core Features
+## Core Features
 
-### 👩‍⚕️ Frontend — Angular
+### Frontend — Angular
 - **Modular UI** with feature-based modules: Auth, Blog, Session, Test, User, Admin.
 - **API Client Layer** to interact with backend services.
 - **JWT Authentication** with protected routes for users and admins.
 - **Role-based Access Control** and dynamic navigation.
 - **Responsive Design** using Angular Material & TailwindCSS.
 
-### ⚙️ Backend — Spring Boot (Java)
+### Backend — Spring Boot (Java)
 - **RESTful API** with secure, versioned endpoints.
 - **Spring Security** with JWT-based auth and filter chains.
 - **Layered Architecture** (Controller, Service, Repository).
@@ -40,7 +40,7 @@ This application allows psychologists and clients to:
 
 ---
 
-## 🔐 Security
+## Security
 
 - **Spring Security + JWT** for stateless auth.
 - **Role-based authorization** (Admin, Psychologist, Client).
@@ -49,7 +49,7 @@ This application allows psychologists and clients to:
 
 ---
 
-## 🔧 DevOps & Deployment
+## DevOps & Deployment
 
 - **Dockerized** frontend and backend.
 - **GitHub Actions** for CI/CD pipelines.
@@ -58,14 +58,14 @@ This application allows psychologists and clients to:
 
 ---
 
-## 📡 External Integrations
+## External Integrations
 
 - **Google Calendar API** – Automatically creates session events for appointments.
 - **SMTP Email** – Sends verification and reminder emails via an external provider.
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 psk-full-stack/
@@ -112,7 +112,7 @@ psk-full-stack/
 
 ---
 
-## 🛠️ Technologies Used
+## Technologies Used
 
 | Layer         | Tech Stack                                      |
 |---------------|--------------------------------------------------|
@@ -125,7 +125,7 @@ psk-full-stack/
 
 ---
 
-## 👤 Author
+## Author
 
 **Hasan Burak Songur**  
 📍 İzmir, Türkiye  
@@ -134,12 +134,12 @@ psk-full-stack/
 
 ---
 
-## 📊 Note
+## Note
 
 This project was developed as part of a side effort to improve full-stack development skills while focusing on clean architecture, testable code, and secure system design in a real-world business domain.
 
 ---
 
-## 📄 License
+## License
 
 MIT — feel free to use for educational purposes.
