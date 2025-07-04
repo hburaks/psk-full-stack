@@ -1,0 +1,131 @@
+erDiagram
+    BaseEntity {
+        int id PK
+        timestamp createdAt
+        timestamp updatedAt
+    }
+    
+    User {
+        int id PK
+        string firstname
+        string lastname
+        string email
+        string password
+        string phoneNumber
+        string birthYear
+        boolean accountLocked
+        boolean enabled
+    }
+    
+    TestTemplate {
+        int id PK
+        string title
+        string subTitle
+        string imageUrl
+        boolean isActive
+        int createdBy FK "Admin user who created this template"
+    }
+    
+    UserTest {
+        int id PK
+        int userId FK
+        int testTemplateId FK
+        timestamp assignedAt
+        timestamp completedAt
+        boolean isCompleted
+        int assignedBy FK "Admin who assigned this test"
+        string personalNotes
+    }
+    
+    Question {
+        int id PK
+        string text
+        enum answerType
+        int testTemplateId FK
+        int orderIndex
+    }
+    
+    Choice {
+        int id PK
+        string text
+        enum answerType
+        int questionId FK
+        int orderIndex
+    }
+    
+    UserAnswer {
+        int id PK
+        int userTestId FK
+        int questionId FK
+        int choiceId FK "nullable for open-ended questions"
+        string textAnswer "nullable for multiple choice"
+        timestamp answeredAt
+    }
+    
+    Session {
+        int id PK
+        timestamp date
+        int userId FK
+        enum sessionStatus
+        string noteForUser
+        string noteForPsychologist
+        boolean isSessionPaid
+        boolean isMock
+        string sessionLink
+        string googleEventId
+    }
+    
+    Comment {
+        int id PK
+        int score
+        string title
+        string text
+        string imageUrl
+        int userTestId FK
+        int commentedBy FK "Psychologist who commented"
+    }
+    
+    Role {
+        int id PK
+        string name
+    }
+    
+    UserRole {
+        int userId FK
+        int roleId FK
+    }
+    
+    Token {
+        int id PK
+        string token
+        timestamp createdAt
+        timestamp expiresAt
+        timestamp validatedAt
+        int userId FK
+    }
+    
+    Blog {
+        int id PK
+        string title
+        string subTitle
+        string text
+        boolean shareable
+        string imageFileName
+    }
+
+    %% Relationships
+    User ||--o{ UserTest : "has assigned tests"
+    TestTemplate ||--o{ UserTest : "used in assignments"
+    TestTemplate ||--o{ Question : "contains"
+    Question ||--o{ Choice : "has options"
+    UserTest ||--o{ UserAnswer : "contains answers"
+    UserTest ||--o{ Comment : "receives feedback"
+    User ||--o{ Session : "schedules"
+    User ||--o{ Token : "has tokens"
+    User ||--o{ UserRole : "has roles"
+    Role ||--o{ UserRole : "assigned to users"
+    Question ||--o{ UserAnswer : "answered in"
+    Choice ||--o{ UserAnswer : "selected as answer"
+    User ||--o{ TestTemplate : "creates (admin)"
+    User ||--o{ UserTest : "assigns (admin)"
+    User ||--o{ Comment : "writes (psychologist)"
