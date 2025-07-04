@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  apiUrl: 'process.env.API_URL',
+  apiUrl: '__API_URL__',
   defaultLanguage: 'tr',
   supportedLanguages: ['en', 'tr'],
 };

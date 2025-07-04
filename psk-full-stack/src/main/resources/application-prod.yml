@@ -32,15 +32,15 @@ application:
       secret-key: ${JWT_SECRET_KEY}
       expiration: 86400000
       refresh-token:
-        expiration: 604800000
+        expiration: 604800001
   mailing:
     frontend:
-      activation-url: https://psk-frontend-mwqu.onrender.com/activate-account
+      activation-url: https://psk-full-stack.vercel.app/activate-account
   file:
     uploads:
       photos-output-path: /tmp/uploads
   cors:
-    origins: https://psk-frontend-mwqu.onrender.com
+    origins: https://psk-full-stack-dek1m6p8f-hburaks-projects.vercel.app,https://psk-full-stack.vercel.app/
 server:
   port: 8088 
 google:
