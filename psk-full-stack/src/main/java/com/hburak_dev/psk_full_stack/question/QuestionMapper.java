@@ -2,7 +2,6 @@ package com.hburak_dev.psk_full_stack.question;
 
 import com.hburak_dev.psk_full_stack.choice.Choice;
 import com.hburak_dev.psk_full_stack.choice.ChoiceMapper;
-import com.hburak_dev.psk_full_stack.test.Test;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -35,7 +34,7 @@ public class QuestionMapper {
                                 .build();
         }
 
-        public Question toQuestion(PublicTestQuestionRequest publicTestQuestionRequest, Integer userId, Test test) {
+        public Question toQuestion(PublicTestQuestionRequest publicTestQuestionRequest, Integer userId) {
                 Question question = new Question();
 
                 if (publicTestQuestionRequest.getId() == null) {
@@ -66,7 +65,6 @@ public class QuestionMapper {
                                 question.setId(publicTestQuestionRequest.getId());
                         }
 
-                        question.setTest(test);
 
                 }
 

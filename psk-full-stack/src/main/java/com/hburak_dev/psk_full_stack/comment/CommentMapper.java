@@ -1,7 +1,5 @@
 package com.hburak_dev.psk_full_stack.comment;
 
-import java.util.Arrays;
-import com.hburak_dev.psk_full_stack.test.Test;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -24,7 +22,7 @@ public class CommentMapper {
                 .build();
     }
 
-    public Comment toComment(AdminTestCommentRequest adminTestCommentRequest, Test test) {
+    public Comment toComment(AdminTestCommentRequest adminTestCommentRequest) {
         Comment comment = Comment.builder().build();
 
         if (adminTestCommentRequest.getText() != null) {
@@ -47,7 +45,6 @@ public class CommentMapper {
             comment.setScore(adminTestCommentRequest.getScore());
         }
 
-        comment.setTests(Arrays.asList(test));
 
         return comment;
     }
