@@ -6,10 +6,14 @@ import { NgModule, ModuleWithProviders, SkipSelf, Optional } from '@angular/core
 import { HttpClient } from '@angular/common/http';
 import { ApiConfiguration, ApiConfigurationParams } from './api-configuration';
 
-import { TestService } from './services/test.service';
 import { BlogService } from './services/blog.service';
+import { TestTemplateAdminService } from './services/test-template-admin.service';
+import { QuestionAdminService } from './services/question-admin.service';
 import { UserService } from './services/user.service';
 import { SessionControllerV2Service } from './services/session-controller-v-2.service';
+import { UserTestAdminService } from './services/user-test-admin.service';
+import { UserAnswerService } from './services/user-answer.service';
+import { UserTestService } from './services/user-test.service';
 import { SessionControllerService } from './services/session-controller.service';
 import { AuthenticationService } from './services/authentication.service';
 import { SessionControllerV3Service } from './services/session-controller-v-3.service';
@@ -23,10 +27,14 @@ import { FileControllerService } from './services/file-controller.service';
   exports: [],
   declarations: [],
   providers: [
-    TestService,
     BlogService,
+    TestTemplateAdminService,
+    QuestionAdminService,
     UserService,
     SessionControllerV2Service,
+    UserTestAdminService,
+    UserAnswerService,
+    UserTestService,
     SessionControllerService,
     AuthenticationService,
     SessionControllerV3Service,
