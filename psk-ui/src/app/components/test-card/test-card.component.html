@@ -12,7 +12,7 @@
       </div>
       <a *ngIf="!isEditPage" href="test/{{currentData.id}}" class="btn btn-outline-primary btn-test">Teste Başla</a>
       <div *ngIf="isEditPage" class="d-flex justify-content-between w-100">
-        <button (click)="testTemplate ? editTestTemplate() : editTest()" class="btn btn-outline-primary">Düzenle</button>
+        <button (click)="editTestTemplate()" class="btn btn-outline-primary">Düzenle</button>
         <button type="button" class="btn btn-primary btn-primary-custom" data-bs-toggle="modal"
           [attr.data-bs-target]="'#testModal' + currentData.id">
           Kaldır
@@ -35,7 +35,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Vazgeç</button>
-        <button data-bs-dismiss="modal" (click)="testTemplate ? deleteTestTemplate() : deleteTest()" type="button" class="btn btn-primary">Kaldır</button>
+        <button data-bs-dismiss="modal" (click)="deleteTestTemplate()" type="button" class="btn btn-primary">Kaldır</button>
       </div>
     </div>
   </div>

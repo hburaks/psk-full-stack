@@ -1,11 +1,8 @@
 <div class="page-content container">
   <app-user-nav-underline></app-user-nav-underline>
   <div *ngIf="isActiveItem(UserNavItems.MY_UPCOMING_SESSION)">
-    <app-my-upcoming-session *ngIf="selectedTest === null && selectedUserTest === null"
-      (startTestEvent)="startTest($event)" 
+    <app-my-upcoming-session *ngIf="selectedUserTest === null"
       (startUserTestEvent)="startUserTest($event)"></app-my-upcoming-session>
-    <app-user-test-card-detail *ngIf="selectedTest !== null" [testCard]="selectedTest"
-      (onCompleteTest)="onCompleteTest()"></app-user-test-card-detail>
     <app-user-test-detail *ngIf="selectedUserTest !== null" [userTestSummary]="selectedUserTest"
       (onCompleteTest)="onCompleteTest()"></app-user-test-detail>
   </div>

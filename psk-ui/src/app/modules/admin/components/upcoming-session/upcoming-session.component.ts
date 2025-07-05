@@ -1,9 +1,8 @@
 import { Component, Input } from '@angular/core';
 import { SessionResponseV2 } from 'src/app/services/models/session-response-v-2';
-import { UserTestForAdminResponse } from 'src/app/services/models/user-test-for-admin-response';
-import { TestService, TestTemplateAdminService, UserTestAdminService } from 'src/app/services/services';
+import { TestTemplateAdminService, UserTestAdminService } from 'src/app/services/services';
 import { SessionControllerV2Service } from 'src/app/services/services/session-controller-v-2.service';
-import { PublicTestResponse, UserWithIncomingSessionResponse, TestTemplateResponse, UserTestListResponse } from 'src/app/services/models';
+import { UserWithIncomingSessionResponse, TestTemplateResponse, UserTestListResponse } from 'src/app/services/models';
 
 @Component({
   selector: 'app-upcoming-session',
@@ -21,9 +20,8 @@ export class UpcomingSessionComponent {
   bindingNoteForUser: string = '';
   bindingNoteForPsychologist: string = '';
 
-  testResults: UserTestForAdminResponse[] = [];
+  testResults: UserTestListResponse[] = [];
 
-  publicTests: PublicTestResponse[] = [];
   testTemplates: TestTemplateResponse[] = [];
 
   isAddingTestToUser: boolean = false;
@@ -42,7 +40,7 @@ export class UpcomingSessionComponent {
     this.getUpcomingSession();
   }
 
-  receiveAddedTest(test: UserTestForAdminResponse | null) {
+  receiveAddedTest(test: UserTestListResponse | null) {
     if (test) {
       this.testResults = [...this.testResults, test];
     }
@@ -50,7 +48,6 @@ export class UpcomingSessionComponent {
 
   constructor(
     private sessionControllerV2Service: SessionControllerV2Service,
-    private testService: TestService,
     private testTemplateAdminService: TestTemplateAdminService,
     private userTestAdminService: UserTestAdminService
   ) {}
@@ -97,8 +94,8 @@ export class UpcomingSessionComponent {
   }
 
   getTestResultOfUser(userId: number) {
-    this.testService
-      .getAllTestsAssignedToUserV2({ userId: userId })
+    this.userTestAdminService
+      .getAllUserTests()
       .subscribe((result) => {
         if (result.length > 0) {
           this.testResults = result;
@@ -117,22 +114,10 @@ export class UpcomingSessionComponent {
   }
 
   addTestToUser() {
-    // Load both legacy tests and new test templates
     this.testTemplateAdminService.getAllTestTemplates().subscribe({
       next: (templates) => {
         this.testTemplates = templates;
-        // Also load legacy tests for backward compatibility
-        this.testService.getAllPublicTests().subscribe({
-          next: (tests) => {
-            this.publicTests = tests;
-            this.isAddingTestToUser = true;
-          },
-          error: (error) => {
-            // If legacy tests fail, continue with just templates
-            this.publicTests = [];
-            this.isAddingTestToUser = true;
-          },
-        });
+        this.isAddingTestToUser = true;
       },
       error: (error) => {
         this.toastErrorMessage = 'Test şablonları getirilirken bir hata oluştu';

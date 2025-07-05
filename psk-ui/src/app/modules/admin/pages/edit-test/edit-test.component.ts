@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { PublicTestResponse, TestTemplateResponse } from 'src/app/services/models';
-import { TestService, TestTemplateAdminService } from 'src/app/services/services';
+import { TestTemplateResponse } from 'src/app/services/models';
+import { TestTemplateAdminService } from 'src/app/services/services';
 
 @Component({
   selector: 'app-edit-test',
@@ -9,15 +9,9 @@ import { TestService, TestTemplateAdminService } from 'src/app/services/services
 })
 export class EditTestComponent {
   isEditingTest: boolean = false;
-  testToEdit: PublicTestResponse | null = null;
   testTemplateToEdit: TestTemplateResponse | null = null;
 
-  constructor(private testService: TestService, private testTemplateAdminService: TestTemplateAdminService) {}
-
-  editTest(test: PublicTestResponse) {
-    this.testToEdit = test;
-    this.isEditingTest = true;
-  }
+  constructor(private testTemplateAdminService: TestTemplateAdminService) {}
 
   editTestTemplate(testTemplate: TestTemplateResponse) {
     this.testTemplateToEdit = testTemplate;
@@ -37,7 +31,6 @@ export class EditTestComponent {
 
   closeModal() {
     this.isEditingTest = false;
-    this.testToEdit = null;
     this.testTemplateToEdit = null;
   }
 }

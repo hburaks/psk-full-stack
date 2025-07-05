@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {AdminTestResponse, TestTemplateResponse} from 'src/app/services/models';
+import {TestTemplateResponse} from 'src/app/services/models';
 import {FileControllerService} from 'src/app/services/services';
 
 @Component({
@@ -8,11 +8,9 @@ import {FileControllerService} from 'src/app/services/services';
   styleUrls: ['./test-card.component.scss'],
 })
 export class TestCardComponent implements OnInit {
-  @Input() testCard!: AdminTestResponse;
   @Input() testTemplate!: TestTemplateResponse;
+  @Input() testCard!: TestTemplateResponse; // Legacy property for backward compatibility
   @Input() isEditPage: boolean = false;
-  @Output() editTestEvent = new EventEmitter<AdminTestResponse>();
-  @Output() deleteTestEvent = new EventEmitter<AdminTestResponse>();
   @Output() editTestTemplateEvent = new EventEmitter<TestTemplateResponse>();
   @Output() deleteTestTemplateEvent = new EventEmitter<TestTemplateResponse>();
 
@@ -31,23 +29,24 @@ export class TestCardComponent implements OnInit {
     }
   }
 
-  editTest() {
-    this.editTestEvent.emit(this.testCard);
-  }
-
-  deleteTest() {
-    this.deleteTestEvent.emit(this.testCard);
-  }
-
   editTestTemplate() {
-    this.editTestTemplateEvent.emit(this.testTemplate);
+    this.editTestTemplateEvent.emit(this.testTemplate || this.testCard);
   }
 
   deleteTestTemplate() {
-    this.deleteTestTemplateEvent.emit(this.testTemplate);
+    this.deleteTestTemplateEvent.emit(this.testTemplate || this.testCard);
   }
 
   get currentData() {
     return this.testTemplate || this.testCard;
+  }
+
+  // Legacy methods for backward compatibility
+  editTest() {
+    this.editTestTemplate();
+  }
+
+  deleteTest() {
+    this.deleteTestTemplate();
   }
 }

@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { MyTestResponse, UserTestListResponse } from 'src/app/services/models';
+import { UserTestListResponse } from 'src/app/services/models';
 
 @Component({
   selector: 'app-user-test-card',
@@ -7,34 +7,28 @@ import { MyTestResponse, UserTestListResponse } from 'src/app/services/models';
   styleUrls: ['./user-test-card.component.scss'],
 })
 export class UserTestCardComponent {
-  @Input() testCard!: MyTestResponse;
   @Input() userTest!: UserTestListResponse;
 
-  @Output() startTestEvent = new EventEmitter<MyTestResponse>();
   @Output() startUserTestEvent = new EventEmitter<UserTestListResponse>();
-
-  startTest() {
-    this.startTestEvent.emit(this.testCard);
-  }
 
   startUserTest() {
     this.startUserTestEvent.emit(this.userTest);
   }
 
   get currentTest() {
-    return this.userTest || this.testCard;
+    return this.userTest;
   }
 
   get testTitle() {
-    return this.userTest?.testTemplateTitle || this.testCard?.title || 'Untitled Test';
+    return this.userTest?.testTemplateTitle || 'Untitled Test';
   }
 
   get testSubTitle() {
-    return this.userTest?.testTemplateSubTitle || this.testCard?.subTitle || '';
+    return this.userTest?.testTemplateSubTitle || '';
   }
 
   get testImageUrl() {
-    return this.userTest?.testTemplateImageUrl || this.testCard?.imageUrl;
+    return this.userTest?.testTemplateImageUrl;
   }
 
   get isCompleted() {

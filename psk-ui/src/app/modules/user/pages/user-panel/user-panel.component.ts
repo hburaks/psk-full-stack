@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import { UserNavItems } from 'src/app/components/user-nav-underline/user-nav-underline-enum';
-import { MyTestResponse, UserTestListResponse } from 'src/app/services/models';
+import { UserTestListResponse } from 'src/app/services/models';
 import { HeaderService } from '../../service/header.service';
 
 @Component({
@@ -10,30 +10,19 @@ import { HeaderService } from '../../service/header.service';
 })
 export class UserPanelComponent {
   selectedNavItem: string;
-  selectedTest: MyTestResponse | null = null;
   selectedUserTest: UserTestListResponse | null = null;
 
   UserNavItems = UserNavItems;
-
-
 
   constructor(private headerService: HeaderService) {
     this.selectedNavItem = this.headerService.getActiveItem();
   }
 
-
-  startTest(test: MyTestResponse) {
-    this.selectedTest = test;
-    this.selectedUserTest = null;
-  }
-
   startUserTest(userTest: UserTestListResponse) {
     this.selectedUserTest = userTest;
-    this.selectedTest = null;
   }
 
   onCompleteTest() {
-    this.selectedTest = null;
     this.selectedUserTest = null;
   }
 

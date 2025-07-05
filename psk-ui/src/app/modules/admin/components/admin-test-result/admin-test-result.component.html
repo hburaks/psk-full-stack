@@ -1,23 +1,22 @@
 <div class="test-circle mx-auto">
-  <img *ngIf="testResult?.imageUrl" [src]="testResult?.imageUrl" alt="Test image"
+  <img *ngIf="testResult?.testTemplateImageUrl" [src]="testResult?.testTemplateImageUrl" alt="Test image"
     style="width: 100%; height: 100%; object-fit: cover;">
 </div>
 <div class="test-result-card">
   <div class="card-body test-card-body test-card-body-large d-flex flex-column justify-content-between">
-    <h5 class="card-title text-center">{{testResult?.title}}</h5>
-    <div *ngIf="testResult?.answerDistribution">
-      <p class="card-text text-center text-secondary">{{formatAnswerDistribution(testResult?.answerDistribution)}}</p>
+    <h5 class="card-title text-center">{{testResult?.testTemplateTitle}}</h5>
+    <div *ngIf="testResult?.isCompleted">
+      <p class="card-text text-center text-secondary">Test tamamlandı: {{testResult?.completedAt | date:'dd.MM.yyyy HH:mm'}}</p>
     </div>
   </div>
 </div>
-<div class="row mx-0 my-2 py-4 px-md-5 px-sm-2" *ngFor="let question of testResult?.questions; let i = index">
-  <div class="col">
-    <p><span class="fw-bold">{{i + 1}}- </span>{{question.text}}</p>
-    <div class="simple alert" [ngClass]="{
-          'alert-primary': question.userAnswer === getAnswerType(j),
-          'alert-dark': question.userAnswer !== getAnswerType(j)
-        }" *ngFor="let choice of question.choices; let j = index">
-      {{j === 0 ? 'A) ' : j === 1 ? 'B) ' : j === 2 ? 'C) ' : j === 3 ? 'D) ' : 'E) '}}{{choice.text}}
-    </div>
+<!-- Question details would require separate API call to get test answers -->
+<div class="row mx-0 my-2 py-4 px-md-5 px-sm-2">
+  <div class="col text-center text-muted">
+    <p>Test detayları için ayrı bir API çağrısı gerekli.</p>
+    <p><strong>Test ID:</strong> {{testResult?.id}}</p>
+    <p><strong>Kullanıcı:</strong> {{testResult?.userFirstname}} {{testResult?.userLastname}}</p>
+    <p><strong>E-posta:</strong> {{testResult?.userEmail}}</p>
+    <p *ngIf="testResult?.personalNotes"><strong>Kişisel Notlar:</strong> {{testResult?.personalNotes}}</p>
   </div>
 </div>

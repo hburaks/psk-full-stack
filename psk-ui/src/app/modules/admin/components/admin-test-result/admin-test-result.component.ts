@@ -1,6 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { TestService } from 'src/app/custom-services/test/test.service';
-import { UserTestForAdminResponse } from 'src/app/services/models/user-test-for-admin-response';
+import { UserTestListResponse } from 'src/app/services/models/user-test-list-response';
 
 @Component({
   selector: 'app-admin-test-result',
@@ -8,7 +7,7 @@ import { UserTestForAdminResponse } from 'src/app/services/models/user-test-for-
   styleUrls: ['./admin-test-result.component.scss'],
 })
 export class AdminTestResultComponent {
-  @Input() testResult: UserTestForAdminResponse | null = null;
+  @Input() testResult: UserTestListResponse | null = null;
 
   selectedChoices: string[] = [
     'ANSWER_A',
@@ -17,10 +16,12 @@ export class AdminTestResultComponent {
     'ANSWER_D',
     'ANSWER_E',
   ];
-  constructor(private testService: TestService) {}
+  constructor() {}
 
   formatAnswerDistribution(answerDistribution: any) {
-    return this.testService.formatAnswerDistribution(answerDistribution);
+    // Legacy formatting method - simplified implementation
+    if (!answerDistribution) return {};
+    return answerDistribution;
   }
 
   getAnswerType(index: number): string {

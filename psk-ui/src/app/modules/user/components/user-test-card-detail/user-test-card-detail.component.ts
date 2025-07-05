@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { MyTestResponse } from 'src/app/services/models';
-import { TestService } from 'src/app/services/services';
+import { UserTestListResponse } from 'src/app/services/models';
 
 // Legacy interface for backward compatibility
 interface LegacyAnswerQuestionRequest {
@@ -14,9 +13,9 @@ interface LegacyAnswerQuestionRequest {
   styleUrls: ['./user-test-card-detail.component.scss'],
 })
 export class UserTestCardDetailComponent {
-  constructor(private testService: TestService) {}
+  constructor() {}
 
-  @Input() testCard!: MyTestResponse;
+  @Input() testCard!: UserTestListResponse;
 
   @Output() onCompleteTest = new EventEmitter<void>();
 

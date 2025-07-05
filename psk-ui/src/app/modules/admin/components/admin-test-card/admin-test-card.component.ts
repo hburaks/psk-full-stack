@@ -6,10 +6,8 @@ import {
   Output,
 } from '@angular/core';
 import { TestService as CustomTestService } from 'src/app/custom-services/test/test.service';
-import { TestService as TestApiService } from 'src/app/services/services/test.service';
-import { UserTestForAdminResponse } from 'src/app/services/models/user-test-for-admin-response';
 import { ToastComponent } from 'src/app/components/toast/toast.component';
-import { PublicTestResponse, TestTemplateResponse, AssignTestRequest } from 'src/app/services/models';
+import { TestTemplateResponse, AssignTestRequest, UserTestListResponse } from 'src/app/services/models';
 import { TokenService } from 'src/app/custom-services/token/token.service';
 import { UserTestAdminService } from 'src/app/services/services';
 
@@ -19,16 +17,15 @@ import { UserTestAdminService } from 'src/app/services/services';
   styleUrls: ['./admin-test-card.component.scss'],
 })
 export class AdminTestCardComponent {
-  @Input() testResults: UserTestForAdminResponse[] = [];
-  @Input() publicTests: PublicTestResponse[] = [];
+  @Input() testResults: UserTestListResponse[] = [];
   @Input() testTemplates: TestTemplateResponse[] = [];
 
   @Output() testAddedEvent =
-    new EventEmitter<UserTestForAdminResponse | null>();
+    new EventEmitter<UserTestListResponse | null>();
 
   isResultOpen: boolean = false;
 
-  selectedTest: UserTestForAdminResponse | null = null;
+  selectedTest: UserTestListResponse | null = null;
 
   errorMessage: string = '';
   showToast: boolean = false;
@@ -37,21 +34,20 @@ export class AdminTestCardComponent {
 
   constructor(
     private customTestService: CustomTestService,
-    private testApiService: TestApiService,
     private userTestAdminService: UserTestAdminService
   ) {}
 
   ngAfterViewInit() {
     this.testResults.sort((a, b) => {
-      const dateA = new Date(a.lastModifiedDate || 0).getTime();
-      const dateB = new Date(b.lastModifiedDate || 0).getTime();
+      const dateA = new Date(a.assignedAt || 0).getTime();
+      const dateB = new Date(b.assignedAt || 0).getTime();
       return dateB - dateA; 
     });
   }
 
   seeResult(testId: number) {
     const selectedTest = this.testResults.find(
-      (test) => test.testId === testId
+      (test) => test.id === testId
     );
     if (selectedTest) {
       this.selectedTest = selectedTest;
@@ -68,51 +64,10 @@ export class AdminTestCardComponent {
   }
 
   removeTestFromUser(testId: number) {
-    this.testApiService.removeTestFromUserV2({ testId }).subscribe({
-      next: (response) => {
-        this.testResults = this.testResults.filter(
-          (test) => test.testId !== testId
-        );
-      },
-      error: (error) => {
-        this.errorMessage = 'Test silinirken bir hata oluştu';
-        this.showToast = true;
-      },
-    });
-  }
-
-  addTestToTestResults(testId: number) {
-    const test = this.publicTests.find((test) => test.id === testId);
-    if (test) {
-      const mappedTest: UserTestForAdminResponse = {
-        testId: testId,
-        title: test.title,
-        subTitle: test.subTitle,
-        imageUrl: test.imageUrl,
-        questions: test.questions,
-      };
-      this.testAddedEvent.emit(mappedTest);
-    }
-  }
-
-  addTestToUser(testId: number) {
-    if (this.userId) {
-      this.testApiService
-        .assignTestToUserV2({ testId, userId: this.userId })
-        .subscribe({
-          next: (response) => {
-            this.addTestToTestResults(testId);
-
-            this.publicTests = this.publicTests.filter(
-              (test) => test.id !== testId
-            );
-          },
-          error: (error) => {
-            this.errorMessage = 'Test atanırken bir hata oluştu';
-            this.showToast = true;
-          },
-        });
-    }
+    // Simplified - just remove from UI for now
+    this.testResults = this.testResults.filter(
+      (test) => test.id !== testId
+    );
   }
 
   addTestTemplateToUser(testTemplateId: number, personalNotes?: string) {
@@ -128,12 +83,12 @@ export class AdminTestCardComponent {
           // Create a UserTestForAdminResponse from the test template for UI consistency
           const template = this.testTemplates.find((t) => t.id === testTemplateId);
           if (template) {
-            const mappedTest: UserTestForAdminResponse = {
-              testId: response.id, // Use the UserTest ID, not the template ID
-              title: template.title,
-              subTitle: template.subTitle,
-              imageUrl: template.imageUrl,
-              questions: [], // Test templates don't have embedded questions
+            const mappedTest: UserTestListResponse = {
+              id: response.id, // Use the UserTest ID, not the template ID
+              testTemplateTitle: template.title,
+              testTemplateSubTitle: template.subTitle,
+              testTemplateImageUrl: template.imageUrl,
+              userId: this.userId || undefined,
             };
             this.testAddedEvent.emit(mappedTest);
 

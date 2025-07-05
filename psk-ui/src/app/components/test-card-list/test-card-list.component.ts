@@ -5,8 +5,8 @@ import {
   Input,
   Output,
 } from '@angular/core';
-import { AdminTestResponse, PublicTestResponse, TestTemplateResponse } from 'src/app/services/models';
-import { TestService, TestTemplateAdminService } from 'src/app/services/services';
+import { TestTemplateResponse } from 'src/app/services/models';
+import { TestTemplateAdminService } from 'src/app/services/services';
 import { debounceTime } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 
@@ -16,13 +16,11 @@ import { Subject } from 'rxjs';
   styleUrls: ['./test-card-list.component.scss'],
 })
 export class TestCardListComponent {
-  @Input() testCardList: PublicTestResponse[] = [];
+  @Input() testCardList: TestTemplateResponse[] = [];
 
-  adminTestList: AdminTestResponse[] = [];
   testTemplateList: TestTemplateResponse[] = [];
 
   @Input() isEditPage: boolean = false;
-  @Output() editTestEvent = new EventEmitter<AdminTestResponse>();
   @Output() editTestTemplateEvent = new EventEmitter<TestTemplateResponse>();
 
   @Output() addTestEvent = new EventEmitter<void>();
@@ -36,7 +34,7 @@ export class TestCardListComponent {
 
   private resizeSubject = new Subject<void>();
 
-  constructor(private testService: TestService, private testTemplateAdminService: TestTemplateAdminService) {
+  constructor(private testTemplateAdminService: TestTemplateAdminService) {
     this.resizeSubject
       .pipe(debounceTime(1000))
       .subscribe(() => this.updateScreenSize());
@@ -54,27 +52,8 @@ export class TestCardListComponent {
     this.resizeSubject.next();
   }
 
-  editTest(test: AdminTestResponse) {
-    this.editTestEvent.emit(test);
-  }
-
   editTestTemplate(testTemplate: TestTemplateResponse) {
     this.editTestTemplateEvent.emit(testTemplate);
-  }
-
-  deleteTest(test: AdminTestResponse) {
-    if (this.isEditPage) {
-      this.testService.deleteTestV2({ testId: test.id! }).subscribe({
-        next: () => {
-          this.adminTestList = this.adminTestList.filter(
-            (t) => t.id !== test.id
-          );
-        },
-        error: (err: any) => {
-          console.error('Error deleting test', err);
-        },
-      });
-    }
   }
 
   deleteTestTemplate(testTemplate: TestTemplateResponse) {
