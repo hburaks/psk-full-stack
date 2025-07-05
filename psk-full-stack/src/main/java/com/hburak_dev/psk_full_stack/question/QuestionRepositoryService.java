@@ -1,5 +1,6 @@
 package com.hburak_dev.psk_full_stack.question;
 
+import com.hburak_dev.psk_full_stack.choice.Choice;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

@@ -45,8 +45,8 @@ public class TestTemplateMapper {
                 .isActive(testTemplate.getIsActive())
                 .createdDate(testTemplate.getCreatedDate())
                 .lastModifiedDate(testTemplate.getLastModifiedDate())
-                .createdBy(testTemplate.getCreatedBy())
-                .lastModifiedBy(testTemplate.getLastModifiedBy())
+                .createdBy(testTemplate.getCreatedBy() != null ? testTemplate.getCreatedBy().toString() : null)
+                .lastModifiedBy(testTemplate.getLastModifiedBy() != null ? testTemplate.getLastModifiedBy().toString() : null)
                 .build();
     }
 }

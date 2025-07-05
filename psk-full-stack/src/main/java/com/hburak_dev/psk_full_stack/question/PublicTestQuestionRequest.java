@@ -1,6 +1,6 @@
 package com.hburak_dev.psk_full_stack.question;
 
-import com.hburak_dev.psk_full_stack.test.PublicChoiceRequest;
+import com.hburak_dev.psk_full_stack.choice.PublicChoiceRequest;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
