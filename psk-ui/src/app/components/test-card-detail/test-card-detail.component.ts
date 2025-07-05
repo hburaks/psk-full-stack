@@ -23,8 +23,13 @@ import {
   PublicTestResponse,
   AdminTestResponse,
   AdminTestCommentResponse,
+  TestTemplateResponse,
+  TestTemplateCreateRequest,
+  TestTemplateUpdateRequest,
+  QuestionResponse,
+  Choice,
 } from 'src/app/services/models';
-import { TestService } from 'src/app/services/services';
+import { TestService, TestTemplateAdminService, QuestionAdminService } from 'src/app/services/services';
 declare var bootstrap: any;
 
 @Component({
@@ -38,10 +43,12 @@ export class TestCardDetailComponent implements AfterViewInit {
 
   cardId: number = this.route.snapshot.params['id'];
   @Input() editableTestCard: AdminTestResponse | null = null;
+  @Input() editableTestTemplate: TestTemplateResponse | null = null;
 
   @Output() closeModalEvent = new EventEmitter<void>();
 
   updateTestCard: PublicTestRequest = {} as PublicTestRequest;
+  updateTestTemplate: TestTemplateUpdateRequest = {} as TestTemplateUpdateRequest;
 
   testCard: PublicTestResponse | null = null;
   selectedChoices: { [key: number]: number } = {};
@@ -57,19 +64,40 @@ export class TestCardDetailComponent implements AfterViewInit {
   selectedFile: File | null = null;
   @Input() imageUrl: string = '';
 
-  constructor(private route: ActivatedRoute, private testService: TestService) {
+  // Question management for test templates
+  templateQuestions: QuestionResponse[] = [];
+  showQuestionManagement: boolean = false;
+
+  constructor(
+    private route: ActivatedRoute, 
+    private testService: TestService, 
+    private testTemplateAdminService: TestTemplateAdminService,
+    private questionAdminService: QuestionAdminService
+  ) {
     this.cardId = this.route.snapshot.params['id'];
   }
 
   ngAfterViewInit() {
-    if (!this.editableTestCard && !this.isEditPage) {
+    if (!this.editableTestCard && !this.editableTestTemplate && !this.isEditPage) {
       this.getTestDetail();
     }
-    this.updateTestCard = {
-      title: this.editableTestCard?.title,
-      subTitle: this.editableTestCard?.subTitle,
-      isActive: this.editableTestCard?.isActive,
-    };
+    
+    if (this.editableTestCard) {
+      this.updateTestCard = {
+        title: this.editableTestCard?.title,
+        subTitle: this.editableTestCard?.subTitle,
+        isActive: this.editableTestCard?.isActive,
+      };
+    }
+    
+    if (this.editableTestTemplate) {
+      this.updateTestTemplate = {
+        title: this.editableTestTemplate?.title || '',
+        subTitle: this.editableTestTemplate?.subTitle,
+        imageUrl: this.editableTestTemplate?.imageUrl,
+        isActive: this.editableTestTemplate?.isActive,
+      };
+    }
   }
 
   getTestDetail() {
@@ -173,6 +201,13 @@ export class TestCardDetailComponent implements AfterViewInit {
   }
 
   saveOrUpdateTestInfo() {
+    // Handle TestTemplate save/update
+    if (this.editableTestTemplate) {
+      this.saveOrUpdateTestTemplateInfo();
+      return;
+    }
+    
+    // Handle legacy Test save/update
     if (this.editableTestCard?.id) {
       this.updateTestCard.testId = this.editableTestCard.id;
       if (
@@ -199,6 +234,104 @@ export class TestCardDetailComponent implements AfterViewInit {
     } else {
       this.saveTest();
     }
+  }
+
+  saveOrUpdateTestTemplateInfo() {
+    if (this.editableTestTemplate?.id) {
+      // UPDATE existing template
+      const params = {
+        id: this.editableTestTemplate.id,
+        body: this.updateTestTemplate,
+      };
+      this.testTemplateAdminService.updateTestTemplate(params).subscribe({
+        next: (response: TestTemplateResponse) => {
+          this.closeModalEvent.emit();
+        },
+        error: (err: any) => {
+          console.error('Error updating test template', err);
+        },
+      });
+    } else {
+      // CREATE new template
+      this.saveTestTemplate();
+    }
+  }
+
+  saveTestTemplate() {
+    const params = {
+      body: this.updateTestTemplate,
+    };
+    this.testTemplateAdminService.createTestTemplate(params).subscribe({
+      next: (response: TestTemplateResponse) => {
+        this.closeModalEvent.emit();
+      },
+      error: (err: any) => {
+        console.error('Error creating test template', err);
+      },
+    });
+  }
+
+  navigateToQuestionManagement() {
+    if (this.editableTestTemplate?.id) {
+      this.loadTemplateQuestions(this.editableTestTemplate.id);
+      this.showQuestionManagement = true;
+    }
+  }
+
+  loadTemplateQuestions(testTemplateId: number) {
+    this.questionAdminService.getQuestionsByTestTemplate({ testTemplateId }).subscribe({
+      next: (questions: QuestionResponse[]) => {
+        this.templateQuestions = questions || [];
+      },
+      error: (err: any) => {
+        console.error('Error loading template questions', err);
+      },
+    });
+  }
+
+  addTemplateQuestion() {
+    const newQuestion: QuestionResponse = {
+      text: '',
+      testTemplateId: this.editableTestTemplate?.id,
+      orderIndex: this.templateQuestions.length,
+      choices: [
+        { text: '', answerType: 'ANSWER_A' },
+        { text: '', answerType: 'ANSWER_B' },
+        { text: '', answerType: 'ANSWER_C' },
+        { text: '', answerType: 'ANSWER_D' },
+        { text: '', answerType: 'ANSWER_E' },
+      ],
+    };
+    this.templateQuestions.push(newQuestion);
+  }
+
+  removeTemplateQuestion(index: number) {
+    this.templateQuestions.splice(index, 1);
+  }
+
+  addTemplateChoice(questionIndex: number) {
+    const question = this.templateQuestions[questionIndex];
+    if (question.choices && question.choices.length < 5) {
+      const nextAnswerType = ['ANSWER_A', 'ANSWER_B', 'ANSWER_C', 'ANSWER_D', 'ANSWER_E'][question.choices.length] as Choice['answerType'];
+      question.choices.push({
+        text: '',
+        answerType: nextAnswerType,
+      });
+    }
+  }
+
+  removeTemplateChoice(questionIndex: number, choiceIndex: number) {
+    const question = this.templateQuestions[questionIndex];
+    if (question.choices && question.choices.length > 2) {
+      question.choices.splice(choiceIndex, 1);
+    }
+  }
+
+  saveTemplateQuestions() {
+    // Implementation for saving questions will depend on the API structure
+    // For now, just close the question management view
+    this.showQuestionManagement = false;
+    alert('Question saving functionality will be implemented based on the specific API requirements.');
   }
 
   saveTest() {

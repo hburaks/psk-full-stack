@@ -11,19 +11,39 @@
           </div>
           <div class="col-8 d-flex flex-column justify-content-center about-text">
             <ng-container *ngIf="isEditPage; else viewMode">
-              <input [(ngModel)]="updateTestCard!.title" class="form-control fs-5 fw-bold" placeholder="Başlık" />
-              <input [(ngModel)]="updateTestCard!.subTitle" class="form-control fw-light mt-2 text-secondary"
-                placeholder="Alt başlık" />
-              <div class="mt-2 d-flex align-items-start">
-                <p class="me-2">Aktiflik Durumu: </p>
-                <input type="checkbox" [(ngModel)]="updateTestCard!.isActive" class="form-check-input" />
-              </div>
-              <div *ngIf="isEditPage">
-                <button class="btn btn-primary mt-2" (click)="uploadImage()">Fotoğrafı Değiştir</button>
-              </div>
-              <div *ngIf="isEditPage" class="col-12 text-end">
-                <button class="btn btn-primary mt-4" (click)="saveOrUpdateTestInfo()">Test Bilgilerini Kaydet</button>
-              </div>
+              <!-- Test Template Edit Mode -->
+              <ng-container *ngIf="editableTestTemplate">
+                <input [(ngModel)]="updateTestTemplate!.title" class="form-control fs-5 fw-bold" placeholder="Başlık" />
+                <input [(ngModel)]="updateTestTemplate!.subTitle" class="form-control fw-light mt-2 text-secondary"
+                  placeholder="Alt başlık" />
+                <div class="mt-2 d-flex align-items-start">
+                  <p class="me-2">Aktiflik Durumu: </p>
+                  <input type="checkbox" [(ngModel)]="updateTestTemplate!.isActive" class="form-check-input" />
+                </div>
+                <div *ngIf="isEditPage">
+                  <button class="btn btn-primary mt-2" (click)="uploadImage()">Fotoğrafı Değiştir</button>
+                </div>
+                <div *ngIf="isEditPage" class="col-12 text-end">
+                  <button class="btn btn-primary mt-4" (click)="saveOrUpdateTestInfo()">Test Template Kaydet</button>
+                </div>
+              </ng-container>
+              
+              <!-- Legacy Test Card Edit Mode -->
+              <ng-container *ngIf="editableTestCard && !editableTestTemplate">
+                <input [(ngModel)]="updateTestCard!.title" class="form-control fs-5 fw-bold" placeholder="Başlık" />
+                <input [(ngModel)]="updateTestCard!.subTitle" class="form-control fw-light mt-2 text-secondary"
+                  placeholder="Alt başlık" />
+                <div class="mt-2 d-flex align-items-start">
+                  <p class="me-2">Aktiflik Durumu: </p>
+                  <input type="checkbox" [(ngModel)]="updateTestCard!.isActive" class="form-check-input" />
+                </div>
+                <div *ngIf="isEditPage">
+                  <button class="btn btn-primary mt-2" (click)="uploadImage()">Fotoğrafı Değiştir</button>
+                </div>
+                <div *ngIf="isEditPage" class="col-12 text-end">
+                  <button class="btn btn-primary mt-4" (click)="saveOrUpdateTestInfo()">Test Bilgilerini Kaydet</button>
+                </div>
+              </ng-container>
             </ng-container>
             <ng-template #viewMode>
               <p class="fs-5 fw-bold">{{testCard?.title}}</p>
@@ -33,7 +53,8 @@
         </div>
       </div>
     </div>
-    <div *ngIf="isEditPage">
+    <!-- Question Management - Only for legacy test cards -->
+    <div *ngIf="isEditPage && editableTestCard && !editableTestTemplate">
       <div class="row mx-0 my-2 py-4 px-md-5 px-sm-2"
         *ngFor="let question of editableTestCard?.questions; let i = index">
         <div class="col">
@@ -76,11 +97,73 @@
         <button class="btn btn-primary mt-4" (click)="updateTestQuestions()">Test Sorularını Kaydet</button>
       </div>
     </div>
-    <div class="row mx-0 mt-2 pt-4 px-md-5 px-sm-2" *ngIf="isEditPage">
+    
+    <!-- Test Template Question Management Navigation -->
+    <div *ngIf="isEditPage && editableTestTemplate && !showQuestionManagement" class="row mx-0 my-4 py-4 px-md-5 px-sm-2 border rounded">
+      <div class="col-12">
+        <h5 class="mb-3">Soru Yönetimi</h5>
+        <p class="text-muted">Bu test template'ı için soruları yönetebilirsiniz.</p>
+        <button class="btn btn-outline-primary me-2" (click)="navigateToQuestionManagement()">
+          Soruları Yönet
+        </button>
+        <button class="btn btn-outline-secondary" (click)="closeModalEvent.emit()">
+          Geri Dön
+        </button>
+      </div>
+    </div>
+
+    <!-- Test Template Question Management Interface -->
+    <div *ngIf="isEditPage && editableTestTemplate && showQuestionManagement" class="row mx-0 my-4 py-4 px-md-5 px-sm-2 border rounded">
+      <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h5 class="mb-0">Test Template Soruları</h5>
+          <button class="btn btn-outline-secondary btn-sm" (click)="showQuestionManagement = false">
+            ← Geri Dön
+          </button>
+        </div>
+        
+        <div *ngFor="let question of templateQuestions; let i = index" class="border rounded p-3 mb-3">
+          <div class="d-flex align-items-center mb-2">
+            <span class="me-2 fw-bold">{{i + 1}}.</span>
+            <input [(ngModel)]="question.text" class="form-control" placeholder="Soru metni" />
+            <button class="btn btn-outline-danger btn-sm ms-2" (click)="removeTemplateQuestion(i)">
+              Sil
+            </button>
+          </div>
+          
+          <div *ngFor="let choice of question.choices; let j = index" class="d-flex align-items-center mb-2 ms-3">
+            <span class="me-2">{{choice.answerType}}:</span>
+            <input [(ngModel)]="choice.text" class="form-control me-2" placeholder="Seçenek metni" />
+            <button *ngIf="question.choices && question.choices.length > 2" 
+                    class="btn btn-outline-danger btn-sm" 
+                    (click)="removeTemplateChoice(i, j)">
+              X
+            </button>
+          </div>
+          
+          <button *ngIf="question.choices && question.choices.length < 5" 
+                  class="btn btn-outline-secondary btn-sm ms-3" 
+                  (click)="addTemplateChoice(i)">
+            + Seçenek Ekle
+          </button>
+        </div>
+        
+        <div class="d-flex justify-content-between">
+          <button class="btn btn-outline-primary" (click)="addTemplateQuestion()">
+            + Soru Ekle
+          </button>
+          <button class="btn btn-primary" (click)="saveTemplateQuestions()">
+            Soruları Kaydet
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="row mx-0 mt-2 pt-4 px-md-5 px-sm-2" *ngIf="isEditPage && editableTestCard && !editableTestTemplate">
       <app-edit-comment (updateModalEvent)="updateComments($event)" [comments]="editableTestCard?.comments"></app-edit-comment>
     </div>
     <div class="row mx-0 px-md-5 px-sm-2">
-      <div *ngIf="isEditPage" class="col-12 text-end">
+      <div *ngIf="isEditPage && editableTestCard && !editableTestTemplate" class="col-12 text-end">
         <button class="btn btn-primary mt-4" (click)="updateTestComments()">Değerlendirmeleri Kaydet</button>
       </div>
       <div *ngIf="!isEditPage" class="col-12 text-end">
