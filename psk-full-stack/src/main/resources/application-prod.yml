@@ -12,7 +12,6 @@ spring:
     properties:
       hibernate:
         ddl-auto: update
-        dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
   mail:
     host: ${EMAIL_HOST_NAME}

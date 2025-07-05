@@ -1,19 +1,20 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/psk-full-stack
-    username: username
-    password: password
+    url: jdbc:postgresql://localhost:5432/psk_full_stack_dev
+    username: psk_user
+    password: psk_password
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 5
   jpa:
-    show-sql: false
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    open-in-view: false
+    show-sql: true
+    generate-ddl: true
     properties:
       hibernate:
         ddl-auto: create-drop
-        dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
+        hbm2ddl.auto: create-drop
     database: postgresql
   mail:
     host: ${EMAIL_HOST_NAME}
@@ -50,3 +51,8 @@ google:
     refresh-token: ${GOOGLE_REFRESH_TOKEN}
     application-name: PSK Calendar
     therapist-email: ${THERAPIST_EMAIL}
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.orm.jdbc.bind: TRACE
+    org.hibernate.tool.hbm2ddl: DEBUG

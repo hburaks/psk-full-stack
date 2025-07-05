@@ -42,7 +42,7 @@ public class Question extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private AnswerType userAnswer;
 
-    @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    @ManyToMany(cascade = CascadeType.ALL)
     private List<Choice> choices;
 
 
