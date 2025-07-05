@@ -29,8 +29,16 @@
       </div>
     </div>
     <div class="row g-3 mb-4">
+      <div *ngIf="userTests.length > 0">
+        <h4 class="text-secondary mt-3 mb-3">Size Atanmış Testler</h4>
+        <div class="row d-flex justify-content-center">
+          <div class="col-md-4 col-sm-6" *ngFor="let userTest of userTests; let i = index">
+            <app-user-test-card [userTest]="userTest" (startUserTestEvent)="startUserTest($event)"></app-user-test-card>
+          </div>
+        </div>
+      </div>
       <div *ngIf="myTests.length > 0">
-        <h4 class="text-secondary mt-3 mb-3">Seansınız İçin Atanmış Testler</h4>
+        <h4 class="text-secondary mt-3 mb-3">Seansınız İçin Atanmış Testler (Eski Sistem)</h4>
         <div class="row d-flex justify-content-center">
           <div class="col-md-4 col-sm-6" *ngFor="let testCard of myTests; let i = index">
             <app-user-test-card [testCard]="testCard" (startTestEvent)="startTest($event)"></app-user-test-card>

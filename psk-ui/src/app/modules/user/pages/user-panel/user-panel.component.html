@@ -1,10 +1,17 @@
 <div class="page-content container">
   <app-user-nav-underline></app-user-nav-underline>
   <div *ngIf="isActiveItem(UserNavItems.MY_UPCOMING_SESSION)">
-    <app-my-upcoming-session *ngIf="selectedTest === null"
-      (startTestEvent)="startTest($event)"></app-my-upcoming-session>
+    <app-my-upcoming-session *ngIf="selectedTest === null && selectedUserTest === null"
+      (startTestEvent)="startTest($event)" 
+      (startUserTestEvent)="startUserTest($event)"></app-my-upcoming-session>
     <app-user-test-card-detail *ngIf="selectedTest !== null" [testCard]="selectedTest"
       (onCompleteTest)="onCompleteTest()"></app-user-test-card-detail>
+    <!-- TODO: Create a component for UserTest taking interface -->
+    <div *ngIf="selectedUserTest !== null" class="alert alert-info">
+      UserTest taking interface will be implemented in the next phase.
+      <br>Selected Test: {{selectedUserTest.testTemplateTitle}}
+      <br><button class="btn btn-secondary mt-2" (click)="onCompleteTest()">Back to Tests</button>
+    </div>
   </div>
   <div *ngIf="isActiveItem(UserNavItems.MY_SESSIONS)">
     <app-my-sessions></app-my-sessions>

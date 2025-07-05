@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Output} from '@angular/core';
 import {CommonService} from 'src/app/custom-services/common-service/common.service';
-import {MyTestResponse, SessionResponse, UserResponse,} from 'src/app/services/models';
-import {SessionControllerService, TestService, UserService,} from 'src/app/services/services';
+import {MyTestResponse, SessionResponse, UserResponse, UserTestListResponse} from 'src/app/services/models';
+import {SessionControllerService, TestService, UserService, UserTestService} from 'src/app/services/services';
 
 @Component({
   selector: 'app-my-upcoming-session',
@@ -25,22 +25,30 @@ export class MyUpcomingSessionComponent {
   statusList: string[] = [];
 
   myTests: MyTestResponse[] = [];
+  userTests: UserTestListResponse[] = [];
 
   @Output() startTestEvent = new EventEmitter<MyTestResponse>();
+  @Output() startUserTestEvent = new EventEmitter<UserTestListResponse>();
 
   startTest(test: MyTestResponse) {
     this.startTestEvent.emit(test);
+  }
+
+  startUserTest(test: UserTestListResponse) {
+    this.startUserTestEvent.emit(test);
   }
 
   constructor(
     private mySessionService: SessionControllerService,
     private userService: UserService,
     private commonService: CommonService,
-    private myTestService: TestService
+    private myTestService: TestService,
+    private userTestService: UserTestService
   ) {
     this.getUpcomingSession();
     this.fetchUser();
     this.fetchMyTests();
+    this.fetchUserTests();
     //TODO it will be used in my sessions tab
     /* this.fetchMySessions(); */
     this.statusMap = this.commonService.sessionStatusMap;
@@ -73,6 +81,19 @@ export class MyUpcomingSessionComponent {
   fetchMyTests() {
     this.myTestService.getAllMyTests().subscribe((tests) => {
       this.myTests = tests;
+    });
+  }
+
+  fetchUserTests() {
+    this.userTestService.getCurrentUserTests().subscribe({
+      next: (tests) => {
+        this.userTests = tests || [];
+      },
+      error: (error) => {
+        console.error('Error fetching user tests', error);
+        this.toastErrorMessage = 'Testler getirilirken bir hata oluştu';
+        this.showToast = true;
+      },
     });
   }
 

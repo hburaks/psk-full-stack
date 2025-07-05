@@ -23,6 +23,24 @@
   </div>
 </div>
 
+<!-- Test Templates Section -->
+<h4 *ngIf="testTemplates.length > 0" class="text-secondary mt-3 mb-3">Atanabilir Test Şablonları</h4>
+<div *ngIf="testTemplates.length > 0" class="row justify-content-center mt-3 g-3">
+  <div class="col-md-4 col-sm-6 test-card-container mb-4" *ngFor="let template of testTemplates; let i = index">
+    <div class="test-circle mx-auto">
+      <img *ngIf="template.imageUrl" [src]="template.imageUrl" alt="Test image">
+    </div>
+    <div class="card test-card card-body test-card-body test-card-body-large d-flex justify-content-between">
+      <h5 class="card-title text-center">{{template.title}}</h5>
+      <p class="card-text text-secondary">{{template.subTitle}}</p>
+      <button *ngIf="template.id !== undefined" (click)="addTestTemplateToUser(template.id)"
+        class="btn btn-outline-primary btn-primary-outline-custom btn-test">Test Şablonunu Ata</button>
+    </div>
+  </div>
+</div>
+
+<!-- Legacy Tests Section -->
+<h4 *ngIf="publicTests.length > 0" class="text-secondary mt-3 mb-3">Atanabilir Testler (Eski Sistem)</h4>
 <div *ngIf="publicTests.length > 0" class="row justify-content-center mt-3 g-3">
   <div class="col-md-4 col-sm-6 test-card-container mb-4" *ngFor="let testCard of publicTests; let i = index">
     <div class="test-circle mx-auto">

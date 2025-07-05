@@ -1,9 +1,9 @@
 import { Component, Input } from '@angular/core';
 import { SessionResponseV2 } from 'src/app/services/models/session-response-v-2';
 import { UserTestForAdminResponse } from 'src/app/services/models/user-test-for-admin-response';
-import { TestService } from 'src/app/services/services';
+import { TestService, TestTemplateAdminService, UserTestAdminService } from 'src/app/services/services';
 import { SessionControllerV2Service } from 'src/app/services/services/session-controller-v-2.service';
-import { PublicTestResponse, UserWithIncomingSessionResponse } from 'src/app/services/models';
+import { PublicTestResponse, UserWithIncomingSessionResponse, TestTemplateResponse, UserTestListResponse } from 'src/app/services/models';
 
 @Component({
   selector: 'app-upcoming-session',
@@ -24,6 +24,7 @@ export class UpcomingSessionComponent {
   testResults: UserTestForAdminResponse[] = [];
 
   publicTests: PublicTestResponse[] = [];
+  testTemplates: TestTemplateResponse[] = [];
 
   isAddingTestToUser: boolean = false;
 
@@ -49,7 +50,9 @@ export class UpcomingSessionComponent {
 
   constructor(
     private sessionControllerV2Service: SessionControllerV2Service,
-    private testService: TestService
+    private testService: TestService,
+    private testTemplateAdminService: TestTemplateAdminService,
+    private userTestAdminService: UserTestAdminService
   ) {}
 
   ngAfterViewInit() {
@@ -114,13 +117,25 @@ export class UpcomingSessionComponent {
   }
 
   addTestToUser() {
-    this.testService.getAllPublicTests().subscribe({
-      next: (result) => {
-        this.publicTests = result;
-        this.isAddingTestToUser = true;
+    // Load both legacy tests and new test templates
+    this.testTemplateAdminService.getAllTestTemplates().subscribe({
+      next: (templates) => {
+        this.testTemplates = templates;
+        // Also load legacy tests for backward compatibility
+        this.testService.getAllPublicTests().subscribe({
+          next: (tests) => {
+            this.publicTests = tests;
+            this.isAddingTestToUser = true;
+          },
+          error: (error) => {
+            // If legacy tests fail, continue with just templates
+            this.publicTests = [];
+            this.isAddingTestToUser = true;
+          },
+        });
       },
       error: (error) => {
-        this.toastErrorMessage = 'Testler getirilirken bir hata oluştu';
+        this.toastErrorMessage = 'Test şablonları getirilirken bir hata oluştu';
         this.showToast = true;
       },
     });

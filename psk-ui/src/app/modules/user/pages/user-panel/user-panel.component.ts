@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import { UserNavItems } from 'src/app/components/user-nav-underline/user-nav-underline-enum';
-import { MyTestResponse } from 'src/app/services/models';
+import { MyTestResponse, UserTestListResponse } from 'src/app/services/models';
 import { HeaderService } from '../../service/header.service';
 
 @Component({
@@ -11,6 +11,7 @@ import { HeaderService } from '../../service/header.service';
 export class UserPanelComponent {
   selectedNavItem: string;
   selectedTest: MyTestResponse | null = null;
+  selectedUserTest: UserTestListResponse | null = null;
 
   UserNavItems = UserNavItems;
 
@@ -23,10 +24,17 @@ export class UserPanelComponent {
 
   startTest(test: MyTestResponse) {
     this.selectedTest = test;
+    this.selectedUserTest = null;
+  }
+
+  startUserTest(userTest: UserTestListResponse) {
+    this.selectedUserTest = userTest;
+    this.selectedTest = null;
   }
 
   onCompleteTest() {
     this.selectedTest = null;
+    this.selectedUserTest = null;
   }
 
   showAddSessionModal(isShowAddSessionModal: boolean) {

@@ -31,7 +31,7 @@
         (showEditSessionModal)="receiveShowEditSessionModal($event)" [userId]="upcomingSession?.userForSessionResponse?.id ?? selectedUser?.id ?? null"></app-edit-user-session>
     </div>
     <div class="border-top">
-      <app-admin-test-card [testResults]="testResults"></app-admin-test-card>
+      <app-admin-test-card [testResults]="testResults" [testTemplates]="[]" [publicTests]="[]"></app-admin-test-card>
     </div>
     <div class="row mx-1 g-2">
       <button *ngIf="upcomingSession?.sessionLink" (click)="goToSession()" class="btn btn-primary">Seansa Git</button>
@@ -43,8 +43,8 @@
     
     <div *ngIf="isAddingTestToUser" class="row mx-1 g-2">
       <h4 class="text-secondary mt-5">Test Havuzu</h4>
-      <app-admin-test-card [publicTests]="publicTests" (testAddedEvent)="receiveAddedTest($event)"
-        [userId]="upcomingSession?.userForSessionResponse?.id"></app-admin-test-card>
+      <app-admin-test-card [publicTests]="publicTests" [testTemplates]="testTemplates" (testAddedEvent)="receiveAddedTest($event)"
+        [userId]="upcomingSession?.userForSessionResponse?.id ?? selectedUser?.id"></app-admin-test-card>
     </div>
     <div *ngIf="sessionsOfUser.length > 0">
       <h4 class="text-secondary mt-5">Danışanın Tüm Seansları</h4>
