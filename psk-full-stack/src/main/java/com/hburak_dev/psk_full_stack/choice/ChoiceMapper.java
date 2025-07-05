@@ -3,8 +3,6 @@ package com.hburak_dev.psk_full_stack.choice;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import com.hburak_dev.psk_full_stack.choice.PublicChoiceRequest;
-
 @Service
 @RequiredArgsConstructor
 public class ChoiceMapper {
