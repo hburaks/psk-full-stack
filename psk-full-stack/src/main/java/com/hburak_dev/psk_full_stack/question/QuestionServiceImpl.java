@@ -2,8 +2,9 @@ package com.hburak_dev.psk_full_stack.question;
 
 import com.hburak_dev.psk_full_stack.choice.Choice;
 import com.hburak_dev.psk_full_stack.choice.ChoiceRepository;
-import com.hburak_dev.psk_full_stack.testtemplate.TestTemplateServiceInterface;
+import com.hburak_dev.psk_full_stack.testtemplate.TestTemplateRepository;
 import com.hburak_dev.psk_full_stack.exception.QuestionNotFoundException;
+import com.hburak_dev.psk_full_stack.exception.TestTemplateNotFoundException;
 import com.hburak_dev.psk_full_stack.handler.BusinessErrorCodes;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,13 +22,16 @@ public class QuestionServiceImpl implements QuestionServiceInterface {
     private final QuestionRepositoryService questionRepositoryService;
     private final QuestionMapper questionMapper;
     private final ChoiceRepository choiceRepository;
-    private final TestTemplateServiceInterface testTemplateService;
+    private final TestTemplateRepository testTemplateRepository;
 
     @Override
     @Transactional
     public QuestionResponse createQuestion(QuestionCreateRequest request) {
         // Validate test template exists
-        testTemplateService.getTestTemplateById(request.getTestTemplateId().intValue());
+        if (!testTemplateRepository.existsById(request.getTestTemplateId().intValue())) {
+            throw new TestTemplateNotFoundException("Test template not found with id: " + request.getTestTemplateId(), 
+                    BusinessErrorCodes.TEST_TEMPLATE_NOT_FOUND);
+        }
         
         // Get choices if provided
         List<Choice> choices = null;
