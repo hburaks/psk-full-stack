@@ -1,4 +1,4 @@
-<app-test-card-list *ngIf="!isEditingTest" [isEditPage]="true" (editTestEvent)="editTest($event)"
+<app-test-card-list *ngIf="!isEditingTest" [isEditPage]="true" (editTestTemplateEvent)="editTestTemplate($event)"
   (addTestEvent)="addTest()"></app-test-card-list>
-<app-test-card-detail [editableTestCard]="testToEdit" *ngIf="isEditingTest" [isEditPage]="true"
-  (closeModalEvent)="closeModal()" [imageUrl]="testToEdit?.imageUrl!"></app-test-card-detail>
+<app-test-card-detail [editableTestCard]="testToEdit" [editableTestTemplate]="testTemplateToEdit" *ngIf="isEditingTest" [isEditPage]="true"
+  (closeModalEvent)="closeModal()" [imageUrl]="(testTemplateToEdit?.imageUrl || testToEdit?.imageUrl)!"></app-test-card-detail>

@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {AdminTestResponse} from 'src/app/services/models';
+import {AdminTestResponse, TestTemplateResponse} from 'src/app/services/models';
 import {FileControllerService} from 'src/app/services/services';
 
 @Component({
@@ -9,9 +9,12 @@ import {FileControllerService} from 'src/app/services/services';
 })
 export class TestCardComponent implements OnInit {
   @Input() testCard!: AdminTestResponse;
+  @Input() testTemplate!: TestTemplateResponse;
   @Input() isEditPage: boolean = false;
   @Output() editTestEvent = new EventEmitter<AdminTestResponse>();
   @Output() deleteTestEvent = new EventEmitter<AdminTestResponse>();
+  @Output() editTestTemplateEvent = new EventEmitter<TestTemplateResponse>();
+  @Output() deleteTestTemplateEvent = new EventEmitter<TestTemplateResponse>();
 
   @Input() imageUrl: string | null = null;
 
@@ -34,5 +37,17 @@ export class TestCardComponent implements OnInit {
 
   deleteTest() {
     this.deleteTestEvent.emit(this.testCard);
+  }
+
+  editTestTemplate() {
+    this.editTestTemplateEvent.emit(this.testTemplate);
+  }
+
+  deleteTestTemplate() {
+    this.deleteTestTemplateEvent.emit(this.testTemplate);
+  }
+
+  get currentData() {
+    return this.testTemplate || this.testCard;
   }
 }
