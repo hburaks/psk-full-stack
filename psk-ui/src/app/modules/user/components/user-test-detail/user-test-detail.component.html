@@ -1,0 +1,102 @@
+<div class="page-content container">
+  <div>
+    <!-- Test Header -->
+    <div class="row mx-0 card my-5 py-4 px-md-5 px-sm-2">
+      <div class="col">
+        <div class="card-body my-1 row">
+          <div class="test-logo mt-0 col-4">
+            <div class="test-circle mx-auto">
+              <img *ngIf="testImageUrl" [src]="testImageUrl" alt="Test image"
+                style="width: 100%; height: 100%; object-fit: cover;">
+              <div *ngIf="!testImageUrl" class="placeholder-circle bg-secondary"></div>
+            </div>
+          </div>
+          <div class="col-8 d-flex flex-column justify-content-center about-text">
+            <p class="fs-5 fw-bold">{{testTitle}}</p>
+            <p class="fw-light mt-2 text-secondary">{{testSubTitle}}</p>
+            <p *ngIf="userTest?.personalNotes" class="fw-light mt-2 text-muted">
+              <strong>Not:</strong> {{userTest.personalNotes}}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="row mx-0 my-4 py-4 px-md-5 px-sm-2">
+      <div class="col-12 text-center">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Yükleniyor...</span>
+        </div>
+        <p class="mt-2">Test soruları yükleniyor...</p>
+      </div>
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="errorMessage && !isLoading" class="row mx-0 my-4 py-4 px-md-5 px-sm-2">
+      <div class="col-12">
+        <div class="alert alert-danger" role="alert">
+          {{errorMessage}}
+        </div>
+        <button class="btn btn-secondary" (click)="onCompleteTest.emit()">Geri Dön</button>
+      </div>
+    </div>
+
+    <!-- Questions -->
+    <div *ngIf="!isLoading && !errorMessage && questions.length > 0">
+      <div class="row mx-0 my-2 py-4 px-md-5 px-sm-2" *ngFor="let question of questions; let i = index">
+        <div class="col">
+          <p><span class="fw-bold">{{i + 1}}- </span>{{question.text}}</p>
+          <div class="simple alert cursor-pointer" 
+               [ngClass]="{
+                 'alert-primary': isChoiceSelected(question.id!, choice.id!),
+                 'alert-dark': !isChoiceSelected(question.id!, choice.id!)
+               }" 
+               (click)="selectChoice(question.id!, choice.id!, choice.answerType!)"
+               *ngFor="let choice of question.choices; let j = index">
+            {{choice.answerType === 'ANSWER_A' ? 'A) ' : 
+              choice.answerType === 'ANSWER_B' ? 'B) ' : 
+              choice.answerType === 'ANSWER_C' ? 'C) ' : 
+              choice.answerType === 'ANSWER_D' ? 'D) ' : 'E) '}}{{choice.text}}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Submit Button -->
+    <div *ngIf="!isLoading && !errorMessage && questions.length > 0" class="row mx-0 px-md-5 px-sm-2">
+      <div class="col-12 text-end">
+        <button class="btn btn-primary" 
+                [disabled]="!canSubmitTest() || isSubmitting"
+                (click)="submitTest()">
+          <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2" role="status"></span>
+          {{isSubmitting ? 'Gönderiliyor...' : 'Testi Tamamla'}}
+        </button>
+      </div>
+    </div>
+
+    <!-- Progress Indicator -->
+    <div *ngIf="!isLoading && !errorMessage && questions.length > 0" class="row mx-0 px-md-5 px-sm-2 mt-3">
+      <div class="col-12">
+        <div class="progress">
+          <div class="progress-bar" 
+               [style.width.%]="(Object.keys(selectedAnswers).length / questions.length) * 100">
+          </div>
+        </div>
+        <small class="text-muted">
+          {{Object.keys(selectedAnswers).length}} / {{questions.length}} soru yanıtlandı
+        </small>
+      </div>
+    </div>
+
+    <!-- No Questions State -->
+    <div *ngIf="!isLoading && !errorMessage && questions.length === 0" class="row mx-0 my-4 py-4 px-md-5 px-sm-2">
+      <div class="col-12">
+        <div class="alert alert-warning" role="alert">
+          Bu test için henüz soru bulunmamaktadır.
+        </div>
+        <button class="btn btn-secondary" (click)="onCompleteTest.emit()">Geri Dön</button>
+      </div>
+    </div>
+  </div>
+</div>

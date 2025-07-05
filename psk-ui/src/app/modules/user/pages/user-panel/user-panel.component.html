@@ -6,12 +6,8 @@
       (startUserTestEvent)="startUserTest($event)"></app-my-upcoming-session>
     <app-user-test-card-detail *ngIf="selectedTest !== null" [testCard]="selectedTest"
       (onCompleteTest)="onCompleteTest()"></app-user-test-card-detail>
-    <!-- TODO: Create a component for UserTest taking interface -->
-    <div *ngIf="selectedUserTest !== null" class="alert alert-info">
-      UserTest taking interface will be implemented in the next phase.
-      <br>Selected Test: {{selectedUserTest.testTemplateTitle}}
-      <br><button class="btn btn-secondary mt-2" (click)="onCompleteTest()">Back to Tests</button>
-    </div>
+    <app-user-test-detail *ngIf="selectedUserTest !== null" [userTestSummary]="selectedUserTest"
+      (onCompleteTest)="onCompleteTest()"></app-user-test-detail>
   </div>
   <div *ngIf="isActiveItem(UserNavItems.MY_SESSIONS)">
     <app-my-sessions></app-my-sessions>
