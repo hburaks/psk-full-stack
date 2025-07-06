@@ -105,15 +105,15 @@ public class UserAnswerServiceImpl implements UserAnswerServiceInterface {
 
         // Allow admin to access any user's test results
         boolean isAdmin = user.getAuthorities().stream()
-                .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ADMIN"));
+                .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"));
 
         if (!isAdmin && !userTest.getUserId().equals(user.getId().longValue())) {
             throw new UserTestAccessDeniedException("Access denied: This test does not belong to you and you are not an admin",
                     BusinessErrorCodes.USER_TEST_ACCESS_DENIED);
         }
-        
-        // Check if test is already completed
-        if (userTest.getIsCompleted()) {
+
+        // Check if test is already completed (only for non-admin users)
+        if (!isAdmin && userTest.getIsCompleted()) {
             throw new UserTestAlreadyCompletedException("Cannot submit answers: Test is already completed", 
                     BusinessErrorCodes.USER_TEST_ALREADY_COMPLETED);
         }

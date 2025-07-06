@@ -287,7 +287,7 @@ export class TestSolverComponent implements OnInit {
 
   goBackToTests(): void {
     if (this.isUserTest) {
-      this.router.navigate(['/user']);
+      this.router.navigate(['/user/panel']);
     } else {
       this.router.navigate(['/test']);
     }

@@ -31,8 +31,8 @@
                     *ngFor="let choice of currentQuestion.choices"
                     class="list-group-item list-group-item-action"
                     [class.active]="answers[currentQuestionIndex].choiceId === choice.id">
-                    <input 
-                      type="radio" 
+                    <input
+                      type="radio"
                       [name]="'question_' + currentQuestionIndex"
                       [value]="choice.id"
                       (change)="selectAnswer(choice.id)"
@@ -151,15 +151,10 @@
           <!-- User Test Results -->
           <div *ngIf="isUserTest">
             <h4 class="mb-3">{{ userTest?.testTemplateTitle }}</h4>
-            <div class="alert alert-success" role="alert">
-              <i class="fas fa-check-circle me-2"></i>
-              <strong>Testiniz başarıyla gönderildi!</strong>
-            </div>
             <p class="mb-4">Teşekkürler. Test sonuçlarınız, psikoloğunuz tarafından değerlendirilecektir.</p>
-
             <div class="d-flex justify-content-center gap-3">
               <button class="btn btn-outline-secondary" (click)="goBackToTests()">
-                <i class="fas fa-arrow-left me-2"></i>Testlere Dön
+                <i class="fas fa-arrow-left me-2"></i>Seans Sayfasına Dön
               </button>
             </div>
           </div>
