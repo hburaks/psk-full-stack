@@ -123,7 +123,7 @@ export class UserTestAdminService extends BaseService {
    */
   getUserTestAnswers(params: GetUserTestAnswers$Params, context?: HttpContext): Observable<Array<UserAnswerResponse>> {
     return this.getUserTestAnswers$Response(params, context).pipe(
-        map((r: StrictHttpResponse<Array<UserAnswerResponse>>): Array<UserAnswerResponse> => r.body)
+      map((r: StrictHttpResponse<Array<UserAnswerResponse>>): Array<UserAnswerResponse> => r.body)
     );
   }
 
