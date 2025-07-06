@@ -19,6 +19,8 @@ import com.hburak_dev.psk_full_stack.testtemplate.TestTemplate;
 import com.hburak_dev.psk_full_stack.testtemplate.TestTemplateRepository;
 import com.hburak_dev.psk_full_stack.user.User;
 import com.hburak_dev.psk_full_stack.user.UserRepository;
+import com.hburak_dev.psk_full_stack.usertest.UserTest;
+import com.hburak_dev.psk_full_stack.usertest.UserTestRepository;
 import com.hburak_dev.psk_full_stack.Util;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.annotation.Profile;
@@ -44,12 +46,13 @@ public class DataInitializer {
         private final PasswordEncoder passwordEncoder;
         private final QuestionRepository questionRepository;
         private final ChoiceRepository choiceRepository;
+        private final UserTestRepository userTestRepository;
 
         public DataInitializer(SessionRepository sessionRepository, UserRepository userRepository,
                         RoleRepository roleRepository, TestTemplateRepository testTemplateRepository,
                         CommentRepository commentRepository, BlogRepository blogRepository,
                         PasswordEncoder passwordEncoder, QuestionRepository questionRepository,
-                        ChoiceRepository choiceRepository) {
+                        ChoiceRepository choiceRepository, UserTestRepository userTestRepository) {
                 this.sessionRepository = sessionRepository;
                 this.userRepository = userRepository;
                 this.roleRepository = roleRepository;
@@ -59,6 +62,7 @@ public class DataInitializer {
                 this.passwordEncoder = passwordEncoder;
                 this.questionRepository = questionRepository;
                 this.choiceRepository = choiceRepository;
+                this.userTestRepository = userTestRepository;
         }
 
         @EventListener(ApplicationReadyEvent.class)
@@ -456,6 +460,67 @@ public class DataInitializer {
                         }
                         if (!mockSessions.isEmpty()) {
                                 sessionRepository.saveAll(mockSessions);
+                        }
+                }
+
+                // Assign test and create session for next Monday at 10am
+                User adminUser = userRepository.findByEmail("admin@psk.com").orElse(null);
+                User regularUser = userRepository.findByEmail("user@psk.com").orElse(null);
+                
+                if (adminUser != null && regularUser != null) {
+                        // Get the first available test template (Depression test)
+                        TestTemplate testTemplate = testTemplateRepository.findAll().stream()
+                                .findFirst()
+                                .orElse(null);
+                        
+                        if (testTemplate != null) {
+                                LocalDateTime now = LocalDateTime.now();
+                                LocalDateTime nextMondayAt10 = now.with(DayOfWeek.MONDAY)
+                                        .plusWeeks(1) // Next Monday
+                                        .withHour(10)
+                                        .withMinute(0)
+                                        .withSecond(0)
+                                        .withNano(0);
+                                
+                                // Check if test is already assigned
+                                boolean testAlreadyAssigned = userTestRepository.findByUserIdAndTestTemplateId(
+                                        regularUser.getId().longValue(), 
+                                        testTemplate.getId().longValue()).isPresent();
+                                
+                                if (!testAlreadyAssigned) {
+                                        // Assign test from admin to user
+                                        UserTest userTest = UserTest.builder()
+                                                .userId(regularUser.getId().longValue())
+                                                .testTemplateId(testTemplate.getId().longValue())
+                                                .assignedAt(LocalDateTime.now())
+                                                .assignedBy(adminUser.getId().longValue())
+                                                .isCompleted(false)
+                                                .createdBy(adminUser.getId())
+                                                .build();
+                                        
+                                        userTestRepository.save(userTest);
+                                        System.out.println("✅ Test assigned: " + testTemplate.getTitle() + 
+                                                " assigned to " + regularUser.getFirstname() + " " + regularUser.getLastname() +
+                                                " by " + adminUser.getFirstname() + " " + adminUser.getLastname());
+                                }
+                                
+                                // Check if session already exists for next Monday at 10am
+                                boolean sessionExists = sessionRepository.existsByDate(nextMondayAt10);
+                                
+                                if (!sessionExists) {
+                                        // Create session for next Monday at 10am
+                                        Session mondaySession = Session.builder()
+                                                .createdBy(adminUser.getId())
+                                                .date(nextMondayAt10)
+                                                .user(regularUser)
+                                                .sessionStatus(SessionStatusType.AWAITING_THERAPIST_APPROVAL)
+                                                .isSessionPaid(false)
+                                                .isMock(false)
+                                                .build();
+                                        
+                                        sessionRepository.save(mondaySession);
+                                        System.out.println("✅ Data initilazer worked successfully!");
+                                }
                         }
                 }
         }
