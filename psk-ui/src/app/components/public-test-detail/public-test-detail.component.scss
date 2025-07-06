@@ -7,11 +7,12 @@
   }
   
   &.active {
-    background-color: #0d6efd;
-    border-color: #0d6efd;
+    background-color: #d1d7db;
+    border-color: #d1d7db;
+    color: #212529;
     
     &:hover {
-      background-color: #0b5ed7;
+      background-color: #c4ccd2;
     }
   }
 }
@@ -53,6 +54,19 @@
 
 .gap-3 {
   gap: 1rem;
+}
+
+.btn.rounded-circle {
+  &.btn-secondary {
+    background-color: #d1d7db;
+    border-color: #d1d7db;
+    color: #212529;
+    
+    &:hover {
+      background-color: #c4ccd2;
+      border-color: #c4ccd2;
+    }
+  }
 }
 
 @media (max-width: 768px) {
