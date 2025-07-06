@@ -2,13 +2,11 @@ package com.hburak_dev.psk_full_stack.useranswer;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-
-import jakarta.validation.Valid;
-import java.util.List;
 
 @RestController
 @RequestMapping("v1/user-tests")
@@ -32,14 +30,5 @@ public class UserAnswerController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/{userTestId}/answers")
-    @Operation(summary = "Get user's answers for a test")
-    public ResponseEntity<List<UserAnswerResponse>> getUserTestAnswers(
-            @PathVariable Integer userTestId,
-            Authentication connectedUser) {
-        
-        List<UserAnswerResponse> responses = userAnswerService.getUserTestAnswers(userTestId, connectedUser);
-        return ResponseEntity.ok(responses);
-    }
 
 }

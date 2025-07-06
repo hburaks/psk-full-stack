@@ -102,10 +102,13 @@ public class UserAnswerServiceImpl implements UserAnswerServiceInterface {
         }
         
         UserTest userTest = userTestOpt.get();
-        
-        // Ensure user can only access their own tests
-        if (!userTest.getUserId().equals(user.getId().longValue())) {
-            throw new UserTestAccessDeniedException("Access denied: This test does not belong to you", 
+
+        // Allow admin to access any user's test results
+        boolean isAdmin = user.getAuthorities().stream()
+                .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ADMIN"));
+
+        if (!isAdmin && !userTest.getUserId().equals(user.getId().longValue())) {
+            throw new UserTestAccessDeniedException("Access denied: This test does not belong to you and you are not an admin",
                     BusinessErrorCodes.USER_TEST_ACCESS_DENIED);
         }
         

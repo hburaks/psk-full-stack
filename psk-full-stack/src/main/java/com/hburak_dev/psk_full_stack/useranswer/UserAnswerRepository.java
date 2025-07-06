@@ -9,6 +9,14 @@ import java.util.Optional;
 
 public interface UserAnswerRepository extends JpaRepository<UserAnswer, Integer> {
 
+    @Query("""
+            SELECT ua FROM UserAnswer ua
+            LEFT JOIN FETCH ua.question q
+            LEFT JOIN FETCH ua.choice c
+            WHERE ua.userTestId = :userTestId
+            """)
+    List<UserAnswer> findByUserTestIdWithDetails(@Param("userTestId") Long userTestId);
+
     List<UserAnswer> findByUserTestId(Long userTestId);
 
     Optional<UserAnswer> findByUserTestIdAndQuestionId(Long userTestId, Long questionId);

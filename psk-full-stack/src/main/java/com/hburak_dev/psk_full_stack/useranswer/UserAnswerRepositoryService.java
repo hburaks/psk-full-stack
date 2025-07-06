@@ -63,7 +63,7 @@ public class UserAnswerRepositoryService {
     }
 
     public List<UserAnswer> getUserAnswers(Long userTestId) {
-        return userAnswerRepository.findByUserTestId(userTestId);
+        return userAnswerRepository.findByUserTestIdWithDetails(userTestId);
     }
 
     public List<UserAnswer> getAnswersByQuestion(Long questionId) {
