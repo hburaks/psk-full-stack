@@ -51,8 +51,3 @@ google:
     refresh-token: ${GOOGLE_REFRESH_TOKEN}
     application-name: PSK Calendar
     therapist-email: ${THERAPIST_EMAIL}
-logging:
-  level:
-    org.hibernate.SQL: DEBUG
-    org.hibernate.orm.jdbc.bind: TRACE
-    org.hibernate.tool.hbm2ddl: DEBUG

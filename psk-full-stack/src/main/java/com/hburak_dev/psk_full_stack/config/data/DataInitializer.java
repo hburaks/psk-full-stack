@@ -171,6 +171,7 @@ public class DataInitializer {
                                                 .score(0)
                                                 .text("Sonuçlarınız minimal depresyon belirtileri gösteriyor. Ruh haliniz genel olarak olumlu görünüyor.")
                                                 .testTemplateId(depressionTest.getId().longValue())
+                                                .testTemplate(depressionTest)
                                                 .createdBy(mockUser.getId())
                                                 .build(),
                                 Comment.builder()
@@ -178,6 +179,7 @@ public class DataInitializer {
                                                 .score(4)
                                                 .text("Hafif depresyon belirtileri tespit edildi. Yaşam tarzı değişiklikleri ve destek yararlı olabilir.")
                                                 .testTemplateId(depressionTest.getId().longValue())
+                                                .testTemplate(depressionTest)
                                                 .createdBy(mockUser.getId())
                                                 .build(),
                                 Comment.builder()
@@ -185,6 +187,7 @@ public class DataInitializer {
                                                 .score(8)
                                                 .text("Orta düzeyde depresyon belirtileri mevcut. Profesyonel destek almanız önerilir.")
                                                 .testTemplateId(depressionTest.getId().longValue())
+                                                .testTemplate(depressionTest)
                                                 .createdBy(mockUser.getId())
                                                 .build(),
                                 Comment.builder()
@@ -192,6 +195,7 @@ public class DataInitializer {
                                                 .score(15)
                                                 .text("Ciddi depresyon belirtileri tespit edildi. Mutlaka bir uzmanla görüşmeniz gerekiyor.")
                                                 .testTemplateId(depressionTest.getId().longValue())
+                                                .testTemplate(depressionTest)
                                                 .createdBy(mockUser.getId())
                                                 .build());
 
@@ -202,6 +206,7 @@ public class DataInitializer {
                                                 .score(0)
                                                 .text("Anksiyete seviyeniz normaldir. Stres yönetimi tekniklerini öğrenmek faydalı olabilir.")
                                                 .testTemplateId(anxietyTest.getId().longValue())
+                                                .testTemplate(anxietyTest)
                                                 .createdBy(mockUser.getId())
                                                 .build(),
                                 Comment.builder()
@@ -209,6 +214,7 @@ public class DataInitializer {
                                                 .score(25)
                                                 .text("Hafif düzeyde anksiyete belirtileri var. Nefes egzersizleri ve meditasyon yararlı olabilir.")
                                                 .testTemplateId(anxietyTest.getId().longValue())
+                                                .testTemplate(anxietyTest)
                                                 .createdBy(mockUser.getId())
                                                 .build(),
                                 Comment.builder()
@@ -216,6 +222,7 @@ public class DataInitializer {
                                                 .score(50)
                                                 .text("Orta düzeyde anksiyete mevcut. Stres yönetimi teknikleri ve destek almanız önerilir.")
                                                 .testTemplateId(anxietyTest.getId().longValue())
+                                                .testTemplate(anxietyTest)
                                                 .createdBy(mockUser.getId())
                                                 .build(),
                                 Comment.builder()
@@ -223,6 +230,7 @@ public class DataInitializer {
                                                 .score(75)
                                                 .text("Yüksek anksiyete seviyesi tespit edildi. Profesyonel yardım almanız önemlidir.")
                                                 .testTemplateId(anxietyTest.getId().longValue())
+                                                .testTemplate(anxietyTest)
                                                 .createdBy(mockUser.getId())
                                                 .build());
 
@@ -234,6 +242,7 @@ public class DataInitializer {
                                                 .score(0)
                                                 .text("Daha içe dönük bir kişilik yapısına sahipsiniz. Derin düşünme ve kaliteli ilişkileri tercih ediyorsunuz.")
                                                 .testTemplateId(personalityTest.getId().longValue())
+                                                .testTemplate(personalityTest)
                                                 .createdBy(mockUser.getId())
                                                 .build(),
                                 Comment.builder()
@@ -241,6 +250,7 @@ public class DataInitializer {
                                                 .score(4)
                                                 .text("Dengeli bir kişiliğe sahipsiniz. Hem sosyal hem de bireysel aktiviteleri seviyorsunuz.")
                                                 .testTemplateId(personalityTest.getId().longValue())
+                                                .testTemplate(personalityTest)
                                                 .createdBy(mockUser.getId())
                                                 .build(),
                                 Comment.builder()
@@ -248,13 +258,14 @@ public class DataInitializer {
                                                 .score(7)
                                                 .text("Dışa dönük bir kişiliğe sahipsiniz. Sosyal ortamları ve yeni deneyimleri seviyorsunuz.")
                                                 .testTemplateId(personalityTest.getId().longValue())
+                                                .testTemplate(personalityTest)
                                                 .createdBy(mockUser.getId())
                                                 .build());
 
-                // Save all comments
-                commentRepository.saveAll(depressionComments);
-                commentRepository.saveAll(anxietyComments);
-                commentRepository.saveAll(personalityComments);
+                // Set up bidirectional relationships and save comments through test templates
+                depressionTest.setComments(depressionComments);
+                anxietyTest.setComments(anxietyComments);
+                personalityTest.setComments(personalityComments);
 
                 List<Choice> depressionChoices1 = List.of(
                                 Choice.builder().answerType(AnswerType.ANSWER_A).text("Hiçbir zaman")
@@ -372,7 +383,7 @@ public class DataInitializer {
 
                 questionRepository.saveAll(personalityQuestions);
                 
-                // Save all test templates
+                // Save all test templates with their comments (cascade will handle comments)
                 testTemplateRepository.save(depressionTest);
                 testTemplateRepository.save(anxietyTest);
                 testTemplateRepository.save(personalityTest);
