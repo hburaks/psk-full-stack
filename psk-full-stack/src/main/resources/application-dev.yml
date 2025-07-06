@@ -8,12 +8,12 @@ spring:
       maximum-pool-size: 5
   jpa:
     open-in-view: false
-    show-sql: true
+    show-sql: false
     generate-ddl: true
     properties:
       hibernate:
         ddl-auto: create-drop
-        format_sql: true
+        format_sql: false
         hbm2ddl.auto: create-drop
     database: postgresql
   mail:
@@ -51,3 +51,8 @@ google:
     refresh-token: ${GOOGLE_REFRESH_TOKEN}
     application-name: PSK Calendar
     therapist-email: ${THERAPIST_EMAIL}
+logging:
+  level:
+    org.hibernate.SQL: OFF
+    org.hibernate.type.descriptor.sql.BasicBinder: OFF
+    org.hibernate.engine.jdbc.spi.SqlExceptionHelper: OFF

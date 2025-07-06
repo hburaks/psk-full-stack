@@ -59,12 +59,12 @@ export class UserTestDetailComponent implements OnInit {
       return;
     }
 
-    this.testTemplateAdminService.getTestTemplateQuestions({ id: this.userTest.testTemplateId }).subscribe({
-      next: (questions) => {
+    this.testTemplateAdminService.getTestTemplateQuestions1({ id: this.userTest.testTemplateId }).subscribe({
+      next: (questions: any) => {
         this.questions = questions || [];
         this.isLoading = false;
       },
-      error: (error) => {
+      error: (error: any) => {
         console.error('Error loading questions', error);
         this.errorMessage = 'Sorular yüklenirken bir hata oluştu';
         this.isLoading = false;

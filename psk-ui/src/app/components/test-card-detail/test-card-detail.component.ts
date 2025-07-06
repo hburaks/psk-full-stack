@@ -76,7 +76,7 @@ export class TestCardDetailComponent implements AfterViewInit {
   }
 
   getTestTemplateDetail() {
-    this.testTemplateAdminService.getTestTemplateById({ id: this.cardId }).subscribe({
+    this.testTemplateAdminService.getTestTemplateById1({ id: this.cardId }).subscribe({
       next: (template: TestTemplateResponse) => {
         this.testTemplate = template;
         this.testCard = template; // Set for template compatibility

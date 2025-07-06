@@ -1,0 +1,68 @@
+.list-group-item {
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background-color: #f8f9fa;
+  }
+  
+  &.active {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+    
+    &:hover {
+      background-color: #0b5ed7;
+    }
+  }
+}
+
+.form-check-input {
+  cursor: pointer;
+}
+
+.progress {
+  height: 10px;
+}
+
+.btn.rounded-circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.card {
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  border: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+.card-header {
+  background-color: #f8f9fa;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+.spinner-border {
+  width: 3rem;
+  height: 3rem;
+}
+
+.gap-2 {
+  gap: 0.5rem;
+}
+
+.gap-3 {
+  gap: 1rem;
+}
+
+@media (max-width: 768px) {
+  .btn.rounded-circle {
+    width: 30px !important;
+    height: 30px !important;
+    font-size: 0.75rem;
+  }
+  
+  .d-flex.flex-wrap.gap-2 {
+    justify-content: center;
+  }
+}

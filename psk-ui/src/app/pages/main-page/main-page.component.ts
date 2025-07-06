@@ -3,7 +3,7 @@ import {BlogService} from '../../services/services/blog.service';
 import {PageResponseBlogResponse} from '../../services/models/page-response-blog-response';
 import {BlogResponse} from '../../services/models/blog-response';
 import {TestTemplateResponse} from '../../services/models/test-template-response';
-import {TestTemplateAdminService} from '../../services/services/test-template-admin.service';
+import {PublicTestService} from '../../services/services/public-test.service';
 
 import {CommonService} from 'src/app/custom-services/common-service/common.service';
 import {TokenService} from 'src/app/custom-services/token/token.service';
@@ -34,7 +34,7 @@ export class MainPageComponent implements OnInit {
 
   constructor(
     private blogService: BlogService,
-    private testTemplateAdminService: TestTemplateAdminService,
+    private publicTestService: PublicTestService,
     private commonService: CommonService,
     private tokenService: TokenService
   ) {}
@@ -47,7 +47,7 @@ export class MainPageComponent implements OnInit {
   }
 
   @HostListener('window:resize', ['$event'])
-  onResize(event: any) {
+  onResize() {
     this.updateScreenSize();
   }
 
@@ -94,7 +94,7 @@ export class MainPageComponent implements OnInit {
   }
 
   getTestList() {
-    this.testTemplateAdminService.getAllTestTemplates().subscribe({
+    this.publicTestService.getAllActiveTestTemplates().subscribe({
       next: (testTemplates: Array<TestTemplateResponse>) => {
         this.fetchedTestList = testTemplates || [];
         this.updateTestListBasedOnScreenSize();
