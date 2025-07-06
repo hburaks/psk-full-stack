@@ -1,6 +1,13 @@
-import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
-import { UserTestListResponse, UserTestResponse, QuestionResponse, SubmitTestRequest, SubmitAnswerRequest, SubmitTestResponse } from 'src/app/services/models';
-import { UserTestService, UserAnswerService, TestTemplateAdminService } from 'src/app/services/services';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {
+  QuestionResponse,
+  SubmitAnswerRequest,
+  SubmitTestRequest,
+  SubmitTestResponse,
+  UserTestListResponse,
+  UserTestResponse
+} from 'src/app/services/models';
+import {TestTemplateAdminService, UserAnswerService, UserTestService} from 'src/app/services/services';
 
 @Component({
   selector: 'app-user-test-detail',
@@ -39,12 +46,12 @@ export class UserTestDetailComponent implements OnInit {
     }
 
     // First, start the test to mark it as started
-    this.userTestService.startTest({ id: this.userTestSummary.id }).subscribe({
-      next: (userTest) => {
+    this.userTestService.getUserTest({id: this.userTestSummary.id}).subscribe({
+      next: (userTest: UserTestResponse) => {
         this.userTest = userTest;
         this.loadQuestions();
       },
-      error: (error) => {
+      error: (error: any) => {
         console.error('Error starting test', error);
         this.errorMessage = 'Test başlatılırken bir hata oluştu';
         this.isLoading = false;
@@ -86,7 +93,7 @@ export class UserTestDetailComponent implements OnInit {
   }
 
   canSubmitTest(): boolean {
-    return this.questions.length > 0 && 
+    return this.questions.length > 0 &&
            this.questions.every(q => q.id && this.selectedAnswers[q.id]);
   }
 

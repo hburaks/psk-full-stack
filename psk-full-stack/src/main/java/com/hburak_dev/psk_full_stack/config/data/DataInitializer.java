@@ -1,5 +1,6 @@
 package com.hburak_dev.psk_full_stack.config.data;
 
+import com.hburak_dev.psk_full_stack.Util;
 import com.hburak_dev.psk_full_stack.blog.Blog;
 import com.hburak_dev.psk_full_stack.blog.BlogRepository;
 import com.hburak_dev.psk_full_stack.choice.Choice;
@@ -11,17 +12,16 @@ import com.hburak_dev.psk_full_stack.question.Question;
 import com.hburak_dev.psk_full_stack.question.QuestionRepository;
 import com.hburak_dev.psk_full_stack.role.Role;
 import com.hburak_dev.psk_full_stack.role.RoleRepository;
+import com.hburak_dev.psk_full_stack.scoring.ScoringStrategyType;
 import com.hburak_dev.psk_full_stack.session.Session;
 import com.hburak_dev.psk_full_stack.session.SessionRepository;
 import com.hburak_dev.psk_full_stack.session.SessionStatusType;
-import com.hburak_dev.psk_full_stack.scoring.ScoringStrategyType;
 import com.hburak_dev.psk_full_stack.testtemplate.TestTemplate;
 import com.hburak_dev.psk_full_stack.testtemplate.TestTemplateRepository;
 import com.hburak_dev.psk_full_stack.user.User;
 import com.hburak_dev.psk_full_stack.user.UserRepository;
 import com.hburak_dev.psk_full_stack.usertest.UserTest;
 import com.hburak_dev.psk_full_stack.usertest.UserTestRepository;
-import com.hburak_dev.psk_full_stack.Util;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.EventListener;
@@ -499,9 +499,6 @@ public class DataInitializer {
                                                 .build();
                                         
                                         userTestRepository.save(userTest);
-                                        System.out.println("✅ Test assigned: " + testTemplate.getTitle() + 
-                                                " assigned to " + regularUser.getFirstname() + " " + regularUser.getLastname() +
-                                                " by " + adminUser.getFirstname() + " " + adminUser.getLastname());
                                 }
                                 
                                 // Check if session already exists for next Monday at 10am
@@ -519,7 +516,7 @@ public class DataInitializer {
                                                 .build();
                                         
                                         sessionRepository.save(mondaySession);
-                                        System.out.println("✅ Data initilazer worked successfully!");
+                                        System.out.println("Data initilazer worked successfully!");
                                 }
                         }
                 }

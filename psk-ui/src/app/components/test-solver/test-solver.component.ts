@@ -1,15 +1,15 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { PublicTestService } from 'src/app/services/services/public-test.service';
-import { UserTestService } from 'src/app/services/services/user-test.service';
-import { UserAnswerService } from 'src/app/services/services/user-answer.service';
-import { TestTemplateResponse } from 'src/app/services/models/test-template-response';
-import { QuestionResponse } from 'src/app/services/models/question-response';
-import { PublicTestSubmissionRequest } from 'src/app/services/models/public-test-submission-request';
-import { PublicTestResultResponse } from 'src/app/services/models/public-test-result-response';
-import { SubmitAnswerRequest } from 'src/app/services/models/submit-answer-request';
-import { UserTestResponse } from 'src/app/services/models/user-test-response';
-import { SubmitTestRequest } from 'src/app/services/models/submit-test-request';
+import {Component, Input, OnInit} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
+import {PublicTestService} from 'src/app/services/services/public-test.service';
+import {UserTestService} from 'src/app/services/services/user-test.service';
+import {UserAnswerService} from 'src/app/services/services/user-answer.service';
+import {TestTemplateResponse} from 'src/app/services/models/test-template-response';
+import {QuestionResponse} from 'src/app/services/models/question-response';
+import {PublicTestSubmissionRequest} from 'src/app/services/models/public-test-submission-request';
+import {PublicTestResultResponse} from 'src/app/services/models/public-test-result-response';
+import {SubmitAnswerRequest} from 'src/app/services/models/submit-answer-request';
+import {UserTestResponse} from 'src/app/services/models/user-test-response';
+import {SubmitTestRequest} from 'src/app/services/models/submit-test-request';
 
 @Component({
   selector: 'app-test-solver',
@@ -18,7 +18,7 @@ import { SubmitTestRequest } from 'src/app/services/models/submit-test-request';
 })
 export class TestSolverComponent implements OnInit {
   @Input() isUserTest: boolean = false;
-  
+
   testTemplate: TestTemplateResponse | null = null;
   userTest: UserTestResponse | null = null;
   questions: QuestionResponse[] = [];
@@ -39,7 +39,7 @@ export class TestSolverComponent implements OnInit {
   ngOnInit(): void {
     // Detect if this is a user test based on the route
     this.isUserTest = this.route.snapshot.url[0]?.path === 'user-test';
-    
+
     const testId = this.route.snapshot.paramMap.get('id');
     if (testId) {
       if (this.isUserTest) {
@@ -52,7 +52,7 @@ export class TestSolverComponent implements OnInit {
 
   loadPublicTest(testId: number): void {
     this.isLoading = true;
-    
+
     // Load test template
     this.publicTestService.getTestTemplateById({ id: testId }).subscribe({
       next: (template) => {
@@ -68,21 +68,12 @@ export class TestSolverComponent implements OnInit {
 
   loadUserTest(userTestId: number): void {
     this.isLoading = true;
-    
+
     // Load user test
     this.userTestService.getUserTest({ id: userTestId }).subscribe({
       next: (userTest) => {
         this.userTest = userTest;
-        // Start the test
-        this.userTestService.startTest({ id: userTestId }).subscribe({
-          next: () => {
-            this.loadQuestionsForUserTest(userTest.testTemplateId!);
-          },
-          error: (error) => {
-            console.error('Error starting user test:', error);
-            this.isLoading = false;
-          }
-        });
+        this.loadQuestionsForUserTest(userTest.testTemplateId!);
       },
       error: (error) => {
         console.error('Error loading user test:', error);
@@ -127,9 +118,16 @@ export class TestSolverComponent implements OnInit {
     }));
   }
 
-  selectAnswer(answerType: string): void {
+  selectAnswer(choiceId?: number, textAnswer?: string): void {
     if (this.currentQuestionIndex < this.answers.length) {
-      this.answers[this.currentQuestionIndex].answerType = answerType as any;
+      const currentAnswer = this.answers[this.currentQuestionIndex];
+      if (choiceId !== undefined) {
+        currentAnswer.choiceId = choiceId;
+        currentAnswer.textAnswer = undefined; // Clear text answer if a choice is selected
+      } else if (textAnswer !== undefined) {
+        currentAnswer.textAnswer = textAnswer;
+        currentAnswer.choiceId = undefined; // Clear choice if text is entered
+      }
     }
   }
 
@@ -150,7 +148,8 @@ export class TestSolverComponent implements OnInit {
   }
 
   canProceed(): boolean {
-    return this.answers[this.currentQuestionIndex]?.answerType !== undefined;
+    const currentAnswer = this.answers[this.currentQuestionIndex];
+    return currentAnswer?.choiceId !== undefined || (currentAnswer?.textAnswer !== undefined && currentAnswer?.textAnswer !== '');
   }
 
   isLastQuestion(): boolean {
@@ -158,7 +157,9 @@ export class TestSolverComponent implements OnInit {
   }
 
   allQuestionsAnswered(): boolean {
-    return this.answers.every(answer => answer.answerType !== undefined);
+    return this.answers.every(answer =>
+      answer.choiceId !== undefined || (answer.textAnswer !== undefined && answer.textAnswer !== '')
+    );
   }
 
   submitTest(): void {
@@ -167,7 +168,7 @@ export class TestSolverComponent implements OnInit {
     }
 
     this.isLoading = true;
-    
+
     if (this.isUserTest) {
       this.submitUserTest();
     } else {
@@ -180,8 +181,25 @@ export class TestSolverComponent implements OnInit {
       return;
     }
 
+    const userAnswers: SubmitAnswerRequest[] = this.questions.map((question, index) => {
+      const answer = this.answers[index];
+      if (question.choices && question.choices.length > 0) {
+        return {
+          questionId: question.id!,
+          choiceId: answer.choiceId,
+          userTestId: 0 // Public tests don't have a userTestId
+        };
+      } else {
+        return {
+          questionId: question.id!,
+          textAnswer: answer.textAnswer,
+          userTestId: 0 // Public tests don't have a userTestId
+        };
+      }
+    });
+
     const submission: PublicTestSubmissionRequest = {
-      answers: this.answers,
+      answers: userAnswers,
     };
 
     this.publicTestService.submitTestAnswers({
@@ -205,29 +223,39 @@ export class TestSolverComponent implements OnInit {
       return;
     }
 
+    const currentTestId = this.userTest.id;
+
+    const userAnswers: SubmitAnswerRequest[] = this.questions.map((question, index) => {
+      const answer = this.answers[index];
+      if (question.choices && question.choices.length > 0) {
+        return {
+          questionId: question.id!,
+          choiceId: answer.choiceId,
+          userTestId: currentTestId
+        };
+      } else {
+        return {
+          questionId: question.id!,
+          textAnswer: answer.textAnswer,
+          userTestId: currentTestId
+        };
+      }
+    });
+
     const submission: SubmitTestRequest = {
       userTestId: this.userTest.id,
-      answers: this.answers
+      answers: userAnswers
     };
 
-    this.userAnswerService.submitTest({
-      userTestId: this.userTest.id,
+    this.userTestService.submitAndCompleteTest({
+      id: this.userTest.id,
       body: submission
     }).subscribe({
       next: () => {
-        // Complete the user test
-        this.userTestService.completeTest({ id: this.userTest!.id! }).subscribe({
-          next: () => {
-            this.isTestCompleted = true;
-            this.isLoading = false;
-          },
-          error: (error) => {
-            console.error('Error completing user test:', error);
-            this.isLoading = false;
-          }
-        });
+        this.isTestCompleted = true;
+        this.isLoading = false;
       },
-      error: (error) => {
+      error: (error: any) => {
         console.error('Error submitting user test:', error);
         this.isLoading = false;
       }
@@ -240,6 +268,14 @@ export class TestSolverComponent implements OnInit {
 
   getAnswerForCurrentQuestion(): string | undefined {
     return this.answers[this.currentQuestionIndex]?.answerType;
+  }
+
+  getTextAreaValue(event: Event): string | undefined {
+    return (event.target as HTMLTextAreaElement)?.value;
+  }
+
+  hasChoices(question: QuestionResponse | null): boolean {
+    return question !== null && question.choices !== undefined && question.choices.length > 0;
   }
 
   restartTest(): void {

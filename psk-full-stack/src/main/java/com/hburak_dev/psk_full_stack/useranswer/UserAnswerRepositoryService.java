@@ -33,7 +33,7 @@ public class UserAnswerRepositoryService {
         return userAnswerRepository.existsById(id);
     }
 
-    public UserAnswer saveAnswer(Long userTestId, Long questionId, Long choiceId, String textAnswer) {
+    public UserAnswer saveAnswer(Long userTestId, Long questionId, Long choiceId, String textAnswer, Integer createdBy) {
         if ((choiceId == null && (textAnswer == null || textAnswer.trim().isEmpty())) ||
             (choiceId != null && textAnswer != null && !textAnswer.trim().isEmpty())) {
             throw new IllegalArgumentException("Either choiceId or textAnswer must be provided, but not both");
@@ -47,6 +47,7 @@ public class UserAnswerRepositoryService {
             userAnswer.setChoiceId(choiceId);
             userAnswer.setTextAnswer(textAnswer);
             userAnswer.setAnsweredAt(LocalDateTime.now());
+            userAnswer.setCreatedBy(createdBy);
         } else {
             userAnswer = UserAnswer.builder()
                     .userTestId(userTestId)
@@ -54,18 +55,11 @@ public class UserAnswerRepositoryService {
                     .choiceId(choiceId)
                     .textAnswer(textAnswer)
                     .answeredAt(LocalDateTime.now())
+                    .createdBy(createdBy)
                     .build();
         }
 
         return userAnswerRepository.save(userAnswer);
-    }
-
-    public UserAnswer saveMultipleChoiceAnswer(Long userTestId, Long questionId, Long choiceId) {
-        return saveAnswer(userTestId, questionId, choiceId, null);
-    }
-
-    public UserAnswer saveTextAnswer(Long userTestId, Long questionId, String textAnswer) {
-        return saveAnswer(userTestId, questionId, null, textAnswer);
     }
 
     public List<UserAnswer> getUserAnswers(Long userTestId) {

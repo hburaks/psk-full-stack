@@ -10,44 +10,59 @@
         <div class="card-body">
           <!-- Progress Bar -->
           <div class="progress mb-4">
-            <div class="progress-bar" 
-                 role="progressbar" 
+            <div class="progress-bar"
+                 role="progressbar"
                  [style.width.%]="((currentQuestionIndex + 1) / questions.length) * 100"
                  [attr.aria-valuenow]="currentQuestionIndex + 1"
-                 aria-valuemin="0" 
+                 aria-valuemin="0"
                  [attr.aria-valuemax]="questions.length">
             </div>
           </div>
 
           <!-- Question -->
-          <div *ngIf="getCurrentQuestion()">
-            <h4 class="card-title mb-4">{{ getCurrentQuestion()?.text }}</h4>
-            
+          <ng-container *ngIf="getCurrentQuestion() as currentQuestion">
+            <h4 class="card-title mb-4">{{ currentQuestion.text }}</h4>
+
             <!-- Answer Choices -->
-            <div class="row" *ngIf="getCurrentQuestion()?.choices">
+            <div class="row" *ngIf="hasChoices(currentQuestion)">
               <div class="col-12">
                 <div class="list-group mb-4">
-                  <label 
-                    *ngFor="let choice of getCurrentQuestion()!.choices" 
+                  <label
+                    *ngFor="let choice of currentQuestion.choices"
                     class="list-group-item list-group-item-action"
-                    [class.active]="getAnswerForCurrentQuestion() === choice.answerType">
+                    [class.active]="answers[currentQuestionIndex].choiceId === choice.id">
                     <input 
                       type="radio" 
                       [name]="'question_' + currentQuestionIndex"
-                      [value]="choice.answerType"
-                      (change)="selectAnswer(choice.answerType!)"
-                      [checked]="getAnswerForCurrentQuestion() === choice.answerType"
+                      [value]="choice.id"
+                      (change)="selectAnswer(choice.id)"
+                      [checked]="answers[currentQuestionIndex].choiceId === choice.id"
                       class="form-check-input me-3">
                     {{ choice.text }}
                   </label>
                 </div>
               </div>
             </div>
-          </div>
+
+            <!-- Text Answer Input -->
+            <div class="row" *ngIf="!hasChoices(currentQuestion)">
+              <div class="col-12">
+                <div class="mb-4">
+                  <textarea
+                    class="form-control"
+                    rows="5"
+                    placeholder="Cevabınızı buraya yazın..."
+                    [(ngModel)]="answers[currentQuestionIndex].textAnswer"
+                    (input)="selectAnswer(undefined, getTextAreaValue($event))"
+                  ></textarea>
+                </div>
+              </div>
+            </div>
+          </ng-container>
 
           <!-- Navigation -->
           <div class="d-flex justify-content-between align-items-center">
-            <button 
+            <button
               class="btn btn-outline-secondary"
               (click)="previousQuestion()"
               [disabled]="currentQuestionIndex === 0">
@@ -57,7 +72,7 @@
 
             <!-- Question Navigation Dots -->
             <div class="d-flex flex-wrap gap-2">
-              <button 
+              <button
                 *ngFor="let question of questions; let i = index"
                 class="btn btn-sm rounded-circle"
                 [class.btn-secondary]="i === currentQuestionIndex"
@@ -68,7 +83,7 @@
             </div>
 
             <div>
-              <button 
+              <button
                 *ngIf="!isLastQuestion()"
                 class="btn btn-primary"
                 (click)="nextQuestion()"
@@ -76,8 +91,8 @@
                 <span class="d-none d-md-inline">Sonraki</span>
                 <i class="fas fa-chevron-right ms-md-2"></i>
               </button>
-              
-              <button 
+
+              <button
                 *ngIf="isLastQuestion()"
                 class="btn btn-primary"
                 (click)="submitTest()"
@@ -104,25 +119,25 @@
           <div *ngIf="!isUserTest && testResult">
             <h4 class="mb-3">{{ testResult.testTitle }}</h4>
             <p class="text-muted mb-4">{{ testResult.submittedAt | date:'dd.MM.yyyy HH:mm' }}</p>
-            
+
             <div class="mb-4">
               <div class="d-inline-block me-4">
-                <strong>Skorunuz:</strong> 
+                <strong>Skorunuz:</strong>
                 <span class="badge bg-primary fs-6 ms-2">{{ testResult.score }}</span>
               </div>
               <div class="d-inline-block">
-                <strong>Yanıtlanan Sorular:</strong> 
+                <strong>Yanıtlanan Sorular:</strong>
                 <span class="ms-2">{{ testResult.answeredQuestions }} / {{ testResult.totalQuestions }}</span>
               </div>
             </div>
-            
+
             <div class="mb-4" *ngIf="testResult.comment">
               <div class="mx-auto" style="max-width: 600px;">
                   <h5 class="mb-0">{{ testResult.comment.title }}</h5>
                   <p>{{ testResult.comment.text }}</p>
               </div>
             </div>
-            
+
             <div class="d-flex justify-content-center gap-3">
               <button class="btn btn-primary" (click)="restartTest()">
                 <i class="fas fa-redo me-2"></i>Testi Tekrar Çöz
@@ -132,7 +147,7 @@
               </button>
             </div>
           </div>
-          
+
           <!-- User Test Results -->
           <div *ngIf="isUserTest">
             <h4 class="mb-3">{{ userTest?.testTemplateTitle }}</h4>
@@ -140,8 +155,8 @@
               <i class="fas fa-check-circle me-2"></i>
               <strong>Testiniz başarıyla gönderildi!</strong>
             </div>
-            <p class="mb-4">Sonuçlarınız psikolog tarafından değerlendirilecek ve size iletilecektir. Yorumları psikologunuzdan alacaksınız.</p>
-            
+            <p class="mb-4">Teşekkürler. Test sonuçlarınız, psikoloğunuz tarafından değerlendirilecektir.</p>
+
             <div class="d-flex justify-content-center gap-3">
               <button class="btn btn-outline-secondary" (click)="goBackToTests()">
                 <i class="fas fa-arrow-left me-2"></i>Testlere Dön

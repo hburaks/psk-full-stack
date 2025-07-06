@@ -4,7 +4,7 @@ erDiagram
         timestamp createdAt
         timestamp updatedAt
     }
-    
+
     User {
         int id PK
         string firstname
@@ -16,56 +16,23 @@ erDiagram
         boolean accountLocked
         boolean enabled
     }
-    
-    TestTemplate {
+
+    Role {
         int id PK
-        string title
-        string subTitle
-        string imageUrl
-        boolean isActive
-        int createdBy FK "Admin user who created this template"
+        string name
     }
-    
-    UserTest {
+
+    Token {
         int id PK
-        int userId FK
-        int testTemplateId FK
-        timestamp assignedAt
-        timestamp completedAt
-        boolean isCompleted
-        int assignedBy FK "Admin who assigned this test"
-        string personalNotes
+        string token
+        timestamp createdAt
+        timestamp expiresAt
+        timestamp validatedAt
     }
-    
-    Question {
-        int id PK
-        string text
-        enum answerType
-        int testTemplateId FK
-        int orderIndex
-    }
-    
-    Choice {
-        int id PK
-        string text
-        enum answerType
-        int questionId FK
-        int orderIndex
-    }
-    
-    UserAnswer {
-        int id PK
-        int userTestId FK
-        int questionId FK
-        int choiceId FK "nullable for open-ended questions"
-        string textAnswer "nullable for multiple choice"
-        timestamp answeredAt
-    }
-    
+
     Session {
         int id PK
         timestamp date
-        int userId FK
         enum sessionStatus
         string noteForUser
         string noteForPsychologist
@@ -74,36 +41,30 @@ erDiagram
         string sessionLink
         string googleEventId
     }
-    
+
+    UserTest {
+        int id PK
+        timestamp assignedAt
+        timestamp completedAt
+        boolean isCompleted
+    }
+
+    TestTemplate {
+        int id PK
+        string title
+        string subTitle
+        string imageUrl
+        boolean isActive
+    }
+
     Comment {
         int id PK
         int score
         string title
         string text
         string imageUrl
-        int userTestId FK
-        int commentedBy FK "Psychologist who commented"
     }
-    
-    Role {
-        int id PK
-        string name
-    }
-    
-    UserRole {
-        int userId FK
-        int roleId FK
-    }
-    
-    Token {
-        int id PK
-        string token
-        timestamp createdAt
-        timestamp expiresAt
-        timestamp validatedAt
-        int userId FK
-    }
-    
+
     Blog {
         int id PK
         string title
@@ -113,19 +74,49 @@ erDiagram
         string imageFileName
     }
 
+    Question {
+        int id PK
+        string text
+        int orderIndex
+        enum answerType
+    }
+
+    Choice {
+        int id PK
+        string text
+        enum answerType
+    }
+
+    UserAnswer {
+        int id PK
+        string textAnswer
+        timestamp answeredAt
+    }
+
+    %% Inheritance
+    Session ||--|| BaseEntity : "extends"
+    UserTest ||--|| BaseEntity : "extends"
+    TestTemplate ||--|| BaseEntity : "extends"
+    Comment ||--|| BaseEntity : "extends"
+    Blog ||--|| BaseEntity : "extends"
+    Question ||--|| BaseEntity : "extends"
+    Choice ||--|| BaseEntity : "extends"
+    UserAnswer ||--|| BaseEntity : "extends"
+
     %% Relationships
-    User ||--o{ UserTest : "has assigned tests"
-    TestTemplate ||--o{ UserTest : "used in assignments"
+    User ||--|{ Token : "has"
+    User ||--o{ Session : "has"
+    User }o--o{ Role : "has"
+    User ||--o{ UserTest : "takes"
+    User ||--o{ UserTest : "assigns"
+
     TestTemplate ||--o{ Question : "contains"
-    Question ||--o{ Choice : "has options"
-    UserTest ||--o{ UserAnswer : "contains answers"
-    UserTest ||--o{ Comment : "receives feedback"
-    User ||--o{ Session : "schedules"
-    User ||--o{ Token : "has tokens"
-    User ||--o{ UserRole : "has roles"
-    Role ||--o{ UserRole : "assigned to users"
-    Question ||--o{ UserAnswer : "answered in"
-    Choice ||--o{ UserAnswer : "selected as answer"
-    User ||--o{ TestTemplate : "creates (admin)"
-    User ||--o{ UserTest : "assigns (admin)"
-    User ||--o{ Comment : "writes (psychologist)"
+    TestTemplate ||--o{ Comment : "has"
+    TestTemplate ||--|{ UserTest : "is template for"
+
+    Question }o--o{ Choice : "has"
+    Question ||--o{ UserAnswer : "is answered by"
+
+    UserTest ||--o{ UserAnswer : "contains"
+
+    Choice ||--o{ UserAnswer : "is selected for"

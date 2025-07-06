@@ -1,10 +1,11 @@
 package com.hburak_dev.psk_full_stack.usertest;
 
-import com.hburak_dev.psk_full_stack.user.User;
-import com.hburak_dev.psk_full_stack.exception.UserTestNotFoundException;
-import com.hburak_dev.psk_full_stack.exception.UserTestAccessDeniedException;
-import com.hburak_dev.psk_full_stack.exception.UserTestAlreadyCompletedException;
+import com.hburak_dev.psk_full_stack.exception.*;
 import com.hburak_dev.psk_full_stack.handler.BusinessErrorCodes;
+import com.hburak_dev.psk_full_stack.question.Question;
+import com.hburak_dev.psk_full_stack.question.QuestionRepository;
+import com.hburak_dev.psk_full_stack.user.User;
+import com.hburak_dev.psk_full_stack.useranswer.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,6 +24,9 @@ public class UserTestServiceImpl implements UserTestServiceInterface {
 
     private final UserTestRepository userTestRepository;
     private final UserTestMapper userTestMapper;
+    private final UserAnswerRepositoryService userAnswerRepositoryService;
+    private final QuestionRepository questionRepository;
+    private final UserAnswerMapper userAnswerMapper;
 
     @Override
     @Transactional
@@ -88,41 +93,65 @@ public class UserTestServiceImpl implements UserTestServiceInterface {
         return userTestMapper.toUserTestResponse(userTest);
     }
 
-    @Override
-    @Transactional
-    public UserTestResponse startUserTest(Integer id, Authentication connectedUser) {
-        User user = (User) connectedUser.getPrincipal();
-        UserTest userTest = userTestRepository.findById(id)
-                .orElseThrow(() -> new UserTestNotFoundException("User test not found with id: " + id, 
-                        BusinessErrorCodes.USER_TEST_NOT_FOUND));
-        
-        // Ensure user can only start their own tests
-        if (!userTest.getUserId().equals(user.getId().longValue())) {
-            throw new UserTestAccessDeniedException("Access denied: This test does not belong to you", 
-                    BusinessErrorCodes.USER_TEST_ACCESS_DENIED);
-        }
-        
-        // Check if test is already completed
-        if (userTest.getIsCompleted()) {
-            throw new UserTestAlreadyCompletedException("Test is already completed", 
-                    BusinessErrorCodes.USER_TEST_ALREADY_COMPLETED);
-        }
-        
-        // Mark test as started (you might want to add a startedAt field to UserTest entity)
-        // For now, we'll just return the test as is
-        log.info("User {} started test {}", user.getId(), id);
-        return userTestMapper.toUserTestResponse(userTest);
-    }
 
     @Override
     @Transactional
-    public UserTestResponse completeUserTest(Integer id, Authentication connectedUser) {
+    public SubmitTestResponse submitAndCompleteTest(Integer id, SubmitTestRequest request, Authentication connectedUser) {
         User user = (User) connectedUser.getPrincipal();
-        UserTest userTest = userTestRepository.findById(id)
-                .orElseThrow(() -> new UserTestNotFoundException("User test not found with id: " + id, 
+
+        // Validate user test access
+        UserTest userTest = validateUserTestAccess(id, user);
+
+        List<UserAnswerResponse> submittedAnswers = new ArrayList<>();
+
+        // Process all answers in batch
+        for (SubmitAnswerRequest answerRequest : request.getAnswers()) {
+            answerRequest.setUserTestId(request.getUserTestId());
+
+            // Validate question belongs to test template
+            validateQuestion(answerRequest.getQuestionId(), userTest.getTestTemplateId());
+
+            // Validate answer format
+            validateAnswerFormat(answerRequest);
+
+            Long choiceId = answerRequest.getChoiceId() != null ? answerRequest.getChoiceId().longValue() : null;
+            String textAnswer = answerRequest.getTextAnswer();
+
+            // Save answer
+            UserAnswer userAnswer = userAnswerRepositoryService.saveAnswer(
+                    userTest.getId().longValue(),
+                    answerRequest.getQuestionId().longValue(),
+                    choiceId,
+                    textAnswer,
+                    user.getId()
+            );
+
+            submittedAnswers.add(userAnswerMapper.toUserAnswerResponse(userAnswer));
+        }
+
+        // Mark test as completed
+        userTest.setIsCompleted(true);
+        userTest.setCompletedAt(LocalDateTime.now());
+
+        UserTest completedTest = userTestRepository.save(userTest);
+
+        log.info("User {} submitted and completed test {} with {} answers",
+                user.getId(), id, request.getAnswers().size());
+
+        return SubmitTestResponse.builder()
+                .userTestId(completedTest.getId())
+                .isCompleted(completedTest.getIsCompleted())
+                .completedAt(completedTest.getCompletedAt())
+                .submittedAnswers(submittedAnswers)
+                .build();
+    }
+
+    private UserTest validateUserTestAccess(Integer userTestId, User user) {
+        UserTest userTest = userTestRepository.findById(userTestId)
+                .orElseThrow(() -> new UserTestNotFoundException("User test not found with id: " + userTestId, 
                         BusinessErrorCodes.USER_TEST_NOT_FOUND));
-        
-        // Ensure user can only complete their own tests
+
+        // Ensure user can only access their own tests
         if (!userTest.getUserId().equals(user.getId().longValue())) {
             throw new UserTestAccessDeniedException("Access denied: This test does not belong to you", 
                     BusinessErrorCodes.USER_TEST_ACCESS_DENIED);
@@ -130,18 +159,40 @@ public class UserTestServiceImpl implements UserTestServiceInterface {
         
         // Check if test is already completed
         if (userTest.getIsCompleted()) {
-            throw new UserTestAlreadyCompletedException("Test is already completed", 
+            throw new UserTestAlreadyCompletedException("Cannot submit answers: Test is already completed", 
                     BusinessErrorCodes.USER_TEST_ALREADY_COMPLETED);
         }
-        
-        // Mark test as completed
-        userTest.setIsCompleted(true);
-        userTest.setCompletedAt(LocalDateTime.now());
-        
-        UserTest savedUserTest = userTestRepository.save(userTest);
-        log.info("User {} completed test {}", user.getId(), id);
-        
-        return userTestMapper.toUserTestResponse(savedUserTest);
+
+        return userTest;
+    }
+
+    private Question validateQuestion(Integer questionId, Long testTemplateId) {
+        Question question = questionRepository.findById(questionId)
+                .orElseThrow(() -> new QuestionNotFoundException("Question not found with id: " + questionId,
+                        BusinessErrorCodes.QUESTION_NOT_FOUND));
+
+        // Ensure question belongs to the test template
+        if (!question.getTestTemplateId().equals(testTemplateId)) {
+            throw new UserTestAccessDeniedException("Question does not belong to this test template", 
+                    BusinessErrorCodes.USER_TEST_ACCESS_DENIED);
+        }
+
+        return question;
+    }
+
+    private void validateAnswerFormat(SubmitAnswerRequest request) {
+        boolean hasChoice = request.getChoiceId() != null;
+        boolean hasText = request.getTextAnswer() != null && !request.getTextAnswer().trim().isEmpty();
+
+        if (!hasChoice && !hasText) {
+            throw new InvalidAnswerFormatException("Either choiceId or textAnswer must be provided",
+                    BusinessErrorCodes.INVALID_ANSWER_FORMAT);
+        }
+
+        if (hasChoice && hasText) {
+            throw new InvalidAnswerFormatException("Cannot provide both choiceId and textAnswer",
+                    BusinessErrorCodes.INVALID_ANSWER_FORMAT);
+        }
     }
 
     // Repository methods (keep existing functionality)

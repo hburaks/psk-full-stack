@@ -1,7 +1,10 @@
 package com.hburak_dev.psk_full_stack.usertest;
 
+import com.hburak_dev.psk_full_stack.useranswer.SubmitTestRequest;
+import com.hburak_dev.psk_full_stack.useranswer.SubmitTestResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -34,23 +37,18 @@ public class UserTestController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/{id}/start")
-    @Operation(summary = "Start test")
-    public ResponseEntity<UserTestResponse> startTest(
-            @PathVariable Integer id,
-            Authentication connectedUser) {
-        
-        UserTestResponse response = userTestService.startUserTest(id, connectedUser);
-        return ResponseEntity.ok(response);
-    }
 
-    @PostMapping("/{id}/complete")
-    @Operation(summary = "Complete test")
-    public ResponseEntity<UserTestResponse> completeTest(
+    @PostMapping("/{id}/submit")
+    @Operation(summary = "Submit all answers and complete test in one operation")
+    public ResponseEntity<SubmitTestResponse> submitAndCompleteTest(
             @PathVariable Integer id,
+            @Valid @RequestBody SubmitTestRequest request,
             Authentication connectedUser) {
-        
-        UserTestResponse response = userTestService.completeUserTest(id, connectedUser);
+
+        // Set the userTestId from path variable to ensure consistency
+        request.setUserTestId(id);
+
+        SubmitTestResponse response = userTestService.submitAndCompleteTest(id, request, connectedUser);
         return ResponseEntity.ok(response);
     }
 }

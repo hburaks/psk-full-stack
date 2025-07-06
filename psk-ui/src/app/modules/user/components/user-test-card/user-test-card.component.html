@@ -2,15 +2,12 @@
   <div class="test-circle mx-auto mb-2">
     <img *ngIf="testImageUrl" [src]="testImageUrl" alt="Test image"
       style="width: 100%; height: 100%; object-fit: cover;">
-  </div> 
+  </div>
   <div class="card test-card">
     <div class="card-body test-card-body test-card-body-large d-flex flex-column justify-content-between">
       <div>
         <h5 class="card-title text-center">{{testTitle}}</h5>
         <p class="card-text text-secondary">{{testSubTitle}}</p>
-        <p *ngIf="userTest && isCompleted" class="card-text text-success small">
-          ✓ Tamamlandı
-        </p>
       </div>
       <button *ngIf="userTest && !isCompleted" (click)="startUserTest()" class="btn btn-outline-primary btn-test">
         Teste Başla

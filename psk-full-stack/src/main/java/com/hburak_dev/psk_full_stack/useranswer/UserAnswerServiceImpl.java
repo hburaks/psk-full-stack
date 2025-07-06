@@ -1,16 +1,12 @@
 package com.hburak_dev.psk_full_stack.useranswer;
 
+import com.hburak_dev.psk_full_stack.exception.*;
+import com.hburak_dev.psk_full_stack.handler.BusinessErrorCodes;
+import com.hburak_dev.psk_full_stack.question.Question;
+import com.hburak_dev.psk_full_stack.question.QuestionRepository;
 import com.hburak_dev.psk_full_stack.user.User;
 import com.hburak_dev.psk_full_stack.usertest.UserTest;
 import com.hburak_dev.psk_full_stack.usertest.UserTestServiceImpl;
-import com.hburak_dev.psk_full_stack.question.Question;
-import com.hburak_dev.psk_full_stack.question.QuestionRepository;
-import com.hburak_dev.psk_full_stack.exception.UserTestNotFoundException;
-import com.hburak_dev.psk_full_stack.exception.UserTestAccessDeniedException;
-import com.hburak_dev.psk_full_stack.exception.UserTestAlreadyCompletedException;
-import com.hburak_dev.psk_full_stack.exception.QuestionNotFoundException;
-import com.hburak_dev.psk_full_stack.exception.InvalidAnswerFormatException;
-import com.hburak_dev.psk_full_stack.handler.BusinessErrorCodes;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -18,10 +14,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.ArrayList;
 
 @Service
 @Slf4j
@@ -75,7 +71,7 @@ public class UserAnswerServiceImpl implements UserAnswerServiceInterface {
                     userTest.getId().longValue(),
                     answerRequest.getQuestionId().longValue(),
                     answerRequest.getChoiceId() != null ? answerRequest.getChoiceId().longValue() : null,
-                    answerRequest.getTextAnswer()
+                    answerRequest.getTextAnswer(), answerRequest.getUserTestId()
             );
             
             submittedAnswers.add(userAnswerMapper.toUserAnswerResponse(userAnswer));
