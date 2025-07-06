@@ -70,12 +70,11 @@ export class AdminTestCardComponent {
     );
   }
 
-  addTestTemplateToUser(testTemplateId: number, personalNotes?: string) {
+  addTestTemplateToUser(testTemplateId: number) {
     if (this.userId) {
       const assignRequest: AssignTestRequest = {
         testTemplateId: testTemplateId,
-        userId: this.userId,
-        personalNotes: personalNotes || undefined,
+        userId: this.userId
       };
 
       this.userTestAdminService.assignTest({ body: assignRequest }).subscribe({

@@ -102,8 +102,7 @@ export class UserTestDetailComponent implements OnInit {
     const answers = Object.values(this.selectedAnswers);
     const submitRequest: SubmitTestRequest = {
       userTestId: this.userTest.id,
-      answers: answers,
-      personalNotes: undefined, // Could be added as an optional feature
+      answers: answers
     };
 
     this.userAnswerService.submitTest({ userTestId: this.userTest.id, body: submitRequest }).subscribe({

@@ -20,7 +20,6 @@ export class PublicTestDetailComponent implements OnInit {
   testResult: PublicTestResultResponse | null = null;
   isLoading: boolean = false;
   isTestCompleted: boolean = false;
-  personalNotes: string = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -115,7 +114,6 @@ export class PublicTestDetailComponent implements OnInit {
     this.isLoading = true;
     const submission: PublicTestSubmissionRequest = {
       answers: this.answers,
-      personalNotes: this.personalNotes || undefined
     };
 
     this.publicTestService.submitTestAnswers({
@@ -146,7 +144,6 @@ export class PublicTestDetailComponent implements OnInit {
     this.currentQuestionIndex = 0;
     this.isTestCompleted = false;
     this.testResult = null;
-    this.personalNotes = '';
     this.initializeAnswers();
   }
 

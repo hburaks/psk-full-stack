@@ -91,24 +91,6 @@
     </div>
   </div>
 
-  <!-- Personal Notes Section (only on last question) -->
-  <div class="row mt-3" *ngIf="isLastQuestion() && !isTestCompleted">
-    <div class="col-12">
-      <div class="card">
-        <div class="card-header">
-          <h5 class="mb-0">İsteğe Bağlı Notlar</h5>
-        </div>
-        <div class="card-body">
-          <textarea 
-            class="form-control" 
-            rows="3" 
-            placeholder="Bu test hakkında düşüncelerinizi veya notlarınızı buraya yazabilirsiniz (isteğe bağlı)..."
-            [(ngModel)]="personalNotes">
-          </textarea>
-        </div>
-      </div>
-    </div>
-  </div>
 
   <!-- Test Results -->
   <div class="row" *ngIf="isTestCompleted && testResult">

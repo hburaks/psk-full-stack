@@ -8,9 +8,6 @@
       <div>
         <h5 class="card-title text-center">{{testTitle}}</h5>
         <p class="card-text text-secondary">{{testSubTitle}}</p>
-        <p *ngIf="personalNotes" class="card-text text-muted small">
-          <strong>Not:</strong> {{personalNotes}}
-        </p>
         <p *ngIf="userTest && isCompleted" class="card-text text-success small">
           ✓ Tamamlandı
         </p>

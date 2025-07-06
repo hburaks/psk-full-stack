@@ -35,7 +35,4 @@ export class UserTestCardComponent {
     return this.userTest?.isCompleted || false;
   }
 
-  get personalNotes() {
-    return this.userTest?.personalNotes;
-  }
 }
