@@ -1,4 +1,5 @@
 import {Component} from '@angular/core';
+import { Router } from '@angular/router';
 import { UserNavItems } from 'src/app/components/user-nav-underline/user-nav-underline-enum';
 import { UserTestListResponse } from 'src/app/services/models';
 import { HeaderService } from '../../service/header.service';
@@ -14,12 +15,15 @@ export class UserPanelComponent {
 
   UserNavItems = UserNavItems;
 
-  constructor(private headerService: HeaderService) {
+  constructor(
+    private headerService: HeaderService,
+    private router: Router
+  ) {
     this.selectedNavItem = this.headerService.getActiveItem();
   }
 
   startUserTest(userTest: UserTestListResponse) {
-    this.selectedUserTest = userTest;
+    this.router.navigate(['/user-test', userTest.id]);
   }
 
   onCompleteTest() {

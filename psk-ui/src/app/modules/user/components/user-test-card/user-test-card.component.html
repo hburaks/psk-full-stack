@@ -11,9 +11,6 @@
         <p *ngIf="userTest && isCompleted" class="card-text text-success small">
           ✓ Tamamlandı
         </p>
-        <p *ngIf="userTest && !isCompleted" class="card-text text-warning small">
-          ⏳ Beklemede
-        </p>
       </div>
       <button *ngIf="userTest && !isCompleted" (click)="startUserTest()" class="btn btn-outline-primary btn-test">
         Teste Başla

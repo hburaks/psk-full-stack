@@ -23,7 +23,7 @@ import { HttpTokenInterceptor } from './custom-services/interceptor/http-token.i
 import { TestService } from './custom-services/test/test.service';
 import { SharedModule } from './modules/shared/shared.module';
 import { CustomUserService } from './custom-services/custom-user/custom-user.service';
-import { PublicTestDetailComponent } from './components/public-test-detail/public-test-detail.component';
+import { TestSolverComponent } from './components/test-solver/test-solver.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +36,7 @@ import { PublicTestDetailComponent } from './components/public-test-detail/publi
     AboutComponent,
     TestComponent,
     SessionsComponent,
-    PublicTestDetailComponent,
+    TestSolverComponent,
   ],
   imports: [
     BrowserModule,

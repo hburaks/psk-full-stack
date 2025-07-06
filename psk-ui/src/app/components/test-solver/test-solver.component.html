@@ -1,11 +1,11 @@
 <div class="container page-content py-4" *ngIf="!isLoading">
   <!-- Main Test Container -->
-  <div class="row" *ngIf="testTemplate && !isTestCompleted">
+  <div class="row" *ngIf="(testTemplate || userTest) && !isTestCompleted">
     <div class="col-12">
       <div class="card mb-4">
         <div class="card-header">
-          <h2 class="mb-0">{{ testTemplate.title }}</h2>
-          <p class="text-muted mb-0" *ngIf="testTemplate.subTitle">{{ testTemplate.subTitle }}</p>
+          <h2 class="mb-0">{{ isUserTest ? userTest?.testTemplateTitle : testTemplate?.title }}</h2>
+          <p class="text-muted mb-0" *ngIf="isUserTest ? userTest?.testTemplateSubTitle : testTemplate?.subTitle">{{ isUserTest ? userTest?.testTemplateSubTitle : testTemplate?.subTitle }}</p>
         </div>
         <div class="card-body">
           <!-- Progress Bar -->
@@ -93,41 +93,60 @@
 
 
   <!-- Test Results -->
-  <div class="row" *ngIf="isTestCompleted && testResult">
+  <div class="row" *ngIf="isTestCompleted">
     <div class="col-12">
       <div class="card">
         <div class="card-header">
           <h3 class="mb-0 text-center"><i class="fas fa-check-circle me-2"></i>Test Tamamlandı!</h3>
         </div>
         <div class="card-body text-center">
-          <h4 class="mb-3">{{ testResult.testTitle }}</h4>
-          <p class="text-muted mb-4">{{ testResult.submittedAt | date:'dd.MM.yyyy HH:mm' }}</p>
-          
-          <div class="mb-4">
-            <div class="d-inline-block me-4">
-              <strong>Skorunuz:</strong> 
-              <span class="badge bg-primary fs-6 ms-2">{{ testResult.score }}</span>
+          <!-- Public Test Results -->
+          <div *ngIf="!isUserTest && testResult">
+            <h4 class="mb-3">{{ testResult.testTitle }}</h4>
+            <p class="text-muted mb-4">{{ testResult.submittedAt | date:'dd.MM.yyyy HH:mm' }}</p>
+            
+            <div class="mb-4">
+              <div class="d-inline-block me-4">
+                <strong>Skorunuz:</strong> 
+                <span class="badge bg-primary fs-6 ms-2">{{ testResult.score }}</span>
+              </div>
+              <div class="d-inline-block">
+                <strong>Yanıtlanan Sorular:</strong> 
+                <span class="ms-2">{{ testResult.answeredQuestions }} / {{ testResult.totalQuestions }}</span>
+              </div>
             </div>
-            <div class="d-inline-block">
-              <strong>Yanıtlanan Sorular:</strong> 
-              <span class="ms-2">{{ testResult.answeredQuestions }} / {{ testResult.totalQuestions }}</span>
+            
+            <div class="mb-4" *ngIf="testResult.comment">
+              <div class="mx-auto" style="max-width: 600px;">
+                  <h5 class="mb-0">{{ testResult.comment.title }}</h5>
+                  <p>{{ testResult.comment.text }}</p>
+              </div>
+            </div>
+            
+            <div class="d-flex justify-content-center gap-3">
+              <button class="btn btn-primary" (click)="restartTest()">
+                <i class="fas fa-redo me-2"></i>Testi Tekrar Çöz
+              </button>
+              <button class="btn btn-outline-secondary" (click)="goBackToTests()">
+                <i class="fas fa-arrow-left me-2"></i>Testlere Dön
+              </button>
             </div>
           </div>
           
-          <div class="mb-4" *ngIf="testResult.comment">
-            <div class="mx-auto" style="max-width: 600px;">
-                <h5 class="mb-0">{{ testResult.comment.title }}</h5>
-                <p>{{ testResult.comment.text }}</p>
+          <!-- User Test Results -->
+          <div *ngIf="isUserTest">
+            <h4 class="mb-3">{{ userTest?.testTemplateTitle }}</h4>
+            <div class="alert alert-success" role="alert">
+              <i class="fas fa-check-circle me-2"></i>
+              <strong>Testiniz başarıyla gönderildi!</strong>
             </div>
-          </div>
-          
-          <div class="d-flex justify-content-center gap-3">
-            <button class="btn btn-primary" (click)="restartTest()">
-              <i class="fas fa-redo me-2"></i>Testi Tekrar Çöz
-            </button>
-            <button class="btn btn-outline-secondary" (click)="goBackToTests()">
-              <i class="fas fa-arrow-left me-2"></i>Testlere Dön
-            </button>
+            <p class="mb-4">Sonuçlarınız psikolog tarafından değerlendirilecek ve size iletilecektir. Yorumları psikologunuzdan alacaksınız.</p>
+            
+            <div class="d-flex justify-content-center gap-3">
+              <button class="btn btn-outline-secondary" (click)="goBackToTests()">
+                <i class="fas fa-arrow-left me-2"></i>Testlere Dön
+              </button>
+            </div>
           </div>
         </div>
       </div>
