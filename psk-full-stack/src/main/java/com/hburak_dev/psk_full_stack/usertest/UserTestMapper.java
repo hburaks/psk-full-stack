@@ -27,7 +27,6 @@ public class UserTestMapper {
                 .completedAt(userTest.getCompletedAt())
                 .isCompleted(userTest.getIsCompleted())
                 .assignedBy(userTest.getAssignedBy())
-                .personalNotes(userTest.getPersonalNotes())
                 
                 // User information
                 .userFirstname(userTest.getUser() != null ? userTest.getUser().getFirstname() : null)
@@ -65,7 +64,6 @@ public class UserTestMapper {
                 .assignedAt(userTest.getAssignedAt())
                 .completedAt(userTest.getCompletedAt())
                 .isCompleted(userTest.getIsCompleted())
-                .personalNotes(userTest.getPersonalNotes())
                 
                 // Test template information
                 .testTemplateTitle(userTest.getTestTemplate() != null ? userTest.getTestTemplate().getTitle() : null)

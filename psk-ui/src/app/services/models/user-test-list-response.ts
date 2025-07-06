@@ -7,7 +7,6 @@ export interface UserTestListResponse {
   completedAt?: string;
   id?: number;
   isCompleted?: boolean;
-  personalNotes?: string;
   testTemplateId?: number;
   testTemplateImageUrl?: string;
   testTemplateSubTitle?: string;

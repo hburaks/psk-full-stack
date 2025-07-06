@@ -48,8 +48,6 @@ public class UserTest extends BaseEntity {
     @Column(name = "assigned_by", nullable = false)
     private Long assignedBy;
 
-    @Column(name = "personal_notes", columnDefinition = "TEXT")
-    private String personalNotes;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", insertable = false, updatable = false)

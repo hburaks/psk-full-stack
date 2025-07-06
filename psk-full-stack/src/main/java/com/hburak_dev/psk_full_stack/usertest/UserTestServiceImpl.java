@@ -42,7 +42,6 @@ public class UserTestServiceImpl implements UserTestServiceInterface {
                 .testTemplateId(request.getTestTemplateId())
                 .assignedAt(LocalDateTime.now())
                 .assignedBy(admin.getId().longValue())
-                .personalNotes(request.getPersonalNotes())
                 .isCompleted(false)
                 .build();
         
@@ -138,9 +137,6 @@ public class UserTestServiceImpl implements UserTestServiceInterface {
         // Mark test as completed
         userTest.setIsCompleted(true);
         userTest.setCompletedAt(LocalDateTime.now());
-        if (request.getPersonalNotes() != null) {
-            userTest.setPersonalNotes(request.getPersonalNotes());
-        }
         
         UserTest savedUserTest = userTestRepository.save(userTest);
         log.info("User {} completed test {}", user.getId(), id);
@@ -203,7 +199,7 @@ public class UserTestServiceImpl implements UserTestServiceInterface {
         return userTestRepository.findPendingTestsByUserId(userId);
     }
 
-    public UserTest markTestAsCompleted(Integer userTestId, String personalNotes) {
+    public UserTest markTestAsCompleted(Integer userTestId) {
         UserTest userTest = userTestRepository.findById(userTestId)
                 .orElseThrow(() -> new IllegalArgumentException("UserTest not found with id: " + userTestId));
 
@@ -213,20 +209,10 @@ public class UserTestServiceImpl implements UserTestServiceInterface {
 
         userTest.setIsCompleted(true);
         userTest.setCompletedAt(LocalDateTime.now());
-        if (personalNotes != null && !personalNotes.trim().isEmpty()) {
-            userTest.setPersonalNotes(personalNotes);
-        }
 
         return userTestRepository.save(userTest);
     }
 
-    public UserTest updatePersonalNotes(Integer userTestId, String personalNotes) {
-        UserTest userTest = userTestRepository.findById(userTestId)
-                .orElseThrow(() -> new IllegalArgumentException("UserTest not found with id: " + userTestId));
-
-        userTest.setPersonalNotes(personalNotes);
-        return userTestRepository.save(userTest);
-    }
 
     public List<UserTest> getTestsByTemplateId(Long testTemplateId) {
         return userTestRepository.findByTestTemplateId(testTemplateId);

@@ -5,5 +5,4 @@
 import { SubmitAnswerRequest } from '../models/submit-answer-request';
 export interface PublicTestSubmissionRequest {
   answers: Array<SubmitAnswerRequest>;
-  personalNotes?: string;
 }

@@ -84,9 +84,6 @@ public class UserAnswerServiceImpl implements UserAnswerServiceInterface {
         // Mark test as completed
         userTest.setIsCompleted(true);
         userTest.setCompletedAt(LocalDateTime.now());
-        if (request.getPersonalNotes() != null) {
-            userTest.setPersonalNotes(request.getPersonalNotes());
-        }
         
         UserTest completedTest = userTestRepositoryService.save(userTest);
         
@@ -98,7 +95,6 @@ public class UserAnswerServiceImpl implements UserAnswerServiceInterface {
                 .isCompleted(completedTest.getIsCompleted())
                 .completedAt(completedTest.getCompletedAt())
                 .submittedAnswers(submittedAnswers)
-                .personalNotes(completedTest.getPersonalNotes())
                 .build();
     }
 

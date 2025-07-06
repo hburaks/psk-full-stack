@@ -16,5 +16,4 @@ public class SubmitTestResponse {
     private Boolean isCompleted;
     private LocalDateTime completedAt;
     private List<UserAnswerResponse> submittedAnswers;
-    private String personalNotes;
 }

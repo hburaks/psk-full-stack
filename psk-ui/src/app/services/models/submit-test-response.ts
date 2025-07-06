@@ -6,7 +6,6 @@ import { UserAnswerResponse } from '../models/user-answer-response';
 export interface SubmitTestResponse {
   completedAt?: string;
   isCompleted?: boolean;
-  personalNotes?: string;
   submittedAnswers?: Array<UserAnswerResponse>;
   userTestId?: number;
 }

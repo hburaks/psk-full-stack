@@ -14,7 +14,6 @@ export interface UserTestResponse {
   isCompleted?: boolean;
   lastModifiedBy?: number;
   lastModifiedDate?: string;
-  personalNotes?: string;
   testTemplateId?: number;
   testTemplateImageUrl?: string;
   testTemplateSubTitle?: string;

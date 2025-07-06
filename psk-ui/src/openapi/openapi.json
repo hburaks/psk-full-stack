@@ -2339,9 +2339,6 @@
             "items": {
               "$ref": "#/components/schemas/SubmitAnswerRequest"
             }
-          },
-          "personalNotes": {
-            "type": "string"
           }
         }
       },
@@ -2549,11 +2546,6 @@
           "testTemplateId": {
             "type": "integer",
             "format": "int64"
-          },
-          "personalNotes": {
-            "maxLength": 1000,
-            "minLength": 0,
-            "type": "string"
           }
         }
       },
@@ -2586,9 +2578,6 @@
           "assignedBy": {
             "type": "integer",
             "format": "int64"
-          },
-          "personalNotes": {
-            "type": "string"
           },
           "userFirstname": {
             "type": "string"
@@ -2744,9 +2733,6 @@
             "items": {
               "$ref": "#/components/schemas/SubmitAnswerRequest"
             }
-          },
-          "personalNotes": {
-            "type": "string"
           }
         }
       },
@@ -2769,9 +2755,6 @@
             "items": {
               "$ref": "#/components/schemas/UserAnswerResponse"
             }
-          },
-          "personalNotes": {
-            "type": "string"
           }
         }
       },
@@ -2844,14 +2827,7 @@
         }
       },
       "CompleteTestRequest": {
-        "type": "object",
-        "properties": {
-          "personalNotes": {
-            "maxLength": 1000,
-            "minLength": 0,
-            "type": "string"
-          }
-        }
+        "type": "object"
       },
       "RegistrationRequest": {
         "required": [
@@ -3116,9 +3092,6 @@
           },
           "isCompleted": {
             "type": "boolean"
-          },
-          "personalNotes": {
-            "type": "string"
           },
           "testTemplateTitle": {
             "type": "string"

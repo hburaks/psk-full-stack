@@ -17,7 +17,6 @@ public class UserTestListResponse {
     private LocalDateTime assignedAt;
     private LocalDateTime completedAt;
     private Boolean isCompleted;
-    private String personalNotes;
     
     // Test template information (essential for list view)
     private String testTemplateTitle;

@@ -21,5 +21,4 @@ public class SubmitTestRequest {
     @Valid
     private List<SubmitAnswerRequest> answers;
 
-    private String personalNotes;
 }

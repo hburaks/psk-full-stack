@@ -18,7 +18,6 @@ public class UserTestResponse {
     private LocalDateTime completedAt;
     private Boolean isCompleted;
     private Long assignedBy;
-    private String personalNotes;
     
     // User information
     private String userFirstname;

@@ -18,5 +18,4 @@ public class PublicTestSubmissionRequest {
     @Valid
     private List<SubmitAnswerRequest> answers;
     
-    private String personalNotes;
 }
