@@ -52,7 +52,7 @@
                     (change)="selectAnswer(choice.answerType!)"
                     [checked]="getAnswerForCurrentQuestion() === choice.answerType"
                     class="form-check-input me-3">
-                  <span class="fw-bold me-2">{{ choice.answerType }})</span>
+                  <span class="fw-bold me-2">{{ choice.answerType | answerTypeDisplay }})</span>
                   {{ choice.text }}
                 </label>
               </div>

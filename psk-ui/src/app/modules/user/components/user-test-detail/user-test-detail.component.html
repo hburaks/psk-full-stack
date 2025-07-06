@@ -54,10 +54,7 @@
                }" 
                (click)="selectChoice(question.id!, choice.id!, choice.answerType!)"
                *ngFor="let choice of question.choices; let j = index">
-            {{choice.answerType === 'ANSWER_A' ? 'A) ' : 
-              choice.answerType === 'ANSWER_B' ? 'B) ' : 
-              choice.answerType === 'ANSWER_C' ? 'C) ' : 
-              choice.answerType === 'ANSWER_D' ? 'D) ' : 'E) '}}{{choice.text}}
+            {{ choice.answerType | answerTypeDisplay }}) {{ choice.text }}
           </div>
         </div>
       </div>

@@ -127,7 +127,7 @@
           </div>
           
           <div *ngFor="let choice of question.choices; let j = index" class="d-flex align-items-center mb-2 ms-3">
-            <span class="me-2">{{choice.answerType}}:</span>
+            <span class="me-2">{{ choice.answerType | answerTypeDisplay }}:</span>
             <input [(ngModel)]="choice.text" class="form-control me-2" placeholder="Seçenek metni" />
             <button *ngIf="question.choices && question.choices.length > 2" 
                     class="btn btn-outline-danger btn-sm" 
