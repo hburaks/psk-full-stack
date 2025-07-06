@@ -46,6 +46,10 @@ public class QuestionRepositoryService {
         return questionRepository.findByTestTemplateIdOrderByOrderIndexAndId(testTemplateId);
     }
 
+    public List<Question> findByTestTemplateIdWithChoicesOrderByOrderIndex(Long testTemplateId) {
+        return questionRepository.findByTestTemplateIdWithChoicesOrderByOrderIndex(testTemplateId);
+    }
+
     public Long countByTestTemplateId(Long testTemplateId) {
         return questionRepository.countByTestTemplateId(testTemplateId);
     }

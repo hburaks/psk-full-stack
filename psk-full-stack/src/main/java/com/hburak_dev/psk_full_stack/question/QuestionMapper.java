@@ -98,7 +98,7 @@ public class QuestionMapper {
                                 .testTemplateId(question.getTestTemplateId())
                                 .orderIndex(question.getOrderIndex())
                                 .userAnswer(question.getUserAnswer())
-                                .testTemplateTitle(question.getTestTemplate() != null ? question.getTestTemplate().getTitle() : null)
+                                .testTemplateTitle(null) // Don't access lazy loaded TestTemplate to avoid session issues
                                 .choices(question.getChoices())
                                 .createdDate(question.getCreatedDate())
                                 .lastModifiedDate(question.getLastModifiedDate())

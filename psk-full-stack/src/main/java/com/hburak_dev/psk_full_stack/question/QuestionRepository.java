@@ -21,4 +21,7 @@ public interface QuestionRepository extends JpaRepository<Question, Integer> {
     @Query("SELECT MAX(q.orderIndex) FROM Question q WHERE q.testTemplateId = :testTemplateId")
     Integer findMaxOrderIndexByTestTemplateId(@Param("testTemplateId") Long testTemplateId);
 
+    @Query("SELECT q FROM Question q LEFT JOIN FETCH q.choices WHERE q.testTemplateId = :testTemplateId ORDER BY q.orderIndex ASC")
+    List<Question> findByTestTemplateIdWithChoicesOrderByOrderIndex(@Param("testTemplateId") Long testTemplateId);
+
 }

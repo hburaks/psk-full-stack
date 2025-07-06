@@ -52,7 +52,7 @@ public class QuestionServiceImpl implements QuestionServiceInterface {
     @Override
     @Transactional
     public List<QuestionResponse> getQuestionsByTestTemplate(Long testTemplateId) {
-        List<Question> questions = questionRepositoryService.findByTestTemplateIdOrderByOrderIndex(testTemplateId);
+        List<Question> questions = questionRepositoryService.findByTestTemplateIdWithChoicesOrderByOrderIndex(testTemplateId);
         return questions.stream()
                 .map(questionMapper::toQuestionResponse)
                 .toList();
