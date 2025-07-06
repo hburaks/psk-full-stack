@@ -17,10 +17,10 @@ import { deleteTestTemplate } from '../fn/test-template-admin/delete-test-templa
 import { DeleteTestTemplate$Params } from '../fn/test-template-admin/delete-test-template';
 import { getAllTestTemplates } from '../fn/test-template-admin/get-all-test-templates';
 import { GetAllTestTemplates$Params } from '../fn/test-template-admin/get-all-test-templates';
-import { getTestTemplateById } from '../fn/test-template-admin/get-test-template-by-id';
-import { GetTestTemplateById$Params } from '../fn/test-template-admin/get-test-template-by-id';
-import { getTestTemplateQuestions } from '../fn/test-template-admin/get-test-template-questions';
-import { GetTestTemplateQuestions$Params } from '../fn/test-template-admin/get-test-template-questions';
+import { getTestTemplateById1 } from '../fn/test-template-admin/get-test-template-by-id-1';
+import { GetTestTemplateById1$Params } from '../fn/test-template-admin/get-test-template-by-id-1';
+import { getTestTemplateQuestions1 } from '../fn/test-template-admin/get-test-template-questions-1';
+import { GetTestTemplateQuestions1$Params } from '../fn/test-template-admin/get-test-template-questions-1';
 import { QuestionResponse } from '../models/question-response';
 import { TestTemplateResponse } from '../models/test-template-response';
 import { updateTestTemplate } from '../fn/test-template-admin/update-test-template';
@@ -36,8 +36,8 @@ export class TestTemplateAdminService extends BaseService {
     super(config, http);
   }
 
-  /** Path part for operation `getTestTemplateById()` */
-  static readonly GetTestTemplateByIdPath = '/v2/admin/test-templates/{id}';
+  /** Path part for operation `getTestTemplateById1()` */
+  static readonly GetTestTemplateById1Path = '/v2/admin/test-templates/{id}';
 
   /**
    * Get test template by ID.
@@ -45,12 +45,12 @@ export class TestTemplateAdminService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `getTestTemplateById()` instead.
+   * To access only the response body, use `getTestTemplateById1()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getTestTemplateById$Response(params: GetTestTemplateById$Params, context?: HttpContext): Observable<StrictHttpResponse<TestTemplateResponse>> {
-    return getTestTemplateById(this.http, this.rootUrl, params, context);
+  getTestTemplateById1$Response(params: GetTestTemplateById1$Params, context?: HttpContext): Observable<StrictHttpResponse<TestTemplateResponse>> {
+    return getTestTemplateById1(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -59,12 +59,12 @@ export class TestTemplateAdminService extends BaseService {
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `getTestTemplateById$Response()` instead.
+   * To access the full response (for headers, for example), `getTestTemplateById1$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getTestTemplateById(params: GetTestTemplateById$Params, context?: HttpContext): Observable<TestTemplateResponse> {
-    return this.getTestTemplateById$Response(params, context).pipe(
+  getTestTemplateById1(params: GetTestTemplateById1$Params, context?: HttpContext): Observable<TestTemplateResponse> {
+    return this.getTestTemplateById1$Response(params, context).pipe(
       map((r: StrictHttpResponse<TestTemplateResponse>): TestTemplateResponse => r.body)
     );
   }
@@ -201,8 +201,8 @@ export class TestTemplateAdminService extends BaseService {
     );
   }
 
-  /** Path part for operation `getTestTemplateQuestions()` */
-  static readonly GetTestTemplateQuestionsPath = '/v2/admin/test-templates/{id}/questions';
+  /** Path part for operation `getTestTemplateQuestions1()` */
+  static readonly GetTestTemplateQuestions1Path = '/v2/admin/test-templates/{id}/questions';
 
   /**
    * Get test template questions.
@@ -210,12 +210,12 @@ export class TestTemplateAdminService extends BaseService {
    * Get all questions for a test template ordered by order index
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `getTestTemplateQuestions()` instead.
+   * To access only the response body, use `getTestTemplateQuestions1()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getTestTemplateQuestions$Response(params: GetTestTemplateQuestions$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<QuestionResponse>>> {
-    return getTestTemplateQuestions(this.http, this.rootUrl, params, context);
+  getTestTemplateQuestions1$Response(params: GetTestTemplateQuestions1$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<QuestionResponse>>> {
+    return getTestTemplateQuestions1(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -224,12 +224,12 @@ export class TestTemplateAdminService extends BaseService {
    * Get all questions for a test template ordered by order index
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `getTestTemplateQuestions$Response()` instead.
+   * To access the full response (for headers, for example), `getTestTemplateQuestions1$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getTestTemplateQuestions(params: GetTestTemplateQuestions$Params, context?: HttpContext): Observable<Array<QuestionResponse>> {
-    return this.getTestTemplateQuestions$Response(params, context).pipe(
+  getTestTemplateQuestions1(params: GetTestTemplateQuestions1$Params, context?: HttpContext): Observable<Array<QuestionResponse>> {
+    return this.getTestTemplateQuestions1$Response(params, context).pipe(
       map((r: StrictHttpResponse<Array<QuestionResponse>>): Array<QuestionResponse> => r.body)
     );
   }

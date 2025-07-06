@@ -10,14 +10,17 @@ import { BlogService } from './services/blog.service';
 import { TestTemplateAdminService } from './services/test-template-admin.service';
 import { QuestionAdminService } from './services/question-admin.service';
 import { UserService } from './services/user.service';
+import { PublicTestService } from './services/public-test.service';
 import { SessionControllerV2Service } from './services/session-controller-v-2.service';
 import { UserTestAdminService } from './services/user-test-admin.service';
+import { CommentAdminService } from './services/comment-admin.service';
 import { UserAnswerService } from './services/user-answer.service';
 import { UserTestService } from './services/user-test.service';
 import { SessionControllerService } from './services/session-controller.service';
 import { AuthenticationService } from './services/authentication.service';
 import { SessionControllerV3Service } from './services/session-controller-v-3.service';
 import { FileControllerService } from './services/file-controller.service';
+import { ScoringAdminService } from './services/scoring-admin.service';
 
 /**
  * Module that provides all services and configuration.
@@ -31,14 +34,17 @@ import { FileControllerService } from './services/file-controller.service';
     TestTemplateAdminService,
     QuestionAdminService,
     UserService,
+    PublicTestService,
     SessionControllerV2Service,
     UserTestAdminService,
+    CommentAdminService,
     UserAnswerService,
     UserTestService,
     SessionControllerService,
     AuthenticationService,
     SessionControllerV3Service,
     FileControllerService,
+    ScoringAdminService,
     ApiConfiguration
   ],
 })

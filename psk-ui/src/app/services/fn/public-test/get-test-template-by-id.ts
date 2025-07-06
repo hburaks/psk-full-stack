@@ -8,14 +8,14 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { QuestionResponse } from '../../models/question-response';
+import { TestTemplateResponse } from '../../models/test-template-response';
 
-export interface GetTestTemplateQuestions$Params {
+export interface GetTestTemplateById$Params {
   id: number;
 }
 
-export function getTestTemplateQuestions(http: HttpClient, rootUrl: string, params: GetTestTemplateQuestions$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<QuestionResponse>>> {
-  const rb = new RequestBuilder(rootUrl, getTestTemplateQuestions.PATH, 'get');
+export function getTestTemplateById(http: HttpClient, rootUrl: string, params: GetTestTemplateById$Params, context?: HttpContext): Observable<StrictHttpResponse<TestTemplateResponse>> {
+  const rb = new RequestBuilder(rootUrl, getTestTemplateById.PATH, 'get');
   if (params) {
     rb.path('id', params.id, {});
   }
@@ -25,9 +25,9 @@ export function getTestTemplateQuestions(http: HttpClient, rootUrl: string, para
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<Array<QuestionResponse>>;
+      return r as StrictHttpResponse<TestTemplateResponse>;
     })
   );
 }
 
-getTestTemplateQuestions.PATH = '/v2/admin/test-templates/{id}/questions';
+getTestTemplateById.PATH = '/v3/public/tests/{id}';

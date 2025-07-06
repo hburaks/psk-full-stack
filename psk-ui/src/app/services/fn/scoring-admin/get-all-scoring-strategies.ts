@@ -8,16 +8,14 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { TestTemplateResponse } from '../../models/test-template-response';
+import { ScoringStrategyResponse } from '../../models/scoring-strategy-response';
 
-export interface GetTestTemplateById$Params {
-  id: number;
+export interface GetAllScoringStrategies$Params {
 }
 
-export function getTestTemplateById(http: HttpClient, rootUrl: string, params: GetTestTemplateById$Params, context?: HttpContext): Observable<StrictHttpResponse<TestTemplateResponse>> {
-  const rb = new RequestBuilder(rootUrl, getTestTemplateById.PATH, 'get');
+export function getAllScoringStrategies(http: HttpClient, rootUrl: string, params?: GetAllScoringStrategies$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<ScoringStrategyResponse>>> {
+  const rb = new RequestBuilder(rootUrl, getAllScoringStrategies.PATH, 'get');
   if (params) {
-    rb.path('id', params.id, {});
   }
 
   return http.request(
@@ -25,9 +23,9 @@ export function getTestTemplateById(http: HttpClient, rootUrl: string, params: G
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<TestTemplateResponse>;
+      return r as StrictHttpResponse<Array<ScoringStrategyResponse>>;
     })
   );
 }
 
-getTestTemplateById.PATH = '/v2/admin/test-templates/{id}';
+getAllScoringStrategies.PATH = '/v2/admin/scoring/strategies';

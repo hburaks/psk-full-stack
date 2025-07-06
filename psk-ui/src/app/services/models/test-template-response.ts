@@ -10,6 +10,7 @@ export interface TestTemplateResponse {
   isActive?: boolean;
   lastModifiedBy?: string;
   lastModifiedDate?: string;
+  scoringStrategy?: 'SIMPLE_LINEAR' | 'WEIGHTED' | 'PERCENTAGE';
   subTitle?: string;
   title?: string;
 }

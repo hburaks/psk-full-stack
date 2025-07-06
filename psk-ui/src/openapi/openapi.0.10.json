@@ -40,20 +40,8 @@
       "description": "Admin endpoints for managing test template questions"
     },
     {
-      "name": "Public Test",
-      "description": "Public endpoints for accessing and submitting tests"
-    },
-    {
-      "name": "Scoring Admin",
-      "description": "Admin endpoints for managing scoring strategies"
-    },
-    {
       "name": "Test Template Admin",
       "description": "Admin endpoints for managing test templates"
-    },
-    {
-      "name": "Comment Admin",
-      "description": "Admin endpoints for managing test template comments"
     },
     {
       "name": "User Test",
@@ -109,7 +97,7 @@
       "get": {
         "tags": ["Test Template Admin"],
         "summary": "Get test template by ID",
-        "operationId": "getTestTemplateById_1",
+        "operationId": "getTestTemplateById",
         "parameters": [
           {
             "name": "id",
@@ -323,46 +311,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/UserResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/v3/public/tests/{id}/submit": {
-      "post": {
-        "tags": ["Public Test"],
-        "summary": "Submit test answers for public access",
-        "operationId": "submitTestAnswers",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/PublicTestSubmissionRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PublicTestResultResponse"
                 }
               }
             }
@@ -1013,77 +961,6 @@
         }
       }
     },
-    "/v2/admin/comments/test-template/{testTemplateId}": {
-      "get": {
-        "tags": ["Comment Admin"],
-        "summary": "Get all comments for a test template",
-        "operationId": "getCommentsByTestTemplate",
-        "parameters": [
-          {
-            "name": "testTemplateId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/AdminTestCommentResponse"
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "tags": ["Comment Admin"],
-        "summary": "Create a new comment for a test template",
-        "operationId": "createComment",
-        "parameters": [
-          {
-            "name": "testTemplateId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AdminTestCommentRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AdminTestCommentResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/v1/user-tests/{userTestId}/submit-test": {
       "post": {
         "tags": ["User Answer"],
@@ -1333,91 +1210,6 @@
                   "type": "array",
                   "items": {
                     "$ref": "#/components/schemas/DailyCalendarResponse"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/v3/public/tests": {
-      "get": {
-        "tags": ["Public Test"],
-        "summary": "Get all active test templates for public access",
-        "operationId": "getAllActiveTestTemplates",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/TestTemplateResponse"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/v3/public/tests/{id}": {
-      "get": {
-        "tags": ["Public Test"],
-        "summary": "Get test template by ID for public access",
-        "operationId": "getTestTemplateById",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TestTemplateResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/v3/public/tests/{id}/questions": {
-      "get": {
-        "tags": ["Public Test"],
-        "summary": "Get test template questions for public access",
-        "operationId": "getTestTemplateQuestions",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/QuestionResponse"
                   }
                 }
               }
@@ -1813,7 +1605,7 @@
         "tags": ["Test Template Admin"],
         "summary": "Get test template questions",
         "description": "Get all questions for a test template ordered by order index",
-        "operationId": "getTestTemplateQuestions_1",
+        "operationId": "getTestTemplateQuestions",
         "parameters": [
           {
             "name": "id",
@@ -1834,28 +1626,6 @@
                   "type": "array",
                   "items": {
                     "$ref": "#/components/schemas/QuestionResponse"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/v2/admin/scoring/strategies": {
-      "get": {
-        "tags": ["Scoring Admin"],
-        "summary": "Get all available scoring strategies",
-        "operationId": "getAllScoringStrategies",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ScoringStrategyResponse"
                   }
                 }
               }
@@ -2092,25 +1862,6 @@
           }
         }
       },
-      "TestTemplateCommentRequest": {
-        "required": ["score", "text", "title"],
-        "type": "object",
-        "properties": {
-          "score": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "title": {
-            "type": "string"
-          },
-          "text": {
-            "type": "string"
-          },
-          "imageUrl": {
-            "type": "string"
-          }
-        }
-      },
       "TestTemplateUpdateRequest": {
         "required": ["title"],
         "type": "object",
@@ -2130,16 +1881,6 @@
           },
           "isActive": {
             "type": "boolean"
-          },
-          "scoringStrategy": {
-            "type": "string",
-            "enum": ["SIMPLE_LINEAR", "WEIGHTED", "PERCENTAGE"]
-          },
-          "comments": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/TestTemplateCommentRequest"
-            }
           }
         }
       },
@@ -2161,10 +1902,6 @@
           },
           "isActive": {
             "type": "boolean"
-          },
-          "scoringStrategy": {
-            "type": "string",
-            "enum": ["SIMPLE_LINEAR", "WEIGHTED", "PERCENTAGE"]
           },
           "createdDate": {
             "type": "string",
@@ -2326,96 +2063,6 @@
             "type": "string"
           },
           "birthYear": {
-            "type": "string"
-          }
-        }
-      },
-      "PublicTestSubmissionRequest": {
-        "required": ["answers"],
-        "type": "object",
-        "properties": {
-          "answers": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/SubmitAnswerRequest"
-            }
-          },
-          "personalNotes": {
-            "type": "string"
-          }
-        }
-      },
-      "SubmitAnswerRequest": {
-        "required": ["questionId", "userTestId"],
-        "type": "object",
-        "properties": {
-          "userTestId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "questionId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "choiceId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "answerType": {
-            "type": "string",
-            "enum": ["ANSWER_A", "ANSWER_B", "ANSWER_C", "ANSWER_D", "ANSWER_E"]
-          },
-          "textAnswer": {
-            "maxLength": 2000,
-            "minLength": 0,
-            "type": "string"
-          }
-        }
-      },
-      "PublicTestAnswerCommentResponse": {
-        "type": "object",
-        "properties": {
-          "title": {
-            "type": "string"
-          },
-          "text": {
-            "type": "string"
-          },
-          "imageUrl": {
-            "type": "string"
-          }
-        }
-      },
-      "PublicTestResultResponse": {
-        "type": "object",
-        "properties": {
-          "testTemplateId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "testTitle": {
-            "type": "string"
-          },
-          "totalQuestions": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "answeredQuestions": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "score": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "comment": {
-            "$ref": "#/components/schemas/PublicTestAnswerCommentResponse"
-          },
-          "submittedAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "message": {
             "type": "string"
           }
         }
@@ -2651,16 +2298,6 @@
           },
           "isActive": {
             "type": "boolean"
-          },
-          "scoringStrategy": {
-            "type": "string",
-            "enum": ["SIMPLE_LINEAR", "WEIGHTED", "PERCENTAGE"]
-          },
-          "comments": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/TestTemplateCommentRequest"
-            }
           }
         }
       },
@@ -2690,43 +2327,29 @@
           }
         }
       },
-      "AdminTestCommentRequest": {
+      "SubmitAnswerRequest": {
+        "required": ["questionId", "userTestId"],
         "type": "object",
         "properties": {
-          "commentId": {
+          "userTestId": {
             "type": "integer",
             "format": "int32"
           },
-          "score": {
+          "questionId": {
             "type": "integer",
             "format": "int32"
           },
-          "title": {
-            "type": "string"
-          },
-          "text": {
-            "type": "string"
-          }
-        }
-      },
-      "AdminTestCommentResponse": {
-        "type": "object",
-        "properties": {
-          "commentId": {
+          "choiceId": {
             "type": "integer",
             "format": "int32"
           },
-          "score": {
-            "type": "integer",
-            "format": "int32"
+          "answerType": {
+            "type": "string",
+            "enum": ["ANSWER_A", "ANSWER_B", "ANSWER_C", "ANSWER_D", "ANSWER_E"]
           },
-          "title": {
-            "type": "string"
-          },
-          "text": {
-            "type": "string"
-          },
-          "imageUrl": {
+          "textAnswer": {
+            "maxLength": 2000,
+            "minLength": 0,
             "type": "string"
           }
         }
@@ -3136,20 +2759,6 @@
             "type": "string"
           },
           "userEmail": {
-            "type": "string"
-          }
-        }
-      },
-      "ScoringStrategyResponse": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string"
-          },
-          "strategyName": {
-            "type": "string"
-          },
-          "description": {
             "type": "string"
           }
         }
