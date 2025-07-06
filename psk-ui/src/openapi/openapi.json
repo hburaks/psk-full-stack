@@ -1884,6 +1884,41 @@
         }
       }
     },
+    "/v2/admin/user-tests/{userTestId}/answers": {
+      "get": {
+        "tags": [
+          "User Test Admin"
+        ],
+        "summary": "Get user's answers for a test (Admin access)",
+        "operationId": "getUserTestAnswers",
+        "parameters": [
+          {
+            "name": "userTestId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserAnswerResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v2/admin/test-templates/{id}/questions": {
       "get": {
         "tags": [
@@ -1996,41 +2031,6 @@
                   "type": "array",
                   "items": {
                     "$ref": "#/components/schemas/UserTestListResponse"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/v1/user-tests/{userTestId}/answers": {
-      "get": {
-        "tags": [
-          "User Answer"
-        ],
-        "summary": "Get user's answers for a test",
-        "operationId": "getUserTestAnswers",
-        "parameters": [
-          {
-            "name": "userTestId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/UserAnswerResponse"
                   }
                 }
               }
