@@ -14,6 +14,7 @@ import com.hburak_dev.psk_full_stack.role.RoleRepository;
 import com.hburak_dev.psk_full_stack.session.Session;
 import com.hburak_dev.psk_full_stack.session.SessionRepository;
 import com.hburak_dev.psk_full_stack.session.SessionStatusType;
+import com.hburak_dev.psk_full_stack.scoring.ScoringStrategyType;
 import com.hburak_dev.psk_full_stack.testtemplate.TestTemplate;
 import com.hburak_dev.psk_full_stack.testtemplate.TestTemplateRepository;
 import com.hburak_dev.psk_full_stack.user.User;
@@ -131,11 +132,14 @@ public class DataInitializer {
                         blogRepository.saveAll(mockBlogs);
                 }
 
-                TestTemplate depressionTest = TestTemplate.builder()
+                // Create test templates with different scoring strategies (only if they don't exist)
+                if (testTemplateRepository.count() == 0) {
+                        TestTemplate depressionTest = TestTemplate.builder()
                                 .title("Depresyon Değerlendirmesi")
                                 .subTitle("Depresyon belirtilerini değerlendir")
                                 .createdBy(mockUser.getId())
                                 .isActive(true)
+                                .scoringStrategy(ScoringStrategyType.WEIGHTED) // Clinical assessment uses weighted scoring
                                 .build();
 
                 TestTemplate anxietyTest = TestTemplate.builder()
@@ -143,36 +147,114 @@ public class DataInitializer {
                                 .subTitle("Anksiyete seviyenizi kontrol edin")
                                 .createdBy(mockUser.getId())
                                 .isActive(true)
+                                .scoringStrategy(ScoringStrategyType.PERCENTAGE) // Anxiety test uses percentage scoring
+                                .build();
+
+                // Add a third test with simple linear scoring
+                TestTemplate personalityTest = TestTemplate.builder()
+                                .title("Kişilik Değerlendirmesi")
+                                .subTitle("Temel kişilik özelliklerinizi keşfedin")
+                                .createdBy(mockUser.getId())
+                                .isActive(true)
+                                .scoringStrategy(ScoringStrategyType.SIMPLE_LINEAR) // Personality test uses simple linear
                                 .build();
 
                 depressionTest = testTemplateRepository.save(depressionTest);
                 anxietyTest = testTemplateRepository.save(anxietyTest);
+                personalityTest = testTemplateRepository.save(personalityTest);
 
-                List<Comment> depressionComments = commentRepository.saveAll(List.of(
-                                Comment.builder().title("Yüksek").score(100).text("Yüksek depresyon seviyesi")
+                // Create comments for Depression Test (WEIGHTED scoring: A=0, B=1, C=3, D=6, E=10)
+                // For 2 questions, max score would be 20 (2 * 10)
+                List<Comment> depressionComments = List.of(
+                                Comment.builder()
+                                                .title("Minimal Depresyon")
+                                                .score(0)
+                                                .text("Sonuçlarınız minimal depresyon belirtileri gösteriyor. Ruh haliniz genel olarak olumlu görünüyor.")
+                                                .testTemplateId(depressionTest.getId().longValue())
                                                 .createdBy(mockUser.getId())
                                                 .build(),
-                                Comment.builder().title("Orta").score(50).text("Orta depresyon seviyesi")
+                                Comment.builder()
+                                                .title("Hafif Depresyon")
+                                                .score(4)
+                                                .text("Hafif depresyon belirtileri tespit edildi. Yaşam tarzı değişiklikleri ve destek yararlı olabilir.")
+                                                .testTemplateId(depressionTest.getId().longValue())
                                                 .createdBy(mockUser.getId())
                                                 .build(),
-                                Comment.builder().title("Düşük").score(0).text("Düşük depresyon seviyesi")
+                                Comment.builder()
+                                                .title("Orta Depresyon")
+                                                .score(8)
+                                                .text("Orta düzeyde depresyon belirtileri mevcut. Profesyonel destek almanız önerilir.")
+                                                .testTemplateId(depressionTest.getId().longValue())
                                                 .createdBy(mockUser.getId())
-                                                .build()));
+                                                .build(),
+                                Comment.builder()
+                                                .title("Ciddi Depresyon")
+                                                .score(15)
+                                                .text("Ciddi depresyon belirtileri tespit edildi. Mutlaka bir uzmanla görüşmeniz gerekiyor.")
+                                                .testTemplateId(depressionTest.getId().longValue())
+                                                .createdBy(mockUser.getId())
+                                                .build());
 
-                List<Comment> anxietyComments = commentRepository.saveAll(List.of(
-                                Comment.builder().title("Yüksek").score(100).text("Yüksek anksiyete seviyesi")
+                // Create comments for Anxiety Test (PERCENTAGE scoring: 0-100%)
+                List<Comment> anxietyComments = List.of(
+                                Comment.builder()
+                                                .title("Düşük Anksiyete")
+                                                .score(0)
+                                                .text("Anksiyete seviyeniz normaldir. Stres yönetimi tekniklerini öğrenmek faydalı olabilir.")
+                                                .testTemplateId(anxietyTest.getId().longValue())
                                                 .createdBy(mockUser.getId())
                                                 .build(),
-                                Comment.builder().title("Orta").score(50).text("Orta anksiyete seviyesi")
+                                Comment.builder()
+                                                .title("Hafif Anksiyete")
+                                                .score(25)
+                                                .text("Hafif düzeyde anksiyete belirtileri var. Nefes egzersizleri ve meditasyon yararlı olabilir.")
+                                                .testTemplateId(anxietyTest.getId().longValue())
                                                 .createdBy(mockUser.getId())
                                                 .build(),
-                                Comment.builder().title("Düşük").score(0).text("Düşük anksiyete seviyesi")
+                                Comment.builder()
+                                                .title("Orta Anksiyete")
+                                                .score(50)
+                                                .text("Orta düzeyde anksiyete mevcut. Stres yönetimi teknikleri ve destek almanız önerilir.")
+                                                .testTemplateId(anxietyTest.getId().longValue())
                                                 .createdBy(mockUser.getId())
-                                                .build()));
+                                                .build(),
+                                Comment.builder()
+                                                .title("Yüksek Anksiyete")
+                                                .score(75)
+                                                .text("Yüksek anksiyete seviyesi tespit edildi. Profesyonel yardım almanız önemlidir.")
+                                                .testTemplateId(anxietyTest.getId().longValue())
+                                                .createdBy(mockUser.getId())
+                                                .build());
 
-                // Assuming TestTemplate has a comments field to set
-                // depressionTest.setComments(depressionComments);
-                // anxietyTest.setComments(anxietyComments);
+                // Create comments for Personality Test (SIMPLE_LINEAR scoring: A=1, B=2, C=3, D=4, E=5)
+                // For 2 questions, max score would be 10 (2 * 5)
+                List<Comment> personalityComments = List.of(
+                                Comment.builder()
+                                                .title("Introvert Kişilik")
+                                                .score(0)
+                                                .text("Daha içe dönük bir kişilik yapısına sahipsiniz. Derin düşünme ve kaliteli ilişkileri tercih ediyorsunuz.")
+                                                .testTemplateId(personalityTest.getId().longValue())
+                                                .createdBy(mockUser.getId())
+                                                .build(),
+                                Comment.builder()
+                                                .title("Dengeli Kişilik")
+                                                .score(4)
+                                                .text("Dengeli bir kişiliğe sahipsiniz. Hem sosyal hem de bireysel aktiviteleri seviyorsunuz.")
+                                                .testTemplateId(personalityTest.getId().longValue())
+                                                .createdBy(mockUser.getId())
+                                                .build(),
+                                Comment.builder()
+                                                .title("Ekstrovert Kişilik")
+                                                .score(7)
+                                                .text("Dışa dönük bir kişiliğe sahipsiniz. Sosyal ortamları ve yeni deneyimleri seviyorsunuz.")
+                                                .testTemplateId(personalityTest.getId().longValue())
+                                                .createdBy(mockUser.getId())
+                                                .build());
+
+                // Save all comments
+                commentRepository.saveAll(depressionComments);
+                commentRepository.saveAll(anxietyComments);
+                commentRepository.saveAll(personalityComments);
 
                 List<Choice> depressionChoices1 = List.of(
                                 Choice.builder().answerType(AnswerType.ANSWER_A).text("Hiçbir zaman")
@@ -210,8 +292,6 @@ public class DataInitializer {
                                 .build());
 
                 questionRepository.saveAll(depressionQuestions);
-                // depressionTest.setQuestions(depressionQuestions);
-                testTemplateRepository.save(depressionTest);
 
                 List<Choice> anxietyChoices1 = List.of(
                                 Choice.builder().answerType(AnswerType.ANSWER_A).text("Nadiren")
@@ -249,8 +329,54 @@ public class DataInitializer {
                                 .build());
 
                 questionRepository.saveAll(anxietyQuestions);
-                // anxietyTest.setQuestions(anxietyQuestions);
+                
+                // Create questions for personality test
+                List<Choice> personalityChoices1 = List.of(
+                                Choice.builder().answerType(AnswerType.ANSWER_A).text("Hiç katılmıyorum")
+                                                .createdBy(mockUser.getId()).build(),
+                                Choice.builder().answerType(AnswerType.ANSWER_B).text("Katılmıyorum")
+                                                .createdBy(mockUser.getId()).build(),
+                                Choice.builder().answerType(AnswerType.ANSWER_C).text("Kararsızım")
+                                                .createdBy(mockUser.getId()).build(),
+                                Choice.builder().answerType(AnswerType.ANSWER_D).text("Katılıyorum")
+                                                .createdBy(mockUser.getId()).build(),
+                                Choice.builder().answerType(AnswerType.ANSWER_E).text("Tamamen katılıyorum")
+                                                .createdBy(mockUser.getId()).build());
+
+                List<Choice> personalityChoices2 = List.of(
+                                Choice.builder().answerType(AnswerType.ANSWER_A).text("Asla")
+                                                .createdBy(mockUser.getId()).build(),
+                                Choice.builder().answerType(AnswerType.ANSWER_B).text("Nadiren")
+                                                .createdBy(mockUser.getId()).build(),
+                                Choice.builder().answerType(AnswerType.ANSWER_C).text("Bazen")
+                                                .createdBy(mockUser.getId()).build(),
+                                Choice.builder().answerType(AnswerType.ANSWER_D).text("Sıklıkla")
+                                                .createdBy(mockUser.getId()).build(),
+                                Choice.builder().answerType(AnswerType.ANSWER_E).text("Her zaman")
+                                                .createdBy(mockUser.getId()).build());
+
+                List<Question> personalityQuestions = new ArrayList<>();
+                personalityQuestions.add(Question.builder()
+                                .text("Sosyal ortamlarda enerjik ve konuşkan olurum.")
+                                .createdBy(mockUser.getId())
+                                .testTemplateId(personalityTest.getId().longValue())
+                                .choices(personalityChoices1)
+                                .build());
+
+                personalityQuestions.add(Question.builder()
+                                .text("Yeni insanlarla tanışmaktan hoşlanır mısınız?")
+                                .createdBy(mockUser.getId())
+                                .testTemplateId(personalityTest.getId().longValue())
+                                .choices(personalityChoices2)
+                                .build());
+
+                questionRepository.saveAll(personalityQuestions);
+                
+                // Save all test templates
+                testTemplateRepository.save(depressionTest);
                 testTemplateRepository.save(anxietyTest);
+                testTemplateRepository.save(personalityTest);
+                } // End of test template creation
 
                 if (sessionRepository.findFirstByDateAfterAndSessionStatusNotOrderByDateAsc(LocalDateTime.now(),
                                 SessionStatusType.CANCELED) == null) {

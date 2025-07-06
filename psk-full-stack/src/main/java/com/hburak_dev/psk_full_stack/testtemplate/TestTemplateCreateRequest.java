@@ -1,10 +1,14 @@
 package com.hburak_dev.psk_full_stack.testtemplate;
 
+import com.hburak_dev.psk_full_stack.scoring.ScoringStrategyType;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -22,4 +26,10 @@ public class TestTemplateCreateRequest {
 
     @Builder.Default
     private Boolean isActive = true;
+
+    @Builder.Default
+    private ScoringStrategyType scoringStrategy = ScoringStrategyType.SIMPLE_LINEAR;
+
+    @Valid
+    private List<TestTemplateCommentRequest> comments;
 }

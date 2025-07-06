@@ -1,5 +1,6 @@
 package com.hburak_dev.psk_full_stack.testtemplate;
 
+import com.hburak_dev.psk_full_stack.comment.Comment;
 import com.hburak_dev.psk_full_stack.exception.TestTemplateNotFoundException;
 import com.hburak_dev.psk_full_stack.handler.BusinessErrorCodes;
 import com.hburak_dev.psk_full_stack.question.QuestionResponse;
@@ -9,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,8 +27,34 @@ public class TestTemplateServiceImpl implements TestTemplateServiceInterface {
     @Transactional
     public TestTemplateResponse createTestTemplate(TestTemplateCreateRequest request) {
         TestTemplate testTemplate = testTemplateMapper.toTestTemplate(request);
+        
+        // Create comments from request if provided
+        if (request.getComments() != null && !request.getComments().isEmpty()) {
+            List<Comment> comments = new ArrayList<>();
+            for (TestTemplateCommentRequest commentRequest : request.getComments()) {
+                Comment comment = Comment.builder()
+                        .testTemplateId(null) // Will be set after save
+                        .score(commentRequest.getScore())
+                        .title(commentRequest.getTitle())
+                        .text(commentRequest.getText())
+                        .imageUrl(commentRequest.getImageUrl())
+                        .build();
+                comments.add(comment);
+            }
+            testTemplate.setComments(comments);
+        }
+        
         TestTemplate savedTemplate = testTemplateRepository.save(testTemplate);
-        log.info("Test template created with id: {}", savedTemplate.getId());
+        
+        // Update testTemplateId in comments after save
+        if (savedTemplate.getComments() != null) {
+            savedTemplate.getComments().forEach(comment -> 
+                comment.setTestTemplateId(savedTemplate.getId().longValue()));
+        }
+        
+        log.info("Test template created with id: {} with {} comments", 
+                savedTemplate.getId(), 
+                savedTemplate.getComments() != null ? savedTemplate.getComments().size() : 0);
         return testTemplateMapper.toTestTemplateResponse(savedTemplate);
     }
 
@@ -57,9 +85,38 @@ public class TestTemplateServiceImpl implements TestTemplateServiceInterface {
         existingTemplate.setSubTitle(request.getSubTitle());
         existingTemplate.setImageUrl(request.getImageUrl());
         existingTemplate.setIsActive(request.getIsActive());
+        if (request.getScoringStrategy() != null) {
+            existingTemplate.setScoringStrategy(request.getScoringStrategy());
+        }
+        
+        // Update comments if provided
+        if (request.getComments() != null) {
+            // Initialize comments list if null
+            if (existingTemplate.getComments() == null) {
+                existingTemplate.setComments(new ArrayList<>());
+            } else {
+                // Clear existing comments (orphanRemoval = true will handle deletion)
+                existingTemplate.getComments().clear();
+            }
+            
+            // Add new comments
+            for (TestTemplateCommentRequest commentRequest : request.getComments()) {
+                Comment comment = Comment.builder()
+                        .testTemplateId(existingTemplate.getId().longValue())
+                        .score(commentRequest.getScore())
+                        .title(commentRequest.getTitle())
+                        .text(commentRequest.getText())
+                        .imageUrl(commentRequest.getImageUrl())
+                        .build();
+                existingTemplate.getComments().add(comment);
+            }
+        }
         
         TestTemplate updatedTemplate = testTemplateRepository.save(existingTemplate);
-        log.info("Test template updated with id: {}", updatedTemplate.getId());
+        
+        log.info("Test template updated with id: {} with {} comments", 
+                updatedTemplate.getId(), 
+                updatedTemplate.getComments() != null ? updatedTemplate.getComments().size() : 0);
         return testTemplateMapper.toTestTemplateResponse(updatedTemplate);
     }
 
@@ -69,6 +126,8 @@ public class TestTemplateServiceImpl implements TestTemplateServiceInterface {
         if (!testTemplateRepository.existsById(id)) {
             throw new TestTemplateNotFoundException("Test template not found with id: " + id, BusinessErrorCodes.TEST_TEMPLATE_NOT_FOUND);
         }
+        
+        // Comments will be automatically deleted due to cascade = CascadeType.ALL and orphanRemoval = true
         testTemplateRepository.deleteById(id);
         log.info("Test template deleted with id: {}", id);
     }

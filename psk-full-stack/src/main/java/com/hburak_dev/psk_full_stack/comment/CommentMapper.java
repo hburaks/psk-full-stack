@@ -101,4 +101,8 @@ public class CommentMapper {
                 .imageUrl(imageUrl)
                 .build();
     }
+
+    public AdminTestCommentResponse toAdminTestCommentResponse(Comment comment) {
+        return toAdminCommentResponse(comment);
+    }
 }
