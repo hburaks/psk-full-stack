@@ -116,7 +116,7 @@ public class UserTestServiceImpl implements UserTestServiceInterface {
 
     @Override
     @Transactional
-    public UserTestResponse completeUserTest(Integer id, CompleteTestRequest request, Authentication connectedUser) {
+    public UserTestResponse completeUserTest(Integer id, Authentication connectedUser) {
         User user = (User) connectedUser.getPrincipal();
         UserTest userTest = userTestRepository.findById(id)
                 .orElseThrow(() -> new UserTestNotFoundException("User test not found with id: " + id, 

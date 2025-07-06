@@ -1170,16 +1170,6 @@
             }
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CompleteTestRequest"
-              }
-            }
-          },
-          "required": true
-        },
         "responses": {
           "200": {
             "description": "OK",
@@ -2825,9 +2815,6 @@
             "format": "int32"
           }
         }
-      },
-      "CompleteTestRequest": {
-        "type": "object"
       },
       "RegistrationRequest": {
         "required": [

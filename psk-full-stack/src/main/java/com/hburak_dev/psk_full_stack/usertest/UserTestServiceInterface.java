@@ -16,5 +16,5 @@ public interface UserTestServiceInterface {
 
     UserTestResponse startUserTest(Integer id, Authentication connectedUser);
 
-    UserTestResponse completeUserTest(Integer id, CompleteTestRequest request, Authentication connectedUser);
+    UserTestResponse completeUserTest(Integer id, Authentication connectedUser);
 }

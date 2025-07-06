@@ -8,19 +8,16 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { CompleteTestRequest } from '../../models/complete-test-request';
 import { UserTestResponse } from '../../models/user-test-response';
 
 export interface CompleteTest$Params {
   id: number;
-      body: CompleteTestRequest
 }
 
 export function completeTest(http: HttpClient, rootUrl: string, params: CompleteTest$Params, context?: HttpContext): Observable<StrictHttpResponse<UserTestResponse>> {
   const rb = new RequestBuilder(rootUrl, completeTest.PATH, 'post');
   if (params) {
     rb.path('id', params.id, {});
-    rb.body(params.body, 'application/json');
   }
 
   return http.request(

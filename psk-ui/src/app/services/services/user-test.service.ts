@@ -76,7 +76,7 @@ export class UserTestService extends BaseService {
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `completeTest()` instead.
    *
-   * This method sends `application/json` and handles request body of type `application/json`.
+   * This method doesn't expect any request body.
    */
   completeTest$Response(params: CompleteTest$Params, context?: HttpContext): Observable<StrictHttpResponse<UserTestResponse>> {
     return completeTest(this.http, this.rootUrl, params, context);
@@ -90,7 +90,7 @@ export class UserTestService extends BaseService {
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `completeTest$Response()` instead.
    *
-   * This method sends `application/json` and handles request body of type `application/json`.
+   * This method doesn't expect any request body.
    */
   completeTest(params: CompleteTest$Params, context?: HttpContext): Observable<UserTestResponse> {
     return this.completeTest$Response(params, context).pipe(

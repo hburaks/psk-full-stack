@@ -7,7 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -49,10 +48,9 @@ public class UserTestController {
     @Operation(summary = "Complete test")
     public ResponseEntity<UserTestResponse> completeTest(
             @PathVariable Integer id,
-            @Valid @RequestBody CompleteTestRequest request,
             Authentication connectedUser) {
         
-        UserTestResponse response = userTestService.completeUserTest(id, request, connectedUser);
+        UserTestResponse response = userTestService.completeUserTest(id, connectedUser);
         return ResponseEntity.ok(response);
     }
 }

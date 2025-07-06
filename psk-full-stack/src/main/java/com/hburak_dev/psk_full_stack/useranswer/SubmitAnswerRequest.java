@@ -3,13 +3,17 @@ package com.hburak_dev.psk_full_stack.useranswer;
 import com.hburak_dev.psk_full_stack.question.AnswerType;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class SubmitAnswerRequest {
 
     @NotNull(message = "User test ID is required")

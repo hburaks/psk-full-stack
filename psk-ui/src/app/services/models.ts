@@ -10,7 +10,6 @@ export { AuthenticationResponse } from './models/authentication-response';
 export { BlogRequest } from './models/blog-request';
 export { BlogResponse } from './models/blog-response';
 export { Choice } from './models/choice';
-export { CompleteTestRequest } from './models/complete-test-request';
 export { DailyCalendarResponse } from './models/daily-calendar-response';
 export { HourlySessionResponse } from './models/hourly-session-response';
 export { PageResponseBlogResponse } from './models/page-response-blog-response';
