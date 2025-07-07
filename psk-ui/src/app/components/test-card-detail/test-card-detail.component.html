@@ -32,8 +32,11 @@
                 <div *ngIf="isEditPage">
                   <button class="btn btn-primary mt-2" (click)="uploadImage()">Fotoğrafı Değiştir</button>
                 </div>
-                <div *ngIf="isEditPage" class="col-12 text-end">
-                  <button class="btn btn-primary mt-4" (click)="saveAllChanges()">Kaydet</button>
+                <div *ngIf="isEditPage" class="col-12 text-end mt-4">
+                  <button class="btn btn-outline-secondary me-2" (click)="closeModalEvent.emit()">
+                    ← Geri Dön
+                  </button>
+                  <button class="btn btn-primary" (click)="saveAllChanges()">Kaydet</button>
                 </div>
               </ng-container>
             </ng-container>
