@@ -1,7 +1,13 @@
 import {AfterViewInit, Component, EventEmitter, Input, Output,} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
-import {Choice, QuestionResponse, TestTemplateResponse, TestTemplateUpdateRequest,} from 'src/app/services/models';
-import {QuestionAdminService, TestTemplateAdminService} from 'src/app/services/services';
+import {
+  Choice,
+  QuestionResponse,
+  ScoringStrategyResponse,
+  TestTemplateResponse,
+  TestTemplateUpdateRequest,
+} from 'src/app/services/models';
+import {QuestionAdminService, ScoringAdminService, TestTemplateAdminService} from 'src/app/services/services';
 
 @Component({
   selector: 'app-test-card-detail',
@@ -21,12 +27,8 @@ export class TestCardDetailComponent implements AfterViewInit {
 
   testTemplate: TestTemplateResponse | null = null;
 
-  // Properties for template compatibility
   testResult: any = null;
-  editableTestCard: any = null;
-  updateTestCard: any = null;
   testCard: TestTemplateResponse | null = null;
-  selectedChoices: number[] = [];
 
   title: string = 'Psikolojik Testler';
   text: string =
@@ -39,10 +41,15 @@ export class TestCardDetailComponent implements AfterViewInit {
   templateQuestions: QuestionResponse[] = [];
   showQuestionManagement: boolean = false;
 
+  // Strategy management
+  availableStrategies: ScoringStrategyResponse[] = [];
+  selectedStrategy: string | null = null;
+
   constructor(
     private route: ActivatedRoute,
     private testTemplateAdminService: TestTemplateAdminService,
-    private questionAdminService: QuestionAdminService
+    private questionAdminService: QuestionAdminService,
+    private scoringAdminService: ScoringAdminService
   ) {
     this.cardId = this.route.snapshot.params['id'];
   }
@@ -58,17 +65,21 @@ export class TestCardDetailComponent implements AfterViewInit {
         subTitle: this.editableTestTemplate?.subTitle,
         imageUrl: this.editableTestTemplate?.imageUrl,
         isActive: this.editableTestTemplate?.isActive,
+        scoringStrategy: this.editableTestTemplate?.scoringStrategy,
       };
-      // Set testCard for template compatibility
+      this.selectedStrategy = this.editableTestTemplate?.scoringStrategy || null;
       this.testCard = this.editableTestTemplate;
     }
+
+    // Load available strategies
+    this.loadStrategies();
   }
 
   getTestTemplateDetail() {
     this.testTemplateAdminService.getTestTemplateById1({ id: this.cardId }).subscribe({
       next: (template: TestTemplateResponse) => {
         this.testTemplate = template;
-        this.testCard = template; // Set for template compatibility
+        this.testCard = template;
       },
       error: (err: any) => {
         console.error('Error fetching test template', err);
@@ -78,6 +89,52 @@ export class TestCardDetailComponent implements AfterViewInit {
 
   saveOrUpdateTestInfo() {
     this.saveOrUpdateTestTemplateInfo();
+  }
+
+  saveAllChanges() {
+    // Update the scoring strategy in the update request
+    if (this.selectedStrategy) {
+      this.updateTestTemplate.scoringStrategy = this.selectedStrategy as 'SIMPLE_LINEAR' | 'WEIGHTED' | 'PERCENTAGE';
+    }
+
+    if (this.editableTestTemplate?.id) {
+      // UPDATE existing template
+      const params = {
+        id: this.editableTestTemplate.id,
+        body: this.updateTestTemplate,
+      };
+      this.testTemplateAdminService.updateTestTemplate(params).subscribe({
+        next: (response: TestTemplateResponse) => {
+          // After successful template update, upload image if selected
+          if (this.selectedFile && this.editableTestTemplate?.id) {
+            this.uploadSelectedImage();
+          } else {
+            this.closeModalEvent.emit();
+          }
+        },
+        error: (err: any) => {
+          console.error('Error updating test template', err);
+        },
+      });
+    } else {
+      // CREATE new template
+      const params = {
+        body: this.updateTestTemplate,
+      };
+      this.testTemplateAdminService.createTestTemplate(params).subscribe({
+        next: (response: TestTemplateResponse) => {
+          // After successful template creation, upload image if selected
+          if (this.selectedFile && response.id) {
+            this.uploadImageForNewTemplate(response.id);
+          } else {
+            this.closeModalEvent.emit();
+          }
+        },
+        error: (err: any) => {
+          console.error('Error creating test template', err);
+        },
+      });
+    }
   }
 
   saveOrUpdateTestTemplateInfo() {
@@ -176,6 +233,17 @@ export class TestCardDetailComponent implements AfterViewInit {
     alert('Question saving functionality will be implemented based on the specific API requirements.');
   }
 
+  loadStrategies() {
+    this.scoringAdminService.getAllScoringStrategies().subscribe({
+      next: (strategies: ScoringStrategyResponse[]) => {
+        this.availableStrategies = strategies;
+      },
+      error: (err: any) => {
+        console.error('Error loading strategies', err);
+      },
+    });
+  }
+
   uploadImage() {
     const fileInput = document.createElement('input');
     fileInput.type = 'file';
@@ -193,11 +261,6 @@ export class TestCardDetailComponent implements AfterViewInit {
         this.imageUrl = e.target.result;
       };
       reader.readAsDataURL(file);
-
-      // Upload the image immediately after selection
-      if (this.editableTestTemplate?.id) {
-        this.uploadSelectedImage();
-      }
     }
   }
 
@@ -213,7 +276,7 @@ export class TestCardDetailComponent implements AfterViewInit {
     }).subscribe({
       next: (response) => {
         console.log('Image uploaded successfully', response);
-        // Backend returns filename, we build the URL
+        this.closeModalEvent.emit();
       },
       error: (error) => {
         console.error('Error uploading image:', error);
@@ -222,42 +285,29 @@ export class TestCardDetailComponent implements AfterViewInit {
     });
   }
 
-  // Legacy methods for template compatibility
-  selectChoice(questionIndex: number, choiceIndex: number, questionId: number) {
-    this.selectedChoices[questionIndex] = choiceIndex;
+  uploadImageForNewTemplate(templateId: number) {
+    if (!this.selectedFile) {
+      console.error('No file selected');
+      return;
+    }
+
+    this.testTemplateAdminService.uploadImage({
+      testTemplateId: templateId,
+      body: {file: this.selectedFile}
+    }).subscribe({
+      next: (response) => {
+        console.log('Image uploaded successfully', response);
+        this.closeModalEvent.emit();
+      },
+      error: (error) => {
+        console.error('Error uploading image:', error);
+        alert('Görsel yüklenirken bir hata oluştu. Lütfen tekrar deneyin.');
+        this.closeModalEvent.emit();
+      }
+    });
   }
 
   getResult() {
-    // Legacy method - no longer functional in TestTemplate workflow
-    console.log('getResult method called - not implemented for TestTemplate workflow');
-  }
-
-  // Legacy question/choice management methods (no-op for TestTemplate)
-  addQuestion() {
-    console.log('addQuestion method called - use template question management instead');
-  }
-
-  removeQuestion(index: number) {
-    console.log('removeQuestion method called - use template question management instead');
-  }
-
-  addChoice(questionIndex: number) {
-    console.log('addChoice method called - use template question management instead');
-  }
-
-  removeChoice(questionIndex: number, choiceIndex: number) {
-    console.log('removeChoice method called - use template question management instead');
-  }
-
-  updateTestQuestions() {
-    console.log('updateTestQuestions method called - use template question management instead');
-  }
-
-  updateComments(event: any) {
-    console.log('updateComments method called - not implemented for TestTemplate workflow');
-  }
-
-  updateTestComments() {
-    console.log('updateTestComments method called - not implemented for TestTemplate workflow');
+    console.log('Test completion not implemented for TestTemplate workflow');
   }
 }
