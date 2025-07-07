@@ -18,4 +18,6 @@ public interface UserTestServiceInterface {
 
 
     SubmitTestResponse submitAndCompleteTest(Integer id, SubmitTestRequest request, Authentication connectedUser);
+
+    void deleteUserTest(Integer userTestId, Authentication connectedUser);
 }

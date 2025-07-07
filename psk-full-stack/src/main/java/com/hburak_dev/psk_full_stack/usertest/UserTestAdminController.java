@@ -47,4 +47,14 @@ public class UserTestAdminController {
         List<UserAnswerResponse> responses = userAnswerService.getUserTestAnswers(userTestId, connectedUser);
         return ResponseEntity.ok(responses);
     }
+
+    @DeleteMapping("/{userTestId}")
+    @Operation(summary = "Delete user test")
+    public ResponseEntity<Void> deleteUserTest(
+            @PathVariable Integer userTestId,
+            Authentication connectedUser) {
+
+        userTestService.deleteUserTest(userTestId, connectedUser);
+        return ResponseEntity.noContent().build();
+    }
 }

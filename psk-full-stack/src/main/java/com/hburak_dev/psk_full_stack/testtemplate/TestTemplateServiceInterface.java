@@ -17,4 +17,6 @@ public interface TestTemplateServiceInterface {
     void deleteTestTemplate(Integer id);
 
     List<QuestionResponse> getTestTemplateQuestions(Integer id);
+
+    List<TestTemplateResponse> getAvailableTestTemplatesForUser(Long userId);
 }

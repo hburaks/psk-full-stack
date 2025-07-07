@@ -1,15 +1,7 @@
-import {
-  Component,
-  EventEmitter,
-  HostListener,
-  Input,
-  Output,
-} from '@angular/core';
-import { TestService as CustomTestService } from 'src/app/custom-services/test/test.service';
-import { ToastComponent } from 'src/app/components/toast/toast.component';
-import { TestTemplateResponse, AssignTestRequest, UserTestListResponse } from 'src/app/services/models';
-import { TokenService } from 'src/app/custom-services/token/token.service';
-import { UserTestAdminService } from 'src/app/services/services';
+import {Component, EventEmitter, Input, Output,} from '@angular/core';
+import {TestService as CustomTestService} from 'src/app/custom-services/test/test.service';
+import {AssignTestRequest, TestTemplateResponse, UserTestListResponse} from 'src/app/services/models';
+import {UserTestAdminService} from 'src/app/services/services';
 
 @Component({
   selector: 'app-admin-test-card',
@@ -41,7 +33,7 @@ export class AdminTestCardComponent {
     this.testResults.sort((a, b) => {
       const dateA = new Date(a.assignedAt || 0).getTime();
       const dateB = new Date(b.assignedAt || 0).getTime();
-      return dateB - dateA; 
+      return dateB - dateA;
     });
   }
 
@@ -64,10 +56,18 @@ export class AdminTestCardComponent {
   }
 
   removeTestFromUser(testId: number) {
-    // Simplified - just remove from UI for now
-    this.testResults = this.testResults.filter(
-      (test) => test.id !== testId
-    );
+    this.userTestAdminService.deleteUserTest({userTestId: testId}).subscribe({
+      next: () => {
+        // Remove from UI after successful deletion
+        this.testResults = this.testResults.filter(
+          (test) => test.id !== testId
+        );
+      },
+      error: (error) => {
+        this.errorMessage = 'Test kaldırılırken bir hata oluştu';
+        this.showToast = true;
+      }
+    });
   }
 
   addTestTemplateToUser(testTemplateId: number) {

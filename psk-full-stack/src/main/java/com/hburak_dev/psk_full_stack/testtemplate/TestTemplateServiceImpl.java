@@ -5,6 +5,7 @@ import com.hburak_dev.psk_full_stack.exception.TestTemplateNotFoundException;
 import com.hburak_dev.psk_full_stack.handler.BusinessErrorCodes;
 import com.hburak_dev.psk_full_stack.question.QuestionResponse;
 import com.hburak_dev.psk_full_stack.question.QuestionServiceInterface;
+import com.hburak_dev.psk_full_stack.usertest.UserTestRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ public class TestTemplateServiceImpl implements TestTemplateServiceInterface {
     private final TestTemplateRepository testTemplateRepository;
     private final TestTemplateMapper testTemplateMapper;
     private final QuestionServiceInterface questionService;
+    private final UserTestRepository userTestRepository;
 
     @Override
     @Transactional
@@ -139,6 +141,21 @@ public class TestTemplateServiceImpl implements TestTemplateServiceInterface {
             throw new TestTemplateNotFoundException("Test template not found with id: " + id, BusinessErrorCodes.TEST_TEMPLATE_NOT_FOUND);
         }
         return questionService.getQuestionsByTestTemplate(id.longValue());
+    }
+
+    @Override
+    @Transactional
+    public List<TestTemplateResponse> getAvailableTestTemplatesForUser(Long userId) {
+        List<TestTemplate> allTemplates = testTemplateRepository.findByIsActive(true);
+
+        return allTemplates.stream()
+                .filter(template -> {
+                    Optional<com.hburak_dev.psk_full_stack.usertest.UserTest> existingAssignment =
+                            userTestRepository.findByUserIdAndTestTemplateId(userId, template.getId().longValue());
+                    return existingAssignment.isEmpty() || existingAssignment.get().getIsCompleted();
+                })
+                .map(testTemplateMapper::toTestTemplateResponse)
+                .toList();
     }
 
     // Repository methods (keep existing functionality)

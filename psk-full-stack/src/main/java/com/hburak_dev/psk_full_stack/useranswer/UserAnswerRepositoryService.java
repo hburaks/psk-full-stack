@@ -102,4 +102,8 @@ public class UserAnswerRepositoryService {
     public boolean hasAnswered(Long userTestId, Long questionId) {
         return userAnswerRepository.findByUserTestIdAndQuestionId(userTestId, questionId).isPresent();
     }
+
+    public void deleteAnswer(Long id) {
+        userAnswerRepository.deleteById(id.intValue());
+    }
 }

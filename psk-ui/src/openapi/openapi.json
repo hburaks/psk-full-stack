@@ -1909,6 +1909,42 @@
         }
       }
     },
+    "/v2/admin/test-templates/available-for-user/{userId}": {
+      "get": {
+        "tags": [
+          "Test Template Admin"
+        ],
+        "summary": "Get available test templates for user",
+        "description": "Get test templates that are not yet assigned to the specified user",
+        "operationId": "getAvailableTestTemplatesForUser",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TestTemplateResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v2/admin/scoring/strategies": {
       "get": {
         "tags": [
@@ -2118,6 +2154,31 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/v2/admin/user-tests/{userTestId}": {
+      "delete": {
+        "tags": [
+          "User Test Admin"
+        ],
+        "summary": "Delete user test",
+        "operationId": "deleteUserTest",
+        "parameters": [
+          {
+            "name": "userTestId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }

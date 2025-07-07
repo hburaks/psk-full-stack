@@ -1,8 +1,8 @@
-import { Component, Input } from '@angular/core';
-import { SessionResponseV2 } from 'src/app/services/models/session-response-v-2';
-import { TestTemplateAdminService, UserTestAdminService } from 'src/app/services/services';
-import { SessionControllerV2Service } from 'src/app/services/services/session-controller-v-2.service';
-import { UserWithIncomingSessionResponse, TestTemplateResponse, UserTestListResponse } from 'src/app/services/models';
+import {Component, Input} from '@angular/core';
+import {SessionResponseV2} from 'src/app/services/models/session-response-v-2';
+import {TestTemplateAdminService, UserTestAdminService} from 'src/app/services/services';
+import {SessionControllerV2Service} from 'src/app/services/services/session-controller-v-2.service';
+import {TestTemplateResponse, UserTestListResponse, UserWithIncomingSessionResponse} from 'src/app/services/models';
 
 @Component({
   selector: 'app-upcoming-session',
@@ -114,13 +114,21 @@ export class UpcomingSessionComponent {
   }
 
   addTestToUser() {
-    this.testTemplateAdminService.getAllTestTemplates().subscribe({
+    const userId = this.selectedUser?.id || this.upcomingSession?.userForSessionResponse?.id;
+
+    if (!userId) {
+      this.toastErrorMessage = 'Kullanıcı bilgisi bulunamadı';
+      this.showToast = true;
+      return;
+    }
+
+    this.testTemplateAdminService.getAvailableTestTemplatesForUser({userId: userId}).subscribe({
       next: (templates) => {
         this.testTemplates = templates;
         this.isAddingTestToUser = true;
       },
       error: (error) => {
-        this.toastErrorMessage = 'Test şablonları getirilirken bir hata oluştu';
+        this.toastErrorMessage = 'Uygun test şablonları getirilirken bir hata oluştu';
         this.showToast = true;
       },
     });

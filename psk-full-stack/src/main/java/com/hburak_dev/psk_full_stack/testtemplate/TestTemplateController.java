@@ -3,11 +3,11 @@ package com.hburak_dev.psk_full_stack.testtemplate;
 import com.hburak_dev.psk_full_stack.question.QuestionResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -62,5 +62,13 @@ public class TestTemplateController {
     public ResponseEntity<List<QuestionResponse>> getTestTemplateQuestions(@PathVariable Integer id) {
         List<QuestionResponse> questions = testTemplateService.getTestTemplateQuestions(id);
         return ResponseEntity.ok(questions);
+    }
+
+    @GetMapping("/available-for-user/{userId}")
+    @Operation(summary = "Get available test templates for user",
+            description = "Get test templates that are not yet assigned to the specified user")
+    public ResponseEntity<List<TestTemplateResponse>> getAvailableTestTemplatesForUser(@PathVariable Long userId) {
+        List<TestTemplateResponse> responses = testTemplateService.getAvailableTestTemplatesForUser(userId);
+        return ResponseEntity.ok(responses);
     }
 }

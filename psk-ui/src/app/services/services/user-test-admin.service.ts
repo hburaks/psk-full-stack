@@ -12,6 +12,7 @@ import {ApiConfiguration} from '../api-configuration';
 import {StrictHttpResponse} from '../strict-http-response';
 
 import {assignTest, AssignTest$Params} from '../fn/user-test-admin/assign-test';
+import {deleteUserTest, DeleteUserTest$Params} from '../fn/user-test-admin/delete-user-test';
 import {getAllUserTests, GetAllUserTests$Params} from '../fn/user-test-admin/get-all-user-tests';
 import {getUserTestAnswers, GetUserTestAnswers$Params} from '../fn/user-test-admin/get-user-test-answers';
 import {UserAnswerResponse} from '../models/user-answer-response';
@@ -124,6 +125,39 @@ export class UserTestAdminService extends BaseService {
   getUserTestAnswers(params: GetUserTestAnswers$Params, context?: HttpContext): Observable<Array<UserAnswerResponse>> {
     return this.getUserTestAnswers$Response(params, context).pipe(
       map((r: StrictHttpResponse<Array<UserAnswerResponse>>): Array<UserAnswerResponse> => r.body)
+    );
+  }
+
+  /** Path part for operation `deleteUserTest()` */
+  static readonly DeleteUserTestPath = '/v2/admin/user-tests/{userTestId}';
+
+  /**
+   * Delete user test.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `deleteUserTest()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  deleteUserTest$Response(params: DeleteUserTest$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+    return deleteUserTest(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * Delete user test.
+   *
+   *
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `deleteUserTest$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  deleteUserTest(params: DeleteUserTest$Params, context?: HttpContext): Observable<void> {
+    return this.deleteUserTest$Response(params, context).pipe(
+      map((r: StrictHttpResponse<void>): void => r.body)
     );
   }
 

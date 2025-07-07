@@ -6,9 +6,48 @@
   margin-bottom: 1rem;
 }
 
-
 .btn-primary-hovered {
   background-color: #6339e6;
   color: white;
   border: 1px solid #6339e6;
+}
+
+.test-circle {
+  width: 100%;
+  padding-top: 100%;
+  position: relative;
+  overflow: hidden;
+  border: 0.4rem solid #7749f8;
+  border-radius: 50%;
+
+  img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.test-card {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.test-card-container {
+  cursor: default;
+}
+
+.test-card-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  text-align: center;
+}
+
+.test-card-body-large {
+  height: 220px;
 }

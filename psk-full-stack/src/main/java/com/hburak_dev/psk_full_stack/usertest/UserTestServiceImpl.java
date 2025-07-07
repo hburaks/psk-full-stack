@@ -241,4 +241,31 @@ public class UserTestServiceImpl implements UserTestServiceInterface {
         return userTestRepository.save(userTest);
     }
 
+
+    @Override
+    @Transactional
+    public void deleteUserTest(Integer userTestId, Authentication connectedUser) {
+        User admin = (User) connectedUser.getPrincipal();
+
+        UserTest userTest = userTestRepository.findById(userTestId)
+                .orElseThrow(() -> new UserTestNotFoundException("User test not found with id: " + userTestId,
+                        BusinessErrorCodes.USER_TEST_NOT_FOUND));
+
+        // Check if test is completed - prevent deletion of completed tests
+        if (userTest.getIsCompleted()) {
+            throw new UserTestAlreadyCompletedException("Cannot delete completed test",
+                    BusinessErrorCodes.USER_TEST_ALREADY_COMPLETED);
+        }
+
+        // Delete related user answers first (if any)
+        List<UserAnswer> userAnswers = userAnswerRepositoryService.getUserAnswers(userTest.getId().longValue());
+        for (UserAnswer answer : userAnswers) {
+            userAnswerRepositoryService.deleteAnswer(answer.getId().longValue());
+        }
+
+        userTestRepository.delete(userTest);
+
+        log.info("User test {} deleted by admin {}", userTestId, admin.getId());
+    }
+
 }
