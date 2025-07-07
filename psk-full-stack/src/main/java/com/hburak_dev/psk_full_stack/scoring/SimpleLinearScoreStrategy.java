@@ -46,4 +46,24 @@ public class SimpleLinearScoreStrategy implements ScoreCalculationStrategy {
     public String getDescription() {
         return "Simple linear scoring where A=1, B=2, C=3, D=4, E=5 points";
     }
+
+    @Override
+    public String getComment(int score, int totalQuestions) {
+        if (totalQuestions == 0) {
+            return "No questions in this test.";
+        }
+        // Assuming max score per question is 5 (for ANSWER_E)
+        double maxPossibleScore = totalQuestions * 5.0;
+        double percentage = (maxPossibleScore > 0) ? (score / maxPossibleScore) * 100 : 0;
+
+        if (percentage >= 80) {
+            return "Excellent performance based on linear scoring.";
+        } else if (percentage >= 60) {
+            return "Good performance based on linear scoring.";
+        } else if (percentage >= 40) {
+            return "Average performance based on linear scoring.";
+        } else {
+            return "Needs improvement based on linear scoring.";
+        }
+    }
 }

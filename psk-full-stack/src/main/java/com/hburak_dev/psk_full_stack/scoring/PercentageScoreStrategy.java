@@ -44,4 +44,21 @@ public class PercentageScoreStrategy implements ScoreCalculationStrategy {
     public String getDescription() {
         return "Percentage-based scoring returning values from 0-100";
     }
+
+    @Override
+    public String getComment(int score, int totalQuestions) {
+        if (totalQuestions == 0) {
+            return "No questions in this test.";
+        }
+        // Score is already a percentage (0-100)
+        if (score >= 80) {
+            return "High percentage score. Excellent!";
+        } else if (score >= 60) {
+            return "Good percentage score.";
+        } else if (score >= 40) {
+            return "Average percentage score.";
+        } else {
+            return "Low percentage score. Needs improvement.";
+        }
+    }
 }

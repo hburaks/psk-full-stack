@@ -3272,6 +3272,13 @@
           },
           "userEmail": {
             "type": "string"
+          },
+          "score": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "adminComment": {
+            "type": "string"
           }
         }
       },

@@ -11,4 +11,6 @@ public interface ScoreCalculationStrategy {
     String getStrategyName();
     
     String getDescription();
+
+    String getComment(int score, int totalQuestions);
 }

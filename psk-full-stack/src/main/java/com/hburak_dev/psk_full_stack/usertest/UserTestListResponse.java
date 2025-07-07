@@ -27,4 +27,6 @@ public class UserTestListResponse {
     private String userFirstname;
     private String userLastname;
     private String userEmail;
+    private Integer score;
+    private String adminComment;
 }

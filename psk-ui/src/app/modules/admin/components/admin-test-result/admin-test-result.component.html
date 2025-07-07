@@ -18,22 +18,35 @@
       <p><strong>Test ID:</strong> {{ testResult.id }}</p>
       <p><strong>Kullanıcı:</strong> {{ testResult.userFirstname }} {{ testResult.userLastname }}</p>
       <p><strong>E-posta:</strong> {{ testResult.userEmail }}</p>
+      <p *ngIf="testResult.score !== null && testResult.score !== undefined">
+        <strong>Skor:</strong> {{ testResult.score }}</p>
+      <p *ngIf="testResult.adminComment"><strong>Yorum:</strong> {{ testResult.adminComment }}</p>
     </div>
   </div>
 
   <div *ngIf="testResult.userAnswers && testResult.userAnswers.length > 0" class="mt-4">
-    <h5 class="text-center mb-3">User Answers</h5>
+    <h5 class="text-center mb-3">Kullanıcı Cevapları</h5>
     <div *ngFor="let answer of testResult.userAnswers; let i = index" class="card mb-3">
       <div class="card-header">
-        Question {{ i + 1 }}: {{ answer.questionText }}
+        Soru {{ i + 1 }}: {{ answer.questionText }}
       </div>
       <div class="card-body">
-        <p><strong>Question Type:</strong> {{ answer.questionAnswerType }}</p>
-        <p *ngIf="answer.choiceText"><strong>Selected Choice:</strong> {{ answer.choiceText }}
-          ({{ answer.choiceAnswerType }})</p>
-        <p *ngIf="answer.textAnswer"><strong>Text Answer:</strong> {{ answer.textAnswer }}</p>
-        <p><strong>Answered At:</strong> {{ answer.answeredAt | date:'dd.MM.yyyy HH:mm' }}</p>
+        <p *ngIf="answer.choiceText"><strong>Seçilen Cevap:</strong> {{ answer.choiceAnswerType?.slice(-1) }}
+          - {{ answer.choiceText }}</p>
+        <p *ngIf="answer.textAnswer"><strong>Yazılı Cevap:</strong> {{ answer.textAnswer }}</p>
+        <p *ngIf="!allAnswersHaveSameTime()"><strong>Cevaplanma
+          Zamanı:</strong> {{ answer.answeredAt | date:'dd.MM.yyyy HH:mm' }}</p>
       </div>
+    </div>
+
+    <!-- Show common response time at bottom if all answers are within ±1 minute -->
+    <div style="margin-bottom: 0.5rem; padding: 6px" *ngIf="allAnswersHaveSameTime() && getCommonResponseTime()"
+         class="bg-light rounded">
+      <p class="text-center mb-0"><strong>Tüm Sorular İçin Cevaplanma Zamanı:</strong>
+        <span
+          *ngIf="!getCommonResponseTime()?.includes(' - ')">{{ getCommonResponseTime() | date:'dd.MM.yyyy HH:mm' }}</span>
+        <span *ngIf="getCommonResponseTime()?.includes(' - ')">{{ getCommonResponseTime() }}</span>
+      </p>
     </div>
   </div>
 </div>

@@ -4,6 +4,9 @@ import com.hburak_dev.psk_full_stack.exception.*;
 import com.hburak_dev.psk_full_stack.handler.BusinessErrorCodes;
 import com.hburak_dev.psk_full_stack.question.Question;
 import com.hburak_dev.psk_full_stack.question.QuestionRepository;
+import com.hburak_dev.psk_full_stack.scoring.ScoreCalculationService;
+import com.hburak_dev.psk_full_stack.testtemplate.TestTemplate;
+import com.hburak_dev.psk_full_stack.testtemplate.TestTemplateRepository;
 import com.hburak_dev.psk_full_stack.user.User;
 import com.hburak_dev.psk_full_stack.useranswer.*;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +30,8 @@ public class UserTestServiceImpl implements UserTestServiceInterface {
     private final UserAnswerRepositoryService userAnswerRepositoryService;
     private final QuestionRepository questionRepository;
     private final UserAnswerMapper userAnswerMapper;
+    private final TestTemplateRepository testTemplateRepository;
+    private final ScoreCalculationService scoreCalculationService;
 
     @Override
     @Transactional
@@ -62,7 +67,7 @@ public class UserTestServiceImpl implements UserTestServiceInterface {
     public List<UserTestListResponse> getAllUserTests() {
         List<UserTest> userTests = userTestRepository.findAll();
         return userTests.stream()
-                .map(userTestMapper::toUserTestListResponse)
+                .map(userTest -> toUserTestListResponseWithDetails(userTest, true))
                 .toList();
     }
 
@@ -72,8 +77,46 @@ public class UserTestServiceImpl implements UserTestServiceInterface {
         User user = (User) connectedUser.getPrincipal();
         List<UserTest> userTests = userTestRepository.findByUserId(user.getId().longValue());
         return userTests.stream()
-                .map(userTestMapper::toUserTestListResponse)
+                .map(userTest -> toUserTestListResponseWithDetails(userTest, false))
                 .toList();
+    }
+
+    private UserTestListResponse toUserTestListResponseWithDetails(UserTest userTest, boolean includeAdminComment) {
+        UserTestListResponse response = userTestMapper.toUserTestListResponse(userTest);
+        if (userTest.getIsCompleted()) {
+            // Fetch test template to get scoring strategy
+            TestTemplate testTemplate = testTemplateRepository.findById(userTest.getTestTemplateId().intValue())
+                    .orElseThrow(() -> new TestTemplateNotFoundException("Test template not found", BusinessErrorCodes.TEST_TEMPLATE_NOT_FOUND));
+
+            // Get user answers for score calculation
+            List<UserAnswer> userAnswers = userAnswerRepositoryService.getUserAnswers(userTest.getId().longValue());
+
+            // Convert UserAnswer to SubmitAnswerRequest for score calculation
+            List<SubmitAnswerRequest> submitAnswerRequests = userAnswers.stream()
+                    .map(userAnswer -> SubmitAnswerRequest.builder()
+                            .questionId(userAnswer.getQuestionId().intValue())
+                            .choiceId(userAnswer.getChoiceId() != null ? userAnswer.getChoiceId().intValue() : null)
+                            .textAnswer(userAnswer.getTextAnswer())
+                            .build())
+                    .toList();
+
+            // Calculate score using the appropriate strategy
+            int score = scoreCalculationService.calculateScore(submitAnswerRequests, testTemplate.getScoringStrategy());
+            response.setScore(score);
+
+            // Only include admin comment if requested (for admin endpoints)
+            if (includeAdminComment) {
+                String comment = scoreCalculationService.getStrategy(String.valueOf(testTemplate.getScoringStrategy()))
+                        .getComment(score, userAnswers.size()); // Pass total questions for comment context
+                response.setAdminComment(comment);
+            }
+        }
+        return response;
+    }
+
+    private int calculateScore(Integer userTestId) {
+        // This method is no longer needed as score calculation is now done in toUserTestListResponseWithDetails
+        return 0; // Or throw an UnsupportedOperationException
     }
 
     @Override
