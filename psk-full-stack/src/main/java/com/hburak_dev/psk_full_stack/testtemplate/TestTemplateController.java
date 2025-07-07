@@ -5,8 +5,11 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -70,5 +73,18 @@ public class TestTemplateController {
     public ResponseEntity<List<TestTemplateResponse>> getAvailableTestTemplatesForUser(@PathVariable Long userId) {
         List<TestTemplateResponse> responses = testTemplateService.getAvailableTestTemplatesForUser(userId);
         return ResponseEntity.ok(responses);
+    }
+
+    @PostMapping(value = "/upload-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(summary = "Upload image for test template")
+    public ResponseEntity<HttpStatus> uploadImage(@RequestParam("file") MultipartFile file,
+                                                  @RequestParam("testTemplateId") Integer testTemplateId) {
+        try {
+            testTemplateService.uploadImage(file, testTemplateId);
+            return ResponseEntity.ok(HttpStatus.OK);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }

@@ -1,22 +1,18 @@
 package com.hburak_dev.psk_full_stack.service;
 
+import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.net.MalformedURLException;
-import jakarta.annotation.PostConstruct;
-import lombok.extern.slf4j.Slf4j;
-import lombok.RequiredArgsConstructor;
-import java.nio.file.AccessDeniedException;
-import java.nio.file.FileAlreadyExistsException;
-import java.nio.file.NoSuchFileException;
+import java.nio.file.*;
 
 @Service
 @Slf4j
@@ -31,7 +27,7 @@ public class FileStorageService {
     try {
       createDirectoryIfNotExists(Path.of(baseUploadDir));
       createDirectoryIfNotExists(Path.of(baseUploadDir, "blogs"));
-      createDirectoryIfNotExists(Path.of(baseUploadDir, "tests"));
+      createDirectoryIfNotExists(Path.of(baseUploadDir, "test-templates"));
       createDirectoryIfNotExists(Path.of(baseUploadDir, "comments"));
     } catch (AccessDeniedException e) {
       log.error("Permission denied while creating upload directories", e);

@@ -5,11 +5,14 @@ import com.hburak_dev.psk_full_stack.exception.TestTemplateNotFoundException;
 import com.hburak_dev.psk_full_stack.handler.BusinessErrorCodes;
 import com.hburak_dev.psk_full_stack.question.QuestionResponse;
 import com.hburak_dev.psk_full_stack.question.QuestionServiceInterface;
+import com.hburak_dev.psk_full_stack.service.FileStorageService;
 import com.hburak_dev.psk_full_stack.usertest.UserTestRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +27,7 @@ public class TestTemplateServiceImpl implements TestTemplateServiceInterface {
     private final TestTemplateMapper testTemplateMapper;
     private final QuestionServiceInterface questionService;
     private final UserTestRepository userTestRepository;
+    private final FileStorageService fileStorageService;
 
     @Override
     @Transactional
@@ -181,5 +185,23 @@ public class TestTemplateServiceImpl implements TestTemplateServiceInterface {
 
     public List<TestTemplate> findByIsActive(Boolean isActive) {
         return testTemplateRepository.findByIsActive(isActive);
+    }
+
+    @Override
+    @Transactional
+    public String uploadImage(MultipartFile file, Integer testTemplateId) {
+        TestTemplate testTemplate = testTemplateRepository.findById(testTemplateId)
+                .orElseThrow(() -> new EntityNotFoundException("Test template not found with id: " + testTemplateId));
+
+        if (testTemplate.getImageUrl() != null) {
+            fileStorageService.deleteFile(testTemplate.getImageUrl(), "test-templates");
+        }
+
+        String fileName = fileStorageService.storeFile(file, "test-templates");
+        testTemplate.setImageUrl(fileName);
+        testTemplateRepository.save(testTemplate);
+
+        log.info("Image uploaded for test template id: {}, filename: {}", testTemplateId, fileName);
+        return fileName;
     }
 }
