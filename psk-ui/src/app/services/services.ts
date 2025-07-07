@@ -10,7 +10,6 @@ export { PublicTestService } from './services/public-test.service';
 export { SessionControllerV2Service } from './services/session-controller-v-2.service';
 export { UserTestAdminService } from './services/user-test-admin.service';
 export { CommentAdminService } from './services/comment-admin.service';
-export { UserAnswerService } from './services/user-answer.service';
 export { UserTestService } from './services/user-test.service';
 export { SessionControllerService } from './services/session-controller.service';
 export { AuthenticationService } from './services/authentication.service';

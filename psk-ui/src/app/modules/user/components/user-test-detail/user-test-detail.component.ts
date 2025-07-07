@@ -7,7 +7,7 @@ import {
   UserTestListResponse,
   UserTestResponse
 } from 'src/app/services/models';
-import {TestTemplateAdminService, UserAnswerService, UserTestService} from 'src/app/services/services';
+import {TestTemplateAdminService, UserTestService} from 'src/app/services/services';
 
 @Component({
   selector: 'app-user-test-detail',
@@ -30,7 +30,6 @@ export class UserTestDetailComponent implements OnInit {
 
   constructor(
     private userTestService: UserTestService,
-    private userAnswerService: UserAnswerService,
     private testTemplateAdminService: TestTemplateAdminService
   ) {}
 
@@ -112,7 +111,7 @@ export class UserTestDetailComponent implements OnInit {
       answers: answers
     };
 
-    this.userAnswerService.submitTest({ userTestId: this.userTest.id, body: submitRequest }).subscribe({
+    this.userTestService.submitAndCompleteTest({id: this.userTest.id, body: submitRequest}).subscribe({
       next: (response: SubmitTestResponse) => {
         this.isSubmitting = false;
         this.onCompleteTest.emit();

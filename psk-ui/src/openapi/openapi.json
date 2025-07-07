@@ -58,10 +58,6 @@
     {
       "name": "User Test",
       "description": "User endpoints for managing assigned tests"
-    },
-    {
-      "name": "User Answer",
-      "description": "User endpoints for test-taking and answer submission"
     }
   ],
   "paths": {
@@ -1139,48 +1135,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/AdminTestCommentResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/v1/user-tests/{userTestId}/submit-test": {
-      "post": {
-        "tags": [
-          "User Answer"
-        ],
-        "summary": "Submit all answers for a test and complete it",
-        "operationId": "submitTest",
-        "parameters": [
-          {
-            "name": "userTestId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/SubmitTestRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SubmitTestResponse"
                 }
               }
             }

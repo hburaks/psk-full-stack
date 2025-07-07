@@ -7,6 +7,4 @@ import java.util.List;
 public interface UserAnswerServiceInterface {
 
     List<UserAnswerResponse> getUserTestAnswers(Integer userTestId, Authentication connectedUser);
-
-    SubmitTestResponse submitTest(SubmitTestRequest request, Authentication connectedUser);
 }

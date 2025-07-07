@@ -114,11 +114,6 @@ public class UserTestServiceImpl implements UserTestServiceInterface {
         return response;
     }
 
-    private int calculateScore(Integer userTestId) {
-        // This method is no longer needed as score calculation is now done in toUserTestListResponseWithDetails
-        return 0; // Or throw an UnsupportedOperationException
-    }
-
     @Override
     @Transactional
     public UserTestResponse getUserTestById(Integer id, Authentication connectedUser) {
@@ -209,7 +204,7 @@ public class UserTestServiceImpl implements UserTestServiceInterface {
         return userTest;
     }
 
-    private Question validateQuestion(Integer questionId, Long testTemplateId) {
+    private void validateQuestion(Integer questionId, Long testTemplateId) {
         Question question = questionRepository.findById(questionId)
                 .orElseThrow(() -> new QuestionNotFoundException("Question not found with id: " + questionId,
                         BusinessErrorCodes.QUESTION_NOT_FOUND));
@@ -219,8 +214,6 @@ public class UserTestServiceImpl implements UserTestServiceInterface {
             throw new UserTestAccessDeniedException("Question does not belong to this test template", 
                     BusinessErrorCodes.USER_TEST_ACCESS_DENIED);
         }
-
-        return question;
     }
 
     private void validateAnswerFormat(SubmitAnswerRequest request) {
@@ -238,11 +231,6 @@ public class UserTestServiceImpl implements UserTestServiceInterface {
         }
     }
 
-    // Repository methods (keep existing functionality)
-    public List<UserTest> findAll() {
-        return userTestRepository.findAll();
-    }
-
     public Optional<UserTest> findById(Integer id) {
         return userTestRepository.findById(id);
     }
@@ -251,72 +239,4 @@ public class UserTestServiceImpl implements UserTestServiceInterface {
         return userTestRepository.save(userTest);
     }
 
-    public void deleteById(Integer id) {
-        userTestRepository.deleteById(id);
-    }
-
-    public boolean existsById(Integer id) {
-        return userTestRepository.existsById(id);
-    }
-
-    public UserTest assignTestToUser(Long userId, Long testTemplateId, Long assignedBy) {
-        Optional<UserTest> existingAssignment = userTestRepository.findByUserIdAndTestTemplateId(userId, testTemplateId);
-        
-        if (existingAssignment.isPresent()) {
-            throw new IllegalArgumentException("Test template is already assigned to this user");
-        }
-
-        UserTest userTest = UserTest.builder()
-                .userId(userId)
-                .testTemplateId(testTemplateId)
-                .assignedBy(assignedBy)
-                .assignedAt(LocalDateTime.now())
-                .isCompleted(false)
-                .build();
-
-        return userTestRepository.save(userTest);
-    }
-
-    public List<UserTest> getUserTests(Long userId) {
-        return userTestRepository.findByUserId(userId);
-    }
-
-    public List<UserTest> getUserTestsByCompletion(Long userId, Boolean isCompleted) {
-        return userTestRepository.findByUserIdAndIsCompleted(userId, isCompleted);
-    }
-
-    public List<UserTest> getCompletedTestsByUserId(Long userId) {
-        return userTestRepository.findCompletedTestsByUserId(userId);
-    }
-
-    public List<UserTest> getPendingTestsByUserId(Long userId) {
-        return userTestRepository.findPendingTestsByUserId(userId);
-    }
-
-    public UserTest markTestAsCompleted(Integer userTestId) {
-        UserTest userTest = userTestRepository.findById(userTestId)
-                .orElseThrow(() -> new IllegalArgumentException("UserTest not found with id: " + userTestId));
-
-        if (userTest.getIsCompleted()) {
-            throw new IllegalStateException("Test is already completed");
-        }
-
-        userTest.setIsCompleted(true);
-        userTest.setCompletedAt(LocalDateTime.now());
-
-        return userTestRepository.save(userTest);
-    }
-
-
-    public List<UserTest> getTestsByTemplateId(Long testTemplateId) {
-        return userTestRepository.findByTestTemplateId(testTemplateId);
-    }
-
-    public List<UserTest> getTestsAssignedBy(Long assignedBy) {
-        return userTestRepository.findByAssignedBy(assignedBy);
-    }
-
-    public Optional<UserTest> findByUserIdAndTestTemplateId(Long userId, Long testTemplateId) {
-        return userTestRepository.findByUserIdAndTestTemplateId(userId, testTemplateId);
-    }
 }

@@ -2,7 +2,6 @@ import {Component, Input, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {PublicTestService} from 'src/app/services/services/public-test.service';
 import {UserTestService} from 'src/app/services/services/user-test.service';
-import {UserAnswerService} from 'src/app/services/services/user-answer.service';
 import {TestTemplateResponse} from 'src/app/services/models/test-template-response';
 import {QuestionResponse} from 'src/app/services/models/question-response';
 import {PublicTestSubmissionRequest} from 'src/app/services/models/public-test-submission-request';
@@ -33,7 +32,6 @@ export class TestSolverComponent implements OnInit {
     private router: Router,
     private publicTestService: PublicTestService,
     private userTestService: UserTestService,
-    private userAnswerService: UserAnswerService
   ) {}
 
   ngOnInit(): void {
