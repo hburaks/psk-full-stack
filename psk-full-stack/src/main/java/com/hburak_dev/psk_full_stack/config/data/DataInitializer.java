@@ -102,10 +102,13 @@ public class DataInitializer {
                                         .build());
                 }
 
-                User mockUser = userRepository.findAll()
-                                .stream()
-                                .findFirst()
-                                .orElseThrow(() -> new RuntimeException("No users found"));
+                // Get specific users for proper data setup
+                User adminUser = userRepository.findByEmail("admin@psk.com").orElse(null);
+                User regularUser = userRepository.findByEmail("user@psk.com").orElse(null);
+
+                if (adminUser == null || regularUser == null) {
+                        throw new RuntimeException("Admin or regular user not found for data initialization");
+                }
 
                 if (blogRepository.count() == 0) {
                         List<Blog> mockBlogs = new ArrayList<>();
@@ -115,7 +118,7 @@ public class DataInitializer {
                                         .text(
                                                         "Günümüzün hızlı tempolu yaşam tarzında, psikolojik sağlığımızı korumak her zamankinden daha önemli hale gelmiştir. Stres, kaygı ve depresyon gibi psikolojik sorunlarla başa çıkabilmek için düzenli egzersiz yapmak, sağlıklı beslenmek ve yeterli uyku almak oldukça önemlidir. Ayrıca, sosyal ilişkilerimizi güçlendirmek, hobiler edinmek ve düzenli olarak meditasyon yapmak da psikolojik sağlığımızı destekleyen önemli faktörlerdir. Bu yazıda, günlük yaşamda uygulayabileceğiniz pratik öneriler ve yaşam tarzı değişiklikleri hakkında detaylı bilgiler bulacaksınız.")
                                         .shareable(true)
-                                        .createdBy(mockUser.getId())
+                                .createdBy(adminUser.getId())
                                         .build());
                         mockBlogs.add(Blog.builder()
                                         .title("Stres Yönetimi ve Başa Çıkma Teknikleri")
@@ -123,7 +126,7 @@ public class DataInitializer {
                                         .text(
                                                         "Stres, modern yaşamın kaçınılmaz bir parçası haline gelmiştir. İş hayatı, aile sorumlulukları ve sosyal ilişkiler gibi faktörler stres seviyemizi artırabilir. Ancak, doğru teknikler ve yaklaşımlarla stresi etkili bir şekilde yönetmek mümkündür. Nefes egzersizleri, progresif kas gevşetme teknikleri ve mindfulness uygulamaları, stres yönetiminde kullanabileceğimiz etkili araçlardır. Bu yazıda, stres yönetimi konusunda bilimsel olarak kanıtlanmış yöntemler ve günlük hayatta uygulayabileceğiniz pratik öneriler yer almaktadır.")
                                         .shareable(true)
-                                        .createdBy(mockUser.getId())
+                                .createdBy(adminUser.getId())
                                         .build());
                         mockBlogs.add(Blog.builder()
                                         .title("İlişkilerde Duygusal Zeka")
@@ -131,7 +134,7 @@ public class DataInitializer {
                                         .text(
                                                         "Duygusal zeka, hem kendimizin hem de başkalarının duygularını anlama ve yönetme becerisidir. İlişkilerimizde duygusal zekanın rolü büyüktür. Empati kurabilmek, etkili iletişim becerilerine sahip olmak ve duygusal farkındalık geliştirmek, sağlıklı ve uzun ömürlü ilişkiler kurmanın temel taşlarıdır. Bu makalede, duygusal zekanın beş temel bileşeni olan öz farkındalık, öz düzenleme, motivasyon, empati ve sosyal beceriler hakkında detaylı bilgiler ve bu becerileri geliştirmek için pratik öneriler bulacaksınız.")
                                         .shareable(true)
-                                        .createdBy(mockUser.getId())
+                                .createdBy(adminUser.getId())
                                         .build());
                         blogRepository.saveAll(mockBlogs);
                 }
@@ -141,7 +144,7 @@ public class DataInitializer {
                         TestTemplate depressionTest = TestTemplate.builder()
                                 .title("Depresyon Değerlendirmesi")
                                 .subTitle("Depresyon belirtilerini değerlendir")
-                                .createdBy(mockUser.getId())
+                                .createdBy(adminUser.getId())
                                 .isActive(true)
                                 .scoringStrategy(ScoringStrategyType.WEIGHTED) // Clinical assessment uses weighted scoring
                                 .build();
@@ -149,7 +152,7 @@ public class DataInitializer {
                 TestTemplate anxietyTest = TestTemplate.builder()
                                 .title("Anksiyete Taraması")
                                 .subTitle("Anksiyete seviyenizi kontrol edin")
-                                .createdBy(mockUser.getId())
+                        .createdBy(adminUser.getId())
                                 .isActive(true)
                                 .scoringStrategy(ScoringStrategyType.PERCENTAGE) // Anxiety test uses percentage scoring
                                 .build();
@@ -158,7 +161,7 @@ public class DataInitializer {
                 TestTemplate personalityTest = TestTemplate.builder()
                                 .title("Kişilik Değerlendirmesi")
                                 .subTitle("Temel kişilik özelliklerinizi keşfedin")
-                                .createdBy(mockUser.getId())
+                        .createdBy(adminUser.getId())
                                 .isActive(true)
                                 .scoringStrategy(ScoringStrategyType.SIMPLE_LINEAR) // Personality test uses simple linear
                                 .build();
@@ -176,7 +179,7 @@ public class DataInitializer {
                                                 .text("Sonuçlarınız minimal depresyon belirtileri gösteriyor. Ruh haliniz genel olarak olumlu görünüyor.")
                                                 .testTemplateId(depressionTest.getId().longValue())
                                                 .testTemplate(depressionTest)
-                                                .createdBy(mockUser.getId())
+                                        .createdBy(adminUser.getId())
                                                 .build(),
                                 Comment.builder()
                                                 .title("Hafif Depresyon")
@@ -184,7 +187,7 @@ public class DataInitializer {
                                                 .text("Hafif depresyon belirtileri tespit edildi. Yaşam tarzı değişiklikleri ve destek yararlı olabilir.")
                                                 .testTemplateId(depressionTest.getId().longValue())
                                                 .testTemplate(depressionTest)
-                                                .createdBy(mockUser.getId())
+                                        .createdBy(adminUser.getId())
                                                 .build(),
                                 Comment.builder()
                                                 .title("Orta Depresyon")
@@ -192,7 +195,7 @@ public class DataInitializer {
                                                 .text("Orta düzeyde depresyon belirtileri mevcut. Profesyonel destek almanız önerilir.")
                                                 .testTemplateId(depressionTest.getId().longValue())
                                                 .testTemplate(depressionTest)
-                                                .createdBy(mockUser.getId())
+                                        .createdBy(adminUser.getId())
                                                 .build(),
                                 Comment.builder()
                                                 .title("Ciddi Depresyon")
@@ -200,7 +203,7 @@ public class DataInitializer {
                                                 .text("Ciddi depresyon belirtileri tespit edildi. Mutlaka bir uzmanla görüşmeniz gerekiyor.")
                                                 .testTemplateId(depressionTest.getId().longValue())
                                                 .testTemplate(depressionTest)
-                                                .createdBy(mockUser.getId())
+                                        .createdBy(adminUser.getId())
                                                 .build());
 
                 // Create comments for Anxiety Test (PERCENTAGE scoring: 0-100%)
@@ -211,7 +214,7 @@ public class DataInitializer {
                                                 .text("Anksiyete seviyeniz normaldir. Stres yönetimi tekniklerini öğrenmek faydalı olabilir.")
                                                 .testTemplateId(anxietyTest.getId().longValue())
                                                 .testTemplate(anxietyTest)
-                                                .createdBy(mockUser.getId())
+                                        .createdBy(adminUser.getId())
                                                 .build(),
                                 Comment.builder()
                                                 .title("Hafif Anksiyete")
@@ -219,7 +222,7 @@ public class DataInitializer {
                                                 .text("Hafif düzeyde anksiyete belirtileri var. Nefes egzersizleri ve meditasyon yararlı olabilir.")
                                                 .testTemplateId(anxietyTest.getId().longValue())
                                                 .testTemplate(anxietyTest)
-                                                .createdBy(mockUser.getId())
+                                        .createdBy(adminUser.getId())
                                                 .build(),
                                 Comment.builder()
                                                 .title("Orta Anksiyete")
@@ -227,7 +230,7 @@ public class DataInitializer {
                                                 .text("Orta düzeyde anksiyete mevcut. Stres yönetimi teknikleri ve destek almanız önerilir.")
                                                 .testTemplateId(anxietyTest.getId().longValue())
                                                 .testTemplate(anxietyTest)
-                                                .createdBy(mockUser.getId())
+                                        .createdBy(adminUser.getId())
                                                 .build(),
                                 Comment.builder()
                                                 .title("Yüksek Anksiyete")
@@ -235,7 +238,7 @@ public class DataInitializer {
                                                 .text("Yüksek anksiyete seviyesi tespit edildi. Profesyonel yardım almanız önemlidir.")
                                                 .testTemplateId(anxietyTest.getId().longValue())
                                                 .testTemplate(anxietyTest)
-                                                .createdBy(mockUser.getId())
+                                        .createdBy(adminUser.getId())
                                                 .build());
 
                 // Create comments for Personality Test (SIMPLE_LINEAR scoring: A=1, B=2, C=3, D=4, E=5)
@@ -247,7 +250,7 @@ public class DataInitializer {
                                                 .text("Daha içe dönük bir kişilik yapısına sahipsiniz. Derin düşünme ve kaliteli ilişkileri tercih ediyorsunuz.")
                                                 .testTemplateId(personalityTest.getId().longValue())
                                                 .testTemplate(personalityTest)
-                                                .createdBy(mockUser.getId())
+                                        .createdBy(adminUser.getId())
                                                 .build(),
                                 Comment.builder()
                                                 .title("Dengeli Kişilik")
@@ -255,7 +258,7 @@ public class DataInitializer {
                                                 .text("Dengeli bir kişiliğe sahipsiniz. Hem sosyal hem de bireysel aktiviteleri seviyorsunuz.")
                                                 .testTemplateId(personalityTest.getId().longValue())
                                                 .testTemplate(personalityTest)
-                                                .createdBy(mockUser.getId())
+                                        .createdBy(adminUser.getId())
                                                 .build(),
                                 Comment.builder()
                                                 .title("Ekstrovert Kişilik")
@@ -263,7 +266,7 @@ public class DataInitializer {
                                                 .text("Dışa dönük bir kişiliğe sahipsiniz. Sosyal ortamları ve yeni deneyimleri seviyorsunuz.")
                                                 .testTemplateId(personalityTest.getId().longValue())
                                                 .testTemplate(personalityTest)
-                                                .createdBy(mockUser.getId())
+                                        .createdBy(adminUser.getId())
                                                 .build());
 
                 // Set up bidirectional relationships and save comments through test templates
@@ -273,35 +276,35 @@ public class DataInitializer {
 
                 List<Choice> depressionChoices1 = List.of(
                                 Choice.builder().answerType(AnswerType.ANSWER_A).text("Hiçbir zaman")
-                                                .createdBy(mockUser.getId()).build(),
+                                        .createdBy(adminUser.getId()).build(),
                                 Choice.builder().answerType(AnswerType.ANSWER_B).text("Bazen")
-                                                .createdBy(mockUser.getId()).build(),
+                                        .createdBy(adminUser.getId()).build(),
                                 Choice.builder().answerType(AnswerType.ANSWER_C).text("Sık sık")
-                                                .createdBy(mockUser.getId()).build(),
+                                        .createdBy(adminUser.getId()).build(),
                                 Choice.builder().answerType(AnswerType.ANSWER_D).text("Her zaman")
-                                                .createdBy(mockUser.getId()).build());
+                                        .createdBy(adminUser.getId()).build());
 
                 List<Choice> depressionChoices2 = List.of(
                                 Choice.builder().answerType(AnswerType.ANSWER_A).text("Hayır")
-                                                .createdBy(mockUser.getId()).build(),
+                                        .createdBy(adminUser.getId()).build(),
                                 Choice.builder().answerType(AnswerType.ANSWER_B).text("Ara sıra")
-                                                .createdBy(mockUser.getId()).build(),
+                                        .createdBy(adminUser.getId()).build(),
                                 Choice.builder().answerType(AnswerType.ANSWER_C).text("Sıklıkla")
-                                                .createdBy(mockUser.getId()).build(),
+                                        .createdBy(adminUser.getId()).build(),
                                 Choice.builder().answerType(AnswerType.ANSWER_D).text("Her gece")
-                                                .createdBy(mockUser.getId()).build());
+                                        .createdBy(adminUser.getId()).build());
 
                 List<Question> depressionQuestions = new ArrayList<>();
                 depressionQuestions.add(Question.builder()
                                 .text("Ne sıklıkla üzgün veya mutsuz hissediyorsunuz?")
-                                .createdBy(mockUser.getId())
+                        .createdBy(adminUser.getId())
                                 .testTemplateId(depressionTest.getId().longValue())
                                 .choices(depressionChoices1)
                                 .build());
 
                 depressionQuestions.add(Question.builder()
                                 .text("Uyku problemi yaşıyor musunuz?")
-                                .createdBy(mockUser.getId())
+                        .createdBy(adminUser.getId())
                                 .testTemplateId(depressionTest.getId().longValue())
                                 .choices(depressionChoices2)
                                 .build());
@@ -310,35 +313,35 @@ public class DataInitializer {
 
                 List<Choice> anxietyChoices1 = List.of(
                                 Choice.builder().answerType(AnswerType.ANSWER_A).text("Nadiren")
-                                                .createdBy(mockUser.getId()).build(),
+                                        .createdBy(adminUser.getId()).build(),
                                 Choice.builder().answerType(AnswerType.ANSWER_B).text("Bazen")
-                                                .createdBy(mockUser.getId()).build(),
+                                        .createdBy(adminUser.getId()).build(),
                                 Choice.builder().answerType(AnswerType.ANSWER_C).text("Sık sık")
-                                                .createdBy(mockUser.getId()).build(),
+                                        .createdBy(adminUser.getId()).build(),
                                 Choice.builder().answerType(AnswerType.ANSWER_D).text("Çok sık")
-                                                .createdBy(mockUser.getId()).build());
+                                        .createdBy(adminUser.getId()).build());
 
                 List<Choice> anxietyChoices2 = List.of(
                                 Choice.builder().answerType(AnswerType.ANSWER_A).text("Hiçbir zaman")
-                                                .createdBy(mockUser.getId()).build(),
+                                        .createdBy(adminUser.getId()).build(),
                                 Choice.builder().answerType(AnswerType.ANSWER_B).text("Nadiren")
-                                                .createdBy(mockUser.getId()).build(),
+                                        .createdBy(adminUser.getId()).build(),
                                 Choice.builder().answerType(AnswerType.ANSWER_C).text("Bazen")
-                                                .createdBy(mockUser.getId()).build(),
+                                        .createdBy(adminUser.getId()).build(),
                                 Choice.builder().answerType(AnswerType.ANSWER_D).text("Sıklıkla")
-                                                .createdBy(mockUser.getId()).build());
+                                        .createdBy(adminUser.getId()).build());
 
                 List<Question> anxietyQuestions = new ArrayList<>();
                 anxietyQuestions.add(Question.builder()
                                 .text("Ne sıklıkla gergin veya endişeli hissediyorsunuz?")
-                                .createdBy(mockUser.getId())
+                        .createdBy(adminUser.getId())
                                 .testTemplateId(anxietyTest.getId().longValue())
                                 .choices(anxietyChoices1)
                                 .build());
 
                 anxietyQuestions.add(Question.builder()
                                 .text("Panik atak yaşıyor musunuz?")
-                                .createdBy(mockUser.getId())
+                        .createdBy(adminUser.getId())
                                 .testTemplateId(anxietyTest.getId().longValue())
                                 .choices(anxietyChoices2)
                                 .build());
@@ -348,39 +351,39 @@ public class DataInitializer {
                 // Create questions for personality test
                 List<Choice> personalityChoices1 = List.of(
                                 Choice.builder().answerType(AnswerType.ANSWER_A).text("Hiç katılmıyorum")
-                                                .createdBy(mockUser.getId()).build(),
+                                        .createdBy(adminUser.getId()).build(),
                                 Choice.builder().answerType(AnswerType.ANSWER_B).text("Katılmıyorum")
-                                                .createdBy(mockUser.getId()).build(),
+                                        .createdBy(adminUser.getId()).build(),
                                 Choice.builder().answerType(AnswerType.ANSWER_C).text("Kararsızım")
-                                                .createdBy(mockUser.getId()).build(),
+                                        .createdBy(adminUser.getId()).build(),
                                 Choice.builder().answerType(AnswerType.ANSWER_D).text("Katılıyorum")
-                                                .createdBy(mockUser.getId()).build(),
+                                        .createdBy(adminUser.getId()).build(),
                                 Choice.builder().answerType(AnswerType.ANSWER_E).text("Tamamen katılıyorum")
-                                                .createdBy(mockUser.getId()).build());
+                                        .createdBy(adminUser.getId()).build());
 
                 List<Choice> personalityChoices2 = List.of(
                                 Choice.builder().answerType(AnswerType.ANSWER_A).text("Asla")
-                                                .createdBy(mockUser.getId()).build(),
+                                        .createdBy(adminUser.getId()).build(),
                                 Choice.builder().answerType(AnswerType.ANSWER_B).text("Nadiren")
-                                                .createdBy(mockUser.getId()).build(),
+                                        .createdBy(adminUser.getId()).build(),
                                 Choice.builder().answerType(AnswerType.ANSWER_C).text("Bazen")
-                                                .createdBy(mockUser.getId()).build(),
+                                        .createdBy(adminUser.getId()).build(),
                                 Choice.builder().answerType(AnswerType.ANSWER_D).text("Sıklıkla")
-                                                .createdBy(mockUser.getId()).build(),
+                                        .createdBy(adminUser.getId()).build(),
                                 Choice.builder().answerType(AnswerType.ANSWER_E).text("Her zaman")
-                                                .createdBy(mockUser.getId()).build());
+                                        .createdBy(adminUser.getId()).build());
 
                 List<Question> personalityQuestions = new ArrayList<>();
                 personalityQuestions.add(Question.builder()
                                 .text("Sosyal ortamlarda enerjik ve konuşkan olurum.")
-                                .createdBy(mockUser.getId())
+                        .createdBy(adminUser.getId())
                                 .testTemplateId(personalityTest.getId().longValue())
                                 .choices(personalityChoices1)
                                 .build());
 
                 personalityQuestions.add(Question.builder()
                                 .text("Yeni insanlarla tanışmaktan hoşlanır mısınız?")
-                                .createdBy(mockUser.getId())
+                        .createdBy(adminUser.getId())
                                 .testTemplateId(personalityTest.getId().longValue())
                                 .choices(personalityChoices2)
                                 .build());
@@ -401,9 +404,9 @@ public class DataInitializer {
 
                         if (!sessionRepository.existsByDate(date1)) {
                                 mockSessions.add(Session.builder()
-                                                .createdBy(mockUser.getId())
+                                        .createdBy(adminUser.getId())
                                                 .date(date1)
-                                                .user(mockUser)
+                                        .user(regularUser)
                                                 .sessionStatus(SessionStatusType.AWAITING_THERAPIST_APPROVAL)
                                                 .isSessionPaid(true)
                                                 .isMock(true)
@@ -428,9 +431,9 @@ public class DataInitializer {
 
                         if (!sessionRepository.existsByDate(date1)) {
                                 mockSessions.add(Session.builder()
-                                                .createdBy(mockUser.getId())
+                                        .createdBy(adminUser.getId())
                                                 .date(date1)
-                                                .user(mockUser)
+                                        .user(regularUser)
                                                 .sessionStatus(SessionStatusType.AWAITING_THERAPIST_APPROVAL)
                                                 .isSessionPaid(true)
                                                 .isMock(true)
@@ -439,9 +442,9 @@ public class DataInitializer {
 
                         if (!sessionRepository.existsByDate(date2)) {
                                 mockSessions.add(Session.builder()
-                                                .createdBy(mockUser.getId())
+                                        .createdBy(adminUser.getId())
                                                 .date(date2)
-                                                .user(mockUser)
+                                        .user(regularUser)
                                                 .sessionStatus(SessionStatusType.COMPLETED)
                                                 .isSessionPaid(false)
                                                 .isMock(true)
@@ -450,9 +453,9 @@ public class DataInitializer {
 
                         if (!sessionRepository.existsByDate(date3)) {
                                 mockSessions.add(Session.builder()
-                                                .createdBy(mockUser.getId())
+                                        .createdBy(adminUser.getId())
                                                 .date(date3)
-                                                .user(mockUser)
+                                        .user(regularUser)
                                                 .sessionStatus(SessionStatusType.CANCELED)
                                                 .isSessionPaid(true)
                                                 .isMock(true)
@@ -463,10 +466,7 @@ public class DataInitializer {
                         }
                 }
 
-                // Assign test and create session for next Monday at 10am
-                User adminUser = userRepository.findByEmail("admin@psk.com").orElse(null);
-                User regularUser = userRepository.findByEmail("user@psk.com").orElse(null);
-                
+                // Assign test and create session for next Monday at 10am (users already defined above)
                 if (adminUser != null && regularUser != null) {
                         // Get the first available test template (Depression test)
                         TestTemplate testTemplate = testTemplateRepository.findAll().stream()

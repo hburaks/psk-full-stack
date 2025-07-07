@@ -53,6 +53,7 @@ public class UserTestServiceImpl implements UserTestServiceInterface {
                 .assignedAt(LocalDateTime.now())
                 .assignedBy(admin.getId().longValue())
                 .isCompleted(false)
+                .createdBy(admin.getId())
                 .build();
         
         UserTest savedUserTest = userTestRepository.save(userTest);
