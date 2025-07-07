@@ -78,6 +78,7 @@ public class UserTestServiceImpl implements UserTestServiceInterface {
         User user = (User) connectedUser.getPrincipal();
         List<UserTest> userTests = userTestRepository.findByUserId(user.getId().longValue());
         return userTests.stream()
+                .filter(userTest -> !userTest.getIsCompleted())
                 .map(userTest -> toUserTestListResponseWithDetails(userTest, false))
                 .toList();
     }
