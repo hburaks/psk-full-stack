@@ -16,6 +16,7 @@ public class TestTemplateResponse {
     private String title;
     private String subTitle;
     private String imageUrl;
+    private String imagePath;
     private Boolean isActive;
     private ScoringStrategyType scoringStrategy;
     private LocalDateTime createdDate;

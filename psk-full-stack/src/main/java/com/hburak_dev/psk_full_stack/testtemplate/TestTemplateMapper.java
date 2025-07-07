@@ -1,9 +1,8 @@
 package com.hburak_dev.psk_full_stack.testtemplate;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
-import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -42,7 +41,9 @@ public class TestTemplateMapper {
                 .title(testTemplate.getTitle())
                 .subTitle(testTemplate.getSubTitle())
                 .imageUrl(imageUrl)
+                .imagePath(testTemplate.getImageUrl())
                 .isActive(testTemplate.getIsActive())
+                .scoringStrategy(testTemplate.getScoringStrategy())
                 .createdDate(testTemplate.getCreatedDate())
                 .lastModifiedDate(testTemplate.getLastModifiedDate())
                 .createdBy(testTemplate.getCreatedBy() != null ? testTemplate.getCreatedBy().toString() : null)

@@ -63,12 +63,15 @@ export class TestCardDetailComponent implements AfterViewInit {
       this.updateTestTemplate = {
         title: this.editableTestTemplate?.title || '',
         subTitle: this.editableTestTemplate?.subTitle,
-        imageUrl: this.editableTestTemplate?.imageUrl,
         isActive: this.editableTestTemplate?.isActive,
         scoringStrategy: this.editableTestTemplate?.scoringStrategy,
       };
       this.selectedStrategy = this.editableTestTemplate?.scoringStrategy || null;
       this.testCard = this.editableTestTemplate;
+      // Set imageUrl for display purposes only, don't include in update request
+      if (this.editableTestTemplate?.imageUrl) {
+        this.imageUrl = this.editableTestTemplate.imageUrl;
+      }
     }
 
     // Load available strategies
@@ -95,6 +98,15 @@ export class TestCardDetailComponent implements AfterViewInit {
     // Update the scoring strategy in the update request
     if (this.selectedStrategy) {
       this.updateTestTemplate.scoringStrategy = this.selectedStrategy as 'SIMPLE_LINEAR' | 'WEIGHTED' | 'PERCENTAGE';
+    }
+
+    // Handle imageUrl based on whether a new image is selected
+    if (!this.selectedFile && this.editableTestTemplate?.imagePath) {
+      // No new image selected - use imagePath (raw filename) to prevent host duplication
+      this.updateTestTemplate.imageUrl = this.editableTestTemplate.imagePath;
+    } else if (this.selectedFile) {
+      // New image selected - don't include imageUrl in update, let upload handle it
+      delete this.updateTestTemplate.imageUrl;
     }
 
     if (this.editableTestTemplate?.id) {
@@ -243,6 +255,7 @@ export class TestCardDetailComponent implements AfterViewInit {
       },
     });
   }
+
 
   uploadImage() {
     const fileInput = document.createElement('input');

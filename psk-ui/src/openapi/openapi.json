@@ -1584,6 +1584,37 @@
         }
       }
     },
+    "/v3/files/test-template/download/{fileName}": {
+      "get": {
+        "tags": [
+          "file-controller"
+        ],
+        "operationId": "downloadTestTemplateImage",
+        "parameters": [
+          {
+            "name": "fileName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v3/files/comment/download/{fileName}": {
       "get": {
         "tags": [
@@ -2399,6 +2430,9 @@
             "type": "string"
           },
           "imageUrl": {
+            "type": "string"
+          },
+          "imagePath": {
             "type": "string"
           },
           "isActive": {
