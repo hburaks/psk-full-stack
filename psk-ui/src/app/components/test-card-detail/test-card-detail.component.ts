@@ -1,18 +1,7 @@
-import {
-  AfterViewInit,
-  Component,
-  Input,
-  Output,
-  EventEmitter,
-} from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import {
-  TestTemplateResponse,
-  TestTemplateUpdateRequest,
-  QuestionResponse,
-  Choice,
-} from 'src/app/services/models';
-import { TestTemplateAdminService, QuestionAdminService } from 'src/app/services/services';
+import {AfterViewInit, Component, EventEmitter, Input, Output,} from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
+import {Choice, QuestionResponse, TestTemplateResponse, TestTemplateUpdateRequest,} from 'src/app/services/models';
+import {QuestionAdminService, TestTemplateAdminService} from 'src/app/services/services';
 
 @Component({
   selector: 'app-test-card-detail',
@@ -51,7 +40,7 @@ export class TestCardDetailComponent implements AfterViewInit {
   showQuestionManagement: boolean = false;
 
   constructor(
-    private route: ActivatedRoute, 
+    private route: ActivatedRoute,
     private testTemplateAdminService: TestTemplateAdminService,
     private questionAdminService: QuestionAdminService
   ) {
@@ -62,7 +51,7 @@ export class TestCardDetailComponent implements AfterViewInit {
     if (!this.editableTestTemplate && !this.isEditPage) {
       this.getTestTemplateDetail();
     }
-    
+
     if (this.editableTestTemplate) {
       this.updateTestTemplate = {
         title: this.editableTestTemplate?.title || '',
@@ -80,7 +69,6 @@ export class TestCardDetailComponent implements AfterViewInit {
       next: (template: TestTemplateResponse) => {
         this.testTemplate = template;
         this.testCard = template; // Set for template compatibility
-        this.imageUrl = template.imageUrl || '';
       },
       error: (err: any) => {
         console.error('Error fetching test template', err);
@@ -205,7 +193,33 @@ export class TestCardDetailComponent implements AfterViewInit {
         this.imageUrl = e.target.result;
       };
       reader.readAsDataURL(file);
+
+      // Upload the image immediately after selection
+      if (this.editableTestTemplate?.id) {
+        this.uploadSelectedImage();
+      }
     }
+  }
+
+  uploadSelectedImage() {
+    if (!this.selectedFile || !this.editableTestTemplate?.id) {
+      console.error('No file selected or template ID missing');
+      return;
+    }
+
+    this.testTemplateAdminService.uploadImage({
+      testTemplateId: this.editableTestTemplate.id,
+      body: {file: this.selectedFile}
+    }).subscribe({
+      next: (response) => {
+        console.log('Image uploaded successfully', response);
+        // Backend returns filename, we build the URL
+      },
+      error: (error) => {
+        console.error('Error uploading image:', error);
+        alert('Görsel yüklenirken bir hata oluştu. Lütfen tekrar deneyin.');
+      }
+    });
   }
 
   // Legacy methods for template compatibility

@@ -1,14 +1,14 @@
 package com.hburak_dev.psk_full_stack.controller;
 
+import com.hburak_dev.psk_full_stack.service.FileStorageService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.core.io.Resource;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.MediaType;
-import org.springframework.core.io.Resource;
-import com.hburak_dev.psk_full_stack.service.FileStorageService;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("v3/files")
@@ -36,6 +36,14 @@ public class FileController {
     @GetMapping("/comment/download/{fileName}")
     public ResponseEntity<Resource> downloadCommentImage(@PathVariable String fileName) {
         Resource resource = fileStorageService.loadFileAsResource(fileName, "comments");
+        return ResponseEntity.ok()
+                .contentType(MediaType.IMAGE_JPEG)
+                .body(resource);
+    }
+
+    @GetMapping("/test-template/download/{fileName}")
+    public ResponseEntity<Resource> downloadTestTemplateImage(@PathVariable String fileName) {
+        Resource resource = fileStorageService.loadFileAsResource(fileName, "test-templates");
         return ResponseEntity.ok()
                 .contentType(MediaType.IMAGE_JPEG)
                 .body(resource);
