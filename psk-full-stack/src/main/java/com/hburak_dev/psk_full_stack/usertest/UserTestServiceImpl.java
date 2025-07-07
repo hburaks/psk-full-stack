@@ -96,6 +96,7 @@ public class UserTestServiceImpl implements UserTestServiceInterface {
                     .map(userAnswer -> SubmitAnswerRequest.builder()
                             .questionId(userAnswer.getQuestionId().intValue())
                             .choiceId(userAnswer.getChoiceId() != null ? userAnswer.getChoiceId().intValue() : null)
+                            .answerType(userAnswer.getChoice() != null ? userAnswer.getChoice().getAnswerType() : null)
                             .textAnswer(userAnswer.getTextAnswer())
                             .build())
                     .toList();
