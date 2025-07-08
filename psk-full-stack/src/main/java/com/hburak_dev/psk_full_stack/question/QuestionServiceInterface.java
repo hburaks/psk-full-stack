@@ -1,5 +1,6 @@
 package com.hburak_dev.psk_full_stack.question;
 
+import org.springframework.security.core.Authentication;
 import java.util.List;
 
 public interface QuestionServiceInterface {
@@ -19,4 +20,6 @@ public interface QuestionServiceInterface {
     QuestionResponse moveQuestionDown(Integer id);
 
     void reorderQuestions(Long testTemplateId, List<Integer> questionIds);
+
+    List<QuestionResponse> updateQuestionsForTestTemplate(Long testTemplateId, List<QuestionResponse> questions, Authentication connectedUser);
 }

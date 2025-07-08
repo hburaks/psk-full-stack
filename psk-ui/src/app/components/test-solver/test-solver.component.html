@@ -121,11 +121,7 @@
             <p class="text-muted mb-4">{{ testResult.submittedAt | date:'dd.MM.yyyy HH:mm' }}</p>
 
             <div class="mb-4">
-              <div class="d-inline-block me-4">
-                <strong>Skorunuz:</strong>
-                <span class="badge bg-primary fs-6 ms-2">{{ testResult.score }}</span>
-              </div>
-              <div class="d-inline-block">
+              <div class="text-center">
                 <strong>Yanıtlanan Sorular:</strong>
                 <span class="ms-2">{{ testResult.answeredQuestions }} / {{ testResult.totalQuestions }}</span>
               </div>

@@ -61,13 +61,13 @@ public class PublicTestService {
         ScoringStrategyType scoringStrategy = template.getScoringStrategy() != null ? 
                 template.getScoringStrategy() : ScoringStrategyType.SIMPLE_LINEAR;
         
-        // Calculate score using the appropriate strategy
+        // Calculate score internally for comment selection (but don't return it to user)
         int score = scoreCalculationService.calculateScore(answers, scoringStrategy);
         
         // Get appropriate comment based on score
         PublicTestAnswerCommentResponse comment = getCommentForScore(score, testTemplateId.longValue());
         
-        log.info("Public test submission processed for template: {}, questions: {}, answers: {}, score: {}", 
+        log.info("Public test submission processed for template: {}, questions: {}, answers: {}, score: {} (not shown to user)", 
                 testTemplateId, totalQuestions, answeredQuestions, score);
         
         return PublicTestResultResponse.builder()
@@ -75,7 +75,6 @@ public class PublicTestService {
                 .testTitle(template.getTitle())
                 .totalQuestions(totalQuestions)
                 .answeredQuestions(answeredQuestions)
-                .score(score)
                 .comment(comment)
                 .submittedAt(java.time.LocalDateTime.now())
                 .message("Test completed successfully. Thank you for your participation!")

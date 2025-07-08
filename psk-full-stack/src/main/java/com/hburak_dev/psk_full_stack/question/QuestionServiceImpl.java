@@ -8,6 +8,7 @@ import com.hburak_dev.psk_full_stack.exception.TestTemplateNotFoundException;
 import com.hburak_dev.psk_full_stack.handler.BusinessErrorCodes;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -128,5 +129,21 @@ public class QuestionServiceImpl implements QuestionServiceInterface {
     public void reorderQuestions(Long testTemplateId, List<Integer> questionIds) {
         questionRepositoryService.reorderQuestions(testTemplateId, questionIds);
         log.info("Questions reordered for test template: {}", testTemplateId);
+    }
+
+    @Override
+    @Transactional
+    public List<QuestionResponse> updateQuestionsForTestTemplate(Long testTemplateId, List<QuestionResponse> questions, Authentication connectedUser) {
+        if (!testTemplateRepository.existsById(testTemplateId.intValue())) {
+            throw new TestTemplateNotFoundException("Test template not found with id: " + testTemplateId, 
+                    BusinessErrorCodes.TEST_TEMPLATE_NOT_FOUND);
+        }
+        
+        List<Question> updatedQuestions = questionRepositoryService.updateQuestionsForTestTemplate(testTemplateId, questions, connectedUser);
+        log.info("Updated {} questions for test template: {}", updatedQuestions.size(), testTemplateId);
+        
+        return updatedQuestions.stream()
+                .map(questionMapper::toQuestionResponse)
+                .toList();
     }
 }

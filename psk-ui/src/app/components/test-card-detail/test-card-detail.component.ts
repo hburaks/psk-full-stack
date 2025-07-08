@@ -241,8 +241,25 @@ export class TestCardDetailComponent implements AfterViewInit {
   }
 
   saveTemplateQuestions() {
-    this.showQuestionManagement = false;
-    alert('Question saving functionality will be implemented based on the specific API requirements.');
+    if (!this.editableTestTemplate?.id) {
+      alert('Test template ID is missing');
+      return;
+    }
+
+    this.testTemplateAdminService.updateTestTemplateQuestions({
+      id: this.editableTestTemplate.id,
+      body: this.templateQuestions
+    }).subscribe({
+      next: (updatedQuestions) => {
+        this.templateQuestions = updatedQuestions;
+        this.showQuestionManagement = false;
+        alert('Sorular başarıyla güncellendi!');
+      },
+      error: (error) => {
+        console.error('Error updating questions:', error);
+        alert('Sorular güncellenirken bir hata oluştu. Lütfen tekrar deneyin.');
+      }
+    });
   }
 
   loadStrategies() {

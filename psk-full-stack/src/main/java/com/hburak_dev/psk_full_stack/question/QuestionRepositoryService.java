@@ -1,18 +1,23 @@
 package com.hburak_dev.psk_full_stack.question;
 
 import com.hburak_dev.psk_full_stack.choice.Choice;
+import com.hburak_dev.psk_full_stack.choice.ChoiceRepository;
+import com.hburak_dev.psk_full_stack.user.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.ArrayList;
 
 @Service
 @RequiredArgsConstructor
 public class QuestionRepositoryService {
 
     private final QuestionRepository questionRepository;
+    private final ChoiceRepository choiceRepository;
 
     public List<Question> findAll() {
         return questionRepository.findAll();
@@ -131,5 +136,54 @@ public class QuestionRepositoryService {
             q.setOrderIndex(i);
             questionRepository.save(q);
         }
+    }
+
+    @Transactional
+    public List<Question> updateQuestionsForTestTemplate(Long testTemplateId, List<QuestionResponse> questionResponses, Authentication connectedUser) {
+        // Delete existing questions for this test template
+        List<Question> existingQuestions = questionRepository.findByTestTemplateId(testTemplateId);
+        questionRepository.deleteAll(existingQuestions);
+        
+        // Get current user ID
+        User currentUser = (User) connectedUser.getPrincipal();
+        Integer currentUserId = currentUser.getId();
+        
+        List<Question> updatedQuestions = new ArrayList<>();
+        
+        for (int i = 0; i < questionResponses.size(); i++) {
+            QuestionResponse questionResponse = questionResponses.get(i);
+            
+            // Create new question with createdBy set
+            Question question = Question.builder()
+                    .testTemplateId(testTemplateId)
+                    .text(questionResponse.getText())
+                    .orderIndex(i)
+                    .createdBy(currentUserId)
+                    .build();
+            
+            // Save question first to get ID
+            Question savedQuestion = questionRepository.save(question);
+            
+            // Create choices for this question
+            if (questionResponse.getChoices() != null && !questionResponse.getChoices().isEmpty()) {
+                List<Choice> choices = new ArrayList<>();
+                for (Choice choice : questionResponse.getChoices()) {
+                    Choice newChoice = Choice.builder()
+                            .text(choice.getText())
+                            .answerType(choice.getAnswerType())
+                            .createdBy(currentUserId)
+                            .build();
+                    Choice savedChoice = choiceRepository.save(newChoice);
+                    choices.add(savedChoice);
+                }
+                savedQuestion.setChoices(choices);
+                // Save question again to persist the relationship
+                savedQuestion = questionRepository.save(savedQuestion);
+            }
+            
+            updatedQuestions.add(savedQuestion);
+        }
+        
+        return updatedQuestions;
     }
 }

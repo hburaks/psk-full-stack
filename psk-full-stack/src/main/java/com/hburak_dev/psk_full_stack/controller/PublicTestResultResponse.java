@@ -16,7 +16,6 @@ public class PublicTestResultResponse {
     private String testTitle;
     private Integer totalQuestions;
     private Integer answeredQuestions;
-    private Integer score;
     private PublicTestAnswerCommentResponse comment;
     private LocalDateTime submittedAt;
     private String message;

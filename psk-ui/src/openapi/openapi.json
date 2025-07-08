@@ -63,9 +63,7 @@
   "paths": {
     "/v2/blogs/update/{id}": {
       "put": {
-        "tags": [
-          "Blog"
-        ],
+        "tags": ["Blog"],
         "operationId": "updateBlog",
         "parameters": [
           {
@@ -105,9 +103,7 @@
     },
     "/v2/admin/test-templates/{id}": {
       "get": {
-        "tags": [
-          "Test Template Admin"
-        ],
+        "tags": ["Test Template Admin"],
         "summary": "Get test template by ID",
         "operationId": "getTestTemplateById_1",
         "parameters": [
@@ -135,9 +131,7 @@
         }
       },
       "put": {
-        "tags": [
-          "Test Template Admin"
-        ],
+        "tags": ["Test Template Admin"],
         "summary": "Update test template",
         "operationId": "updateTestTemplate",
         "parameters": [
@@ -175,9 +169,7 @@
         }
       },
       "delete": {
-        "tags": [
-          "Test Template Admin"
-        ],
+        "tags": ["Test Template Admin"],
         "summary": "Delete test template",
         "operationId": "deleteTestTemplate",
         "parameters": [
@@ -198,11 +190,88 @@
         }
       }
     },
+    "/v2/admin/test-templates/{id}/questions": {
+      "get": {
+        "tags": ["Test Template Admin"],
+        "summary": "Get test template questions",
+        "description": "Get all questions for a test template ordered by order index",
+        "operationId": "getTestTemplateQuestions_1",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/QuestionResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Test Template Admin"],
+        "summary": "Update test template questions",
+        "description": "Update all questions and choices for a test template",
+        "operationId": "updateTestTemplateQuestions",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/QuestionResponse"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/QuestionResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v2/admin/questions/{id}": {
       "get": {
-        "tags": [
-          "Question Admin"
-        ],
+        "tags": ["Question Admin"],
         "summary": "Get question by ID",
         "description": "Get a specific question by its ID",
         "operationId": "getQuestionById",
@@ -231,9 +300,7 @@
         }
       },
       "put": {
-        "tags": [
-          "Question Admin"
-        ],
+        "tags": ["Question Admin"],
         "summary": "Update question",
         "description": "Update an existing question",
         "operationId": "updateQuestion",
@@ -272,9 +339,7 @@
         }
       },
       "delete": {
-        "tags": [
-          "Question Admin"
-        ],
+        "tags": ["Question Admin"],
         "summary": "Delete question",
         "description": "Delete a question and reorder remaining questions",
         "operationId": "deleteQuestion",
@@ -298,9 +363,7 @@
     },
     "/user/user": {
       "get": {
-        "tags": [
-          "User"
-        ],
+        "tags": ["User"],
         "operationId": "getUser",
         "responses": {
           "200": {
@@ -316,9 +379,7 @@
         }
       },
       "put": {
-        "tags": [
-          "User"
-        ],
+        "tags": ["User"],
         "operationId": "updateUser",
         "requestBody": {
           "content": {
@@ -346,9 +407,7 @@
     },
     "/v3/public/tests/{id}/submit": {
       "post": {
-        "tags": [
-          "Public Test"
-        ],
+        "tags": ["Public Test"],
         "summary": "Submit test answers for public access",
         "operationId": "submitTestAnswers",
         "parameters": [
@@ -388,9 +447,7 @@
     },
     "/v2/sessions/update-status": {
       "post": {
-        "tags": [
-          "session-controller-v-2"
-        ],
+        "tags": ["session-controller-v-2"],
         "operationId": "updateSessionStatusV2",
         "requestBody": {
           "content": {
@@ -419,9 +476,7 @@
     },
     "/v2/sessions/update-paid-status": {
       "post": {
-        "tags": [
-          "session-controller-v-2"
-        ],
+        "tags": ["session-controller-v-2"],
         "operationId": "updateSessionPaidStatusV2",
         "parameters": [
           {
@@ -458,9 +513,7 @@
     },
     "/v2/sessions/update-date": {
       "post": {
-        "tags": [
-          "session-controller-v-2"
-        ],
+        "tags": ["session-controller-v-2"],
         "operationId": "updateSessionDateV2",
         "requestBody": {
           "content": {
@@ -489,9 +542,7 @@
     },
     "/v2/sessions/make-unavailable": {
       "post": {
-        "tags": [
-          "session-controller-v-2"
-        ],
+        "tags": ["session-controller-v-2"],
         "operationId": "makeUnavailableV2",
         "requestBody": {
           "content": {
@@ -526,9 +577,7 @@
     },
     "/v2/sessions/make-available": {
       "post": {
-        "tags": [
-          "session-controller-v-2"
-        ],
+        "tags": ["session-controller-v-2"],
         "operationId": "makeAvailableV2",
         "requestBody": {
           "content": {
@@ -563,9 +612,7 @@
     },
     "/v2/sessions/create": {
       "post": {
-        "tags": [
-          "session-controller-v-2"
-        ],
+        "tags": ["session-controller-v-2"],
         "operationId": "createSessionForUserV2",
         "parameters": [
           {
@@ -604,9 +651,7 @@
     },
     "/v2/sessions/add-note/user": {
       "post": {
-        "tags": [
-          "session-controller-v-2"
-        ],
+        "tags": ["session-controller-v-2"],
         "operationId": "addNoteToSessionForUserV2",
         "requestBody": {
           "content": {
@@ -634,9 +679,7 @@
     },
     "/v2/sessions/add-note/psychologist": {
       "post": {
-        "tags": [
-          "session-controller-v-2"
-        ],
+        "tags": ["session-controller-v-2"],
         "operationId": "addNoteToSessionForPsychologistV2",
         "requestBody": {
           "content": {
@@ -664,9 +707,7 @@
     },
     "/v2/blogs/upload-image": {
       "post": {
-        "tags": [
-          "Blog"
-        ],
+        "tags": ["Blog"],
         "operationId": "uploadFile",
         "parameters": [
           {
@@ -683,9 +724,7 @@
           "content": {
             "multipart/form-data": {
               "schema": {
-                "required": [
-                  "file"
-                ],
+                "required": ["file"],
                 "type": "object",
                 "properties": {
                   "file": {
@@ -784,9 +823,7 @@
     },
     "/v2/blogs/update-shareable-status": {
       "post": {
-        "tags": [
-          "Blog"
-        ],
+        "tags": ["Blog"],
         "operationId": "updateShareableStatus",
         "parameters": [
           {
@@ -816,9 +853,7 @@
     },
     "/v2/blogs/save": {
       "post": {
-        "tags": [
-          "Blog"
-        ],
+        "tags": ["Blog"],
         "operationId": "saveBlog",
         "requestBody": {
           "content": {
@@ -847,9 +882,7 @@
     },
     "/v2/admin/user-tests/assign": {
       "post": {
-        "tags": [
-          "User Test Admin"
-        ],
+        "tags": ["User Test Admin"],
         "summary": "Assign test to user",
         "operationId": "assignTest",
         "requestBody": {
@@ -878,9 +911,7 @@
     },
     "/v2/admin/test-templates": {
       "get": {
-        "tags": [
-          "Test Template Admin"
-        ],
+        "tags": ["Test Template Admin"],
         "summary": "Get all test templates",
         "operationId": "getAllTestTemplates",
         "responses": {
@@ -900,9 +931,7 @@
         }
       },
       "post": {
-        "tags": [
-          "Test Template Admin"
-        ],
+        "tags": ["Test Template Admin"],
         "summary": "Create a new test template",
         "operationId": "createTestTemplate",
         "requestBody": {
@@ -931,9 +960,7 @@
     },
     "/v2/admin/test-templates/upload-image": {
       "post": {
-        "tags": [
-          "Test Template Admin"
-        ],
+        "tags": ["Test Template Admin"],
         "summary": "Upload image for test template",
         "operationId": "uploadImage",
         "parameters": [
@@ -951,9 +978,7 @@
           "content": {
             "multipart/form-data": {
               "schema": {
-                "required": [
-                  "file"
-                ],
+                "required": ["file"],
                 "type": "object",
                 "properties": {
                   "file": {
@@ -1052,9 +1077,7 @@
     },
     "/v2/admin/questions": {
       "post": {
-        "tags": [
-          "Question Admin"
-        ],
+        "tags": ["Question Admin"],
         "summary": "Create a new question",
         "description": "Create a question for a test template",
         "operationId": "createQuestion",
@@ -1084,9 +1107,7 @@
     },
     "/v2/admin/questions/{id}/move-up": {
       "post": {
-        "tags": [
-          "Question Admin"
-        ],
+        "tags": ["Question Admin"],
         "summary": "Move question up",
         "description": "Move question up in the order",
         "operationId": "moveQuestionUp",
@@ -1117,9 +1138,7 @@
     },
     "/v2/admin/questions/{id}/move-down": {
       "post": {
-        "tags": [
-          "Question Admin"
-        ],
+        "tags": ["Question Admin"],
         "summary": "Move question down",
         "description": "Move question down in the order",
         "operationId": "moveQuestionDown",
@@ -1150,9 +1169,7 @@
     },
     "/v2/admin/questions/test-template/{testTemplateId}/reorder": {
       "post": {
-        "tags": [
-          "Question Admin"
-        ],
+        "tags": ["Question Admin"],
         "summary": "Reorder questions",
         "description": "Reorder all questions for a test template",
         "operationId": "reorderQuestions",
@@ -1190,9 +1207,7 @@
     },
     "/v2/admin/comments/test-template/{testTemplateId}": {
       "get": {
-        "tags": [
-          "Comment Admin"
-        ],
+        "tags": ["Comment Admin"],
         "summary": "Get all comments for a test template",
         "operationId": "getCommentsByTestTemplate",
         "parameters": [
@@ -1223,9 +1238,7 @@
         }
       },
       "post": {
-        "tags": [
-          "Comment Admin"
-        ],
+        "tags": ["Comment Admin"],
         "summary": "Create a new comment for a test template",
         "operationId": "createComment",
         "parameters": [
@@ -1265,9 +1278,7 @@
     },
     "/v1/user-tests/{id}/submit": {
       "post": {
-        "tags": [
-          "User Test"
-        ],
+        "tags": ["User Test"],
         "summary": "Submit all answers and complete test in one operation",
         "operationId": "submitAndCompleteTest",
         "parameters": [
@@ -1307,9 +1318,7 @@
     },
     "/sessions/{id}/cancel": {
       "post": {
-        "tags": [
-          "session-controller"
-        ],
+        "tags": ["session-controller"],
         "operationId": "cancelUserSession",
         "parameters": [
           {
@@ -1338,9 +1347,7 @@
     },
     "/sessions/create": {
       "post": {
-        "tags": [
-          "session-controller"
-        ],
+        "tags": ["session-controller"],
         "operationId": "createMySession",
         "parameters": [
           {
@@ -1370,9 +1377,7 @@
     },
     "/auth/register": {
       "post": {
-        "tags": [
-          "Authentication"
-        ],
+        "tags": ["Authentication"],
         "operationId": "register",
         "requestBody": {
           "content": {
@@ -1400,9 +1405,7 @@
     },
     "/auth/authenticate": {
       "post": {
-        "tags": [
-          "Authentication"
-        ],
+        "tags": ["Authentication"],
         "operationId": "authenticate",
         "requestBody": {
           "content": {
@@ -1430,9 +1433,7 @@
     },
     "/v3/sessions/weekly-calendar": {
       "get": {
-        "tags": [
-          "session-controller-v-3"
-        ],
+        "tags": ["session-controller-v-3"],
         "operationId": "getWeeklyCalendar",
         "parameters": [
           {
@@ -1464,9 +1465,7 @@
     },
     "/v3/public/tests": {
       "get": {
-        "tags": [
-          "Public Test"
-        ],
+        "tags": ["Public Test"],
         "summary": "Get all active test templates for public access",
         "operationId": "getAllActiveTestTemplates",
         "responses": {
@@ -1488,9 +1487,7 @@
     },
     "/v3/public/tests/{id}": {
       "get": {
-        "tags": [
-          "Public Test"
-        ],
+        "tags": ["Public Test"],
         "summary": "Get test template by ID for public access",
         "operationId": "getTestTemplateById",
         "parameters": [
@@ -1520,9 +1517,7 @@
     },
     "/v3/public/tests/{id}/questions": {
       "get": {
-        "tags": [
-          "Public Test"
-        ],
+        "tags": ["Public Test"],
         "summary": "Get test template questions for public access",
         "operationId": "getTestTemplateQuestions",
         "parameters": [
@@ -1555,9 +1550,7 @@
     },
     "/v3/files/test/download/{fileName}": {
       "get": {
-        "tags": [
-          "file-controller"
-        ],
+        "tags": ["file-controller"],
         "operationId": "downloadTestFile",
         "parameters": [
           {
@@ -1586,9 +1579,7 @@
     },
     "/v3/files/test-template/download/{fileName}": {
       "get": {
-        "tags": [
-          "file-controller"
-        ],
+        "tags": ["file-controller"],
         "operationId": "downloadTestTemplateImage",
         "parameters": [
           {
@@ -1617,9 +1608,7 @@
     },
     "/v3/files/comment/download/{fileName}": {
       "get": {
-        "tags": [
-          "file-controller"
-        ],
+        "tags": ["file-controller"],
         "operationId": "downloadCommentImage",
         "parameters": [
           {
@@ -1648,9 +1637,7 @@
     },
     "/v3/files/blog/download/{fileName}": {
       "get": {
-        "tags": [
-          "file-controller"
-        ],
+        "tags": ["file-controller"],
         "operationId": "downloadBlogFile",
         "parameters": [
           {
@@ -1679,9 +1666,7 @@
     },
     "/v3/blogs/get-blog-by-id/{id}": {
       "get": {
-        "tags": [
-          "Blog"
-        ],
+        "tags": ["Blog"],
         "operationId": "findBlogById",
         "parameters": [
           {
@@ -1710,9 +1695,7 @@
     },
     "/v3/blogs/get-all-blogs": {
       "get": {
-        "tags": [
-          "Blog"
-        ],
+        "tags": ["Blog"],
         "operationId": "findAllBlogsShareable",
         "parameters": [
           {
@@ -1752,9 +1735,7 @@
     },
     "/v2/sessions/{id}": {
       "get": {
-        "tags": [
-          "session-controller-v-2"
-        ],
+        "tags": ["session-controller-v-2"],
         "operationId": "getSessionByIdV2",
         "parameters": [
           {
@@ -1792,9 +1773,7 @@
     },
     "/v2/sessions/users-with-sessions": {
       "get": {
-        "tags": [
-          "session-controller-v-2"
-        ],
+        "tags": ["session-controller-v-2"],
         "operationId": "getAllUsersWithSessionV2",
         "parameters": [
           {
@@ -1832,9 +1811,7 @@
     },
     "/v2/sessions/user/{userId}": {
       "get": {
-        "tags": [
-          "session-controller-v-2"
-        ],
+        "tags": ["session-controller-v-2"],
         "operationId": "getAllSessionsOfUserV2",
         "parameters": [
           {
@@ -1866,9 +1843,7 @@
     },
     "/v2/sessions/upcoming-session": {
       "get": {
-        "tags": [
-          "session-controller-v-2"
-        ],
+        "tags": ["session-controller-v-2"],
         "operationId": "getUpcomingSessionsV2",
         "responses": {
           "200": {
@@ -1886,9 +1861,7 @@
     },
     "/v2/sessions/all": {
       "get": {
-        "tags": [
-          "session-controller-v-2"
-        ],
+        "tags": ["session-controller-v-2"],
         "operationId": "getAllSessionsV2",
         "parameters": [
           {
@@ -1926,9 +1899,7 @@
     },
     "/v2/blogs/get-all-blogs": {
       "get": {
-        "tags": [
-          "Blog"
-        ],
+        "tags": ["Blog"],
         "operationId": "findAllBlogs",
         "parameters": [
           {
@@ -1968,9 +1939,7 @@
     },
     "/v2/admin/user-tests": {
       "get": {
-        "tags": [
-          "User Test Admin"
-        ],
+        "tags": ["User Test Admin"],
         "summary": "Get all user tests",
         "operationId": "getAllUserTests",
         "responses": {
@@ -1992,9 +1961,7 @@
     },
     "/v2/admin/user-tests/{userTestId}/answers": {
       "get": {
-        "tags": [
-          "User Test Admin"
-        ],
+        "tags": ["User Test Admin"],
         "summary": "Get user's answers for a test (Admin access)",
         "operationId": "getUserTestAnswers",
         "parameters": [
@@ -2025,47 +1992,9 @@
         }
       }
     },
-    "/v2/admin/test-templates/{id}/questions": {
-      "get": {
-        "tags": [
-          "Test Template Admin"
-        ],
-        "summary": "Get test template questions",
-        "description": "Get all questions for a test template ordered by order index",
-        "operationId": "getTestTemplateQuestions_1",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/QuestionResponse"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/v2/admin/test-templates/available-for-user/{userId}": {
       "get": {
-        "tags": [
-          "Test Template Admin"
-        ],
+        "tags": ["Test Template Admin"],
         "summary": "Get available test templates for user",
         "description": "Get test templates that are not yet assigned to the specified user",
         "operationId": "getAvailableTestTemplatesForUser",
@@ -2099,9 +2028,7 @@
     },
     "/v2/admin/scoring/strategies": {
       "get": {
-        "tags": [
-          "Scoring Admin"
-        ],
+        "tags": ["Scoring Admin"],
         "summary": "Get all available scoring strategies",
         "operationId": "getAllScoringStrategies",
         "responses": {
@@ -2123,9 +2050,7 @@
     },
     "/v2/admin/questions/test-template/{testTemplateId}": {
       "get": {
-        "tags": [
-          "Question Admin"
-        ],
+        "tags": ["Question Admin"],
         "summary": "Get questions by test template",
         "description": "Get all questions for a specific test template ordered by order index",
         "operationId": "getQuestionsByTestTemplate",
@@ -2159,9 +2084,7 @@
     },
     "/v1/user-tests": {
       "get": {
-        "tags": [
-          "User Test"
-        ],
+        "tags": ["User Test"],
         "summary": "Get current user's tests",
         "operationId": "getCurrentUserTests",
         "responses": {
@@ -2183,9 +2106,7 @@
     },
     "/v1/user-tests/{id}": {
       "get": {
-        "tags": [
-          "User Test"
-        ],
+        "tags": ["User Test"],
         "summary": "Get specific user test",
         "operationId": "getUserTest",
         "parameters": [
@@ -2215,9 +2136,7 @@
     },
     "/sessions/upcoming-session": {
       "get": {
-        "tags": [
-          "session-controller"
-        ],
+        "tags": ["session-controller"],
         "operationId": "getUpcomingSession",
         "responses": {
           "200": {
@@ -2235,9 +2154,7 @@
     },
     "/sessions/my-sessions": {
       "get": {
-        "tags": [
-          "session-controller"
-        ],
+        "tags": ["session-controller"],
         "operationId": "getMySessions",
         "responses": {
           "200": {
@@ -2258,9 +2175,7 @@
     },
     "/auth/activate-account": {
       "get": {
-        "tags": [
-          "Authentication"
-        ],
+        "tags": ["Authentication"],
         "operationId": "confirm",
         "parameters": [
           {
@@ -2281,9 +2196,7 @@
     },
     "/v2/blogs/delete/{id}": {
       "delete": {
-        "tags": [
-          "Blog"
-        ],
+        "tags": ["Blog"],
         "operationId": "deleteBlog",
         "parameters": [
           {
@@ -2312,9 +2225,7 @@
     },
     "/v2/admin/user-tests/{userTestId}": {
       "delete": {
-        "tags": [
-          "User Test Admin"
-        ],
+        "tags": ["User Test Admin"],
         "summary": "Delete user test",
         "operationId": "deleteUserTest",
         "parameters": [
@@ -2356,11 +2267,7 @@
         }
       },
       "TestTemplateCommentRequest": {
-        "required": [
-          "score",
-          "text",
-          "title"
-        ],
+        "required": ["score", "text", "title"],
         "type": "object",
         "properties": {
           "score": {
@@ -2379,9 +2286,7 @@
         }
       },
       "TestTemplateUpdateRequest": {
-        "required": [
-          "title"
-        ],
+        "required": ["title"],
         "type": "object",
         "properties": {
           "title": {
@@ -2402,11 +2307,7 @@
           },
           "scoringStrategy": {
             "type": "string",
-            "enum": [
-              "SIMPLE_LINEAR",
-              "WEIGHTED",
-              "PERCENTAGE"
-            ]
+            "enum": ["SIMPLE_LINEAR", "WEIGHTED", "PERCENTAGE"]
           },
           "comments": {
             "type": "array",
@@ -2440,11 +2341,7 @@
           },
           "scoringStrategy": {
             "type": "string",
-            "enum": [
-              "SIMPLE_LINEAR",
-              "WEIGHTED",
-              "PERCENTAGE"
-            ]
+            "enum": ["SIMPLE_LINEAR", "WEIGHTED", "PERCENTAGE"]
           },
           "createdDate": {
             "type": "string",
@@ -2459,30 +2356,6 @@
           },
           "lastModifiedBy": {
             "type": "string"
-          }
-        }
-      },
-      "QuestionUpdateRequest": {
-        "required": [
-          "text"
-        ],
-        "type": "object",
-        "properties": {
-          "text": {
-            "maxLength": 1000,
-            "minLength": 0,
-            "type": "string"
-          },
-          "choiceIds": {
-            "type": "array",
-            "items": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          "orderIndex": {
-            "type": "integer",
-            "format": "int32"
           }
         }
       },
@@ -2511,13 +2384,7 @@
           },
           "answerType": {
             "type": "string",
-            "enum": [
-              "ANSWER_A",
-              "ANSWER_B",
-              "ANSWER_C",
-              "ANSWER_D",
-              "ANSWER_E"
-            ]
+            "enum": ["ANSWER_A", "ANSWER_B", "ANSWER_C", "ANSWER_D", "ANSWER_E"]
           },
           "text": {
             "type": "string"
@@ -2544,13 +2411,7 @@
           },
           "userAnswer": {
             "type": "string",
-            "enum": [
-              "ANSWER_A",
-              "ANSWER_B",
-              "ANSWER_C",
-              "ANSWER_D",
-              "ANSWER_E"
-            ]
+            "enum": ["ANSWER_A", "ANSWER_B", "ANSWER_C", "ANSWER_D", "ANSWER_E"]
           },
           "testTemplateTitle": {
             "type": "string"
@@ -2574,6 +2435,28 @@
             "format": "int32"
           },
           "lastModifiedBy": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "QuestionUpdateRequest": {
+        "required": ["text"],
+        "type": "object",
+        "properties": {
+          "text": {
+            "maxLength": 1000,
+            "minLength": 0,
+            "type": "string"
+          },
+          "choiceIds": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "orderIndex": {
             "type": "integer",
             "format": "int32"
           }
@@ -2625,9 +2508,7 @@
         }
       },
       "PublicTestSubmissionRequest": {
-        "required": [
-          "answers"
-        ],
+        "required": ["answers"],
         "type": "object",
         "properties": {
           "answers": {
@@ -2639,10 +2520,7 @@
         }
       },
       "SubmitAnswerRequest": {
-        "required": [
-          "questionId",
-          "userTestId"
-        ],
+        "required": ["questionId", "userTestId"],
         "type": "object",
         "properties": {
           "userTestId": {
@@ -2659,13 +2537,7 @@
           },
           "answerType": {
             "type": "string",
-            "enum": [
-              "ANSWER_A",
-              "ANSWER_B",
-              "ANSWER_C",
-              "ANSWER_D",
-              "ANSWER_E"
-            ]
+            "enum": ["ANSWER_A", "ANSWER_B", "ANSWER_C", "ANSWER_D", "ANSWER_E"]
           },
           "textAnswer": {
             "maxLength": 2000,
@@ -2703,10 +2575,6 @@
             "format": "int32"
           },
           "answeredQuestions": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "score": {
             "type": "integer",
             "format": "int32"
           },
@@ -2841,10 +2709,7 @@
         }
       },
       "AssignTestRequest": {
-        "required": [
-          "testTemplateId",
-          "userId"
-        ],
+        "required": ["testTemplateId", "userId"],
         "type": "object",
         "properties": {
           "userId": {
@@ -2930,9 +2795,7 @@
         }
       },
       "TestTemplateCreateRequest": {
-        "required": [
-          "title"
-        ],
+        "required": ["title"],
         "type": "object",
         "properties": {
           "title": {
@@ -2953,11 +2816,7 @@
           },
           "scoringStrategy": {
             "type": "string",
-            "enum": [
-              "SIMPLE_LINEAR",
-              "WEIGHTED",
-              "PERCENTAGE"
-            ]
+            "enum": ["SIMPLE_LINEAR", "WEIGHTED", "PERCENTAGE"]
           },
           "comments": {
             "type": "array",
@@ -2968,10 +2827,7 @@
         }
       },
       "QuestionCreateRequest": {
-        "required": [
-          "testTemplateId",
-          "text"
-        ],
+        "required": ["testTemplateId", "text"],
         "type": "object",
         "properties": {
           "testTemplateId": {
@@ -3038,10 +2894,7 @@
         }
       },
       "SubmitTestRequest": {
-        "required": [
-          "answers",
-          "userTestId"
-        ],
+        "required": ["answers", "userTestId"],
         "type": "object",
         "properties": {
           "userTestId": {
@@ -3113,23 +2966,11 @@
           },
           "questionAnswerType": {
             "type": "string",
-            "enum": [
-              "ANSWER_A",
-              "ANSWER_B",
-              "ANSWER_C",
-              "ANSWER_D",
-              "ANSWER_E"
-            ]
+            "enum": ["ANSWER_A", "ANSWER_B", "ANSWER_C", "ANSWER_D", "ANSWER_E"]
           },
           "choiceAnswerType": {
             "type": "string",
-            "enum": [
-              "ANSWER_A",
-              "ANSWER_B",
-              "ANSWER_C",
-              "ANSWER_D",
-              "ANSWER_E"
-            ]
+            "enum": ["ANSWER_A", "ANSWER_B", "ANSWER_C", "ANSWER_D", "ANSWER_E"]
           },
           "choiceText": {
             "type": "string"
@@ -3195,10 +3036,7 @@
         }
       },
       "AuthenticationRequest": {
-        "required": [
-          "email",
-          "password"
-        ],
+        "required": ["email", "password"],
         "type": "object",
         "properties": {
           "email": {
