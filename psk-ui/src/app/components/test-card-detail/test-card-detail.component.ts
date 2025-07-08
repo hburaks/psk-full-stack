@@ -45,6 +45,11 @@ export class TestCardDetailComponent implements AfterViewInit {
   availableStrategies: ScoringStrategyResponse[] = [];
   selectedStrategy: string | null = null;
 
+  // Toast messages
+  toastMessage: string = '';
+  toastType: 'success' | 'error' = 'error';
+  showToast: boolean = false;
+
   constructor(
     private route: ActivatedRoute,
     private testTemplateAdminService: TestTemplateAdminService,
@@ -242,7 +247,9 @@ export class TestCardDetailComponent implements AfterViewInit {
 
   saveTemplateQuestions() {
     if (!this.editableTestTemplate?.id) {
-      alert('Test template ID is missing');
+      this.showToast = true;
+      this.toastType = 'error';
+      this.toastMessage = 'Test template ID is missing';
       return;
     }
 
@@ -253,13 +260,97 @@ export class TestCardDetailComponent implements AfterViewInit {
       next: (updatedQuestions) => {
         this.templateQuestions = updatedQuestions;
         this.showQuestionManagement = false;
-        alert('Sorular başarıyla güncellendi!');
+        this.showToast = true;
+        this.toastType = 'success';
+        this.toastMessage = 'Sorular başarıyla güncellendi!';
       },
       error: (error) => {
         console.error('Error updating questions:', error);
-        alert('Sorular güncellenirken bir hata oluştu. Lütfen tekrar deneyin.');
+        this.showToast = true;
+        this.toastType = 'error';
+        this.toastMessage = 'Sorular güncellenirken bir hata oluştu. Lütfen tekrar deneyin.';
       }
     });
+  }
+
+  saveAllTestChanges() {
+    if (!this.editableTestTemplate?.id) {
+      this.showToast = true;
+      this.toastType = 'error';
+      this.toastMessage = 'Test template ID is missing';
+      return;
+    }
+
+    // Update the scoring strategy in the update request
+    if (this.selectedStrategy) {
+      this.updateTestTemplate.scoringStrategy = this.selectedStrategy as 'SIMPLE_LINEAR' | 'WEIGHTED' | 'PERCENTAGE';
+    }
+
+    // Handle imageUrl based on whether a new image is selected
+    if (!this.selectedFile && this.editableTestTemplate?.imagePath) {
+      this.updateTestTemplate.imageUrl = this.editableTestTemplate.imagePath;
+    } else if (this.selectedFile) {
+      delete this.updateTestTemplate.imageUrl;
+    }
+
+    // First update the template info
+    this.testTemplateAdminService.updateTestTemplate({
+      id: this.editableTestTemplate.id,
+      body: this.updateTestTemplate
+    }).subscribe({
+      next: (response: TestTemplateResponse) => {
+        // Then update questions if there are any
+        if (this.templateQuestions && this.templateQuestions.length > 0) {
+          this.testTemplateAdminService.updateTestTemplateQuestions({
+            id: this.editableTestTemplate!.id!,
+            body: this.templateQuestions
+          }).subscribe({
+            next: (updatedQuestions) => {
+              this.templateQuestions = updatedQuestions;
+              // Finally upload image if selected
+              if (this.selectedFile) {
+                this.uploadSelectedImage();
+              } else {
+                this.showSuccessAndClose();
+              }
+            },
+            error: (error) => {
+              console.error('Error updating questions:', error);
+              this.showToast = true;
+              this.toastType = 'error';
+              this.toastMessage = 'Sorular güncellenirken bir hata oluştu.';
+            }
+          });
+        } else {
+          // No questions to update, just upload image if selected
+          if (this.selectedFile) {
+            this.uploadSelectedImage();
+          } else {
+            this.showSuccessAndClose();
+          }
+        }
+      },
+      error: (error) => {
+        console.error('Error updating test template:', error);
+        this.showToast = true;
+        this.toastType = 'error';
+        this.toastMessage = 'Test güncellenirken bir hata oluştu.';
+      }
+    });
+  }
+
+  private showSuccessAndClose() {
+    this.showToast = true;
+    this.toastType = 'success';
+    this.toastMessage = 'Test başarıyla güncellendi!';
+    setTimeout(() => {
+      this.closeModalEvent.emit();
+    }, 2000);
+  }
+
+  closeToast() {
+    this.showToast = false;
+    this.toastMessage = '';
   }
 
   loadStrategies() {
@@ -306,11 +397,13 @@ export class TestCardDetailComponent implements AfterViewInit {
     }).subscribe({
       next: (response) => {
         console.log('Image uploaded successfully', response);
-        this.closeModalEvent.emit();
+        this.showSuccessAndClose();
       },
       error: (error) => {
         console.error('Error uploading image:', error);
-        alert('Görsel yüklenirken bir hata oluştu. Lütfen tekrar deneyin.');
+        this.showToast = true;
+        this.toastType = 'error';
+        this.toastMessage = 'Görsel yüklenirken bir hata oluştu. Lütfen tekrar deneyin.';
       }
     });
   }
@@ -327,11 +420,13 @@ export class TestCardDetailComponent implements AfterViewInit {
     }).subscribe({
       next: (response) => {
         console.log('Image uploaded successfully', response);
-        this.closeModalEvent.emit();
+        this.showSuccessAndClose();
       },
       error: (error) => {
         console.error('Error uploading image:', error);
-        alert('Görsel yüklenirken bir hata oluştu. Lütfen tekrar deneyin.');
+        this.showToast = true;
+        this.toastType = 'error';
+        this.toastMessage = 'Görsel yüklenirken bir hata oluştu. Lütfen tekrar deneyin.';
         this.closeModalEvent.emit();
       }
     });

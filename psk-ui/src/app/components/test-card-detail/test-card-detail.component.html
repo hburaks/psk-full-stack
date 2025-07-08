@@ -36,7 +36,6 @@
                   <button class="btn btn-outline-secondary me-2" (click)="closeModalEvent.emit()">
                     ← Geri Dön
                   </button>
-                  <button class="btn btn-primary" (click)="saveAllChanges()">Kaydet</button>
                 </div>
               </ng-container>
             </ng-container>
@@ -93,34 +92,50 @@
           </button>
         </div>
 
-        <div class="d-flex justify-content-between">
+        <div class="d-flex justify-content-start">
           <button class="btn btn-outline-primary" (click)="addTemplateQuestion()">
             + Soru Ekle
-          </button>
-          <button class="btn btn-primary" (click)="saveTemplateQuestions()">
-            Soruları Kaydet
           </button>
         </div>
       </div>
     </div>
 
+    <!-- Common Save Button for Edit Mode -->
+    <div *ngIf="isEditPage && editableTestTemplate" class="row mx-0 px-md-5 px-sm-2 my-4">
+      <div class="col-12 text-end">
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#testUpdateModal">
+          Testi Güncelle
+        </button>
+      </div>
+    </div>
+    
     <div class="row mx-0 px-md-5 px-sm-2">
       <div *ngIf="!isEditPage" class="col-12 text-end">
         <button class="btn btn-primary" (click)="getResult()">Testi Tamamla</button>
       </div>
     </div>
-    <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 11">
-      <div id="liveToast" class="toast align-items-center text-bg-danger border-0" role="alert" aria-live="assertive"
-        aria-atomic="true">
-        <div class="d-flex">
-          <div class="toast-body">
-            Lütfen testi tamamlayınız.
-          </div>
-          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
-            aria-label="Close"></button>
-        </div>
-      </div>
-    </div>
   </div>
   <app-test-result *ngIf="testResult" [testResult]="testResult"></app-test-result>
 </div>
+
+<!-- Test Update Confirmation Modal -->
+<div class="modal fade" id="testUpdateModal" tabindex="-1" aria-labelledby="testUpdateModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="testUpdateModalLabel">Testi Güncelle</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Testin tüm değişiklikleri kaydedilecek, onaylıyor musunuz?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Vazgeç</button>
+        <button data-bs-dismiss="modal" (click)="saveAllTestChanges()" type="button" class="btn btn-primary">Onayla</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Use existing toast component -->
+<app-toast *ngIf="showToast" [toastMessage]="toastMessage" [toastType]="toastType"></app-toast>

@@ -51,8 +51,7 @@
     </div>
   </div>
 </div>
-<app-toast class="position-fixed top-0 start-50 translate-middle-x" style="z-index: 1050;" *ngIf="showToast"
-  [toastErrorMessage]="toastErrorMessage"></app-toast>
+<app-toast *ngIf="showToast" [toastMessage]="toastErrorMessage" [toastType]="'error'"></app-toast>
 <div *ngIf="upcomingSession == null" class="row mx-0 card px-md-5 px-sm-2">
   <div class="col">
     <h4 class="text-secondary my-4 ">Gelecek Seans Bulunamadı</h4>

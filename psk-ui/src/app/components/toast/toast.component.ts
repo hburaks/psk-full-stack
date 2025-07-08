@@ -8,6 +8,9 @@ declare var bootstrap: any;
   styleUrls: ['./toast.component.scss'],
 })
 export class ToastComponent implements OnInit {
+  @Input() toastMessage: string = '';
+  @Input() toastType: 'success' | 'error' = 'error';
+  // Backward compatibility
   @Input() toastErrorMessage: string = '';
 
   ngOnInit() {
@@ -20,5 +23,17 @@ export class ToastComponent implements OnInit {
       const bsToast = new bootstrap.Toast(toastElement);
       bsToast.show();
     }
+  }
+
+  get toastClass() {
+    return this.toastType === 'success' ? 'text-bg-success' : 'text-bg-danger';
+  }
+
+  get toastIcon() {
+    return this.toastType === 'success' ? 'fas fa-check-circle' : 'fas fa-exclamation-circle';
+  }
+
+  get displayMessage() {
+    return this.toastMessage || this.toastErrorMessage;
   }
 }

@@ -48,4 +48,4 @@
   <app-admin-test-result class="col-12" [testResult]="selectedTest"></app-admin-test-result>
 </div>
 
-<app-toast *ngIf="showToast" [toastErrorMessage]="errorMessage"></app-toast>
+<app-toast *ngIf="showToast" [toastMessage]="errorMessage" [toastType]="'error'"></app-toast>
