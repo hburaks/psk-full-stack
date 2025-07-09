@@ -46,6 +46,7 @@ public class SecurityConfig {
                                 .permitAll()
                                 .requestMatchers("/v1/**").hasAnyAuthority("ROLE_USER")
                                 .requestMatchers("/v2/**").hasAnyAuthority("ROLE_ADMIN")
+                                .requestMatchers("/v3/**").hasAnyAuthority("ROLE_USER")
                                 .anyRequest()
                                 .authenticated()
                 )

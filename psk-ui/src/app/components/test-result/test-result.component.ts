@@ -1,6 +1,11 @@
 import {Component, Input} from '@angular/core';
-import {PublicTestAnswerCommentResponse} from 'src/app/services/models/public-test-answer-comment-response';
 import {FileControllerService} from 'src/app/services/services';
+
+interface TestResultData {
+  text?: string;
+  title?: string;
+  imageUrl?: string;
+}
 
 @Component({
   selector: 'app-test-result',
@@ -8,7 +13,7 @@ import {FileControllerService} from 'src/app/services/services';
   styleUrls: ['./test-result.component.scss'],
 })
 export class TestResultComponent {
-  @Input() testResult!: PublicTestAnswerCommentResponse | null;
+  @Input() testResult!: TestResultData | null;
   text: string = '';
   title: string = '';
   imageUrl: string = '';

@@ -2,8 +2,8 @@ import {Component, HostListener, OnInit} from '@angular/core';
 import {BlogService} from '../../services/services/blog.service';
 import {PageResponseBlogResponse} from '../../services/models/page-response-blog-response';
 import {BlogResponse} from '../../services/models/blog-response';
-import {PublicTestResponse} from '../../services/models/public-test-response';
-import {TestService} from '../../services/services/test.service';
+import {TestTemplateResponse} from '../../services/models/test-template-response';
+import {PublicTestService} from '../../services/services/public-test.service';
 
 import {CommonService} from 'src/app/custom-services/common-service/common.service';
 import {TokenService} from 'src/app/custom-services/token/token.service';
@@ -28,13 +28,13 @@ export class MainPageComponent implements OnInit {
   blogCardList: BlogResponse[] = [];
   fetchedBlogList: BlogResponse[] = [];
 
-  testCardList: PublicTestResponse[] = [];
-  fetchedTestList: PublicTestResponse[] = [];
+  testCardList: TestTemplateResponse[] = [];
+  fetchedTestList: TestTemplateResponse[] = [];
 
 
   constructor(
     private blogService: BlogService,
-    private testServiceV3: TestService,
+    private publicTestService: PublicTestService,
     private commonService: CommonService,
     private tokenService: TokenService
   ) {}
@@ -47,7 +47,7 @@ export class MainPageComponent implements OnInit {
   }
 
   @HostListener('window:resize', ['$event'])
-  onResize(event: any) {
+  onResize() {
     this.updateScreenSize();
   }
 
@@ -94,13 +94,13 @@ export class MainPageComponent implements OnInit {
   }
 
   getTestList() {
-    this.testServiceV3.getAllPublicTests().subscribe({
-      next: (publicTests: Array<PublicTestResponse>) => {
-        this.fetchedTestList = publicTests || [];
+    this.publicTestService.getAllActiveTestTemplates().subscribe({
+      next: (testTemplates: Array<TestTemplateResponse>) => {
+        this.fetchedTestList = testTemplates || [];
         this.updateTestListBasedOnScreenSize();
       },
       error: (err) => {
-        console.error('Error fetching public tests', err);
+        console.error('Error fetching test templates', err);
       },
     });
   }

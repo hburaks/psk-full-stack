@@ -15,6 +15,7 @@ import { EditCommentComponent } from '../admin/components/edit-comment/edit-comm
 import { EditUserComponent } from 'src/app/components/edit-user/edit-user.component';
 import { UserNavUnderlineComponent } from 'src/app/components/user-nav-underline/user-nav-underline.component';
 import { ToastComponent } from 'src/app/components/toast/toast.component';
+import { AnswerTypeDisplayPipe } from 'src/app/shared/pipes/answer-type-display.pipe';
 @NgModule({
   declarations: [
     WeeklySessionCalendarComponent,
@@ -30,7 +31,8 @@ import { ToastComponent } from 'src/app/components/toast/toast.component';
     EditCommentComponent,
     EditUserComponent,
     UserNavUnderlineComponent,
-    ToastComponent
+    ToastComponent,
+    AnswerTypeDisplayPipe
   ],
   imports: [CommonModule, FormsModule],
   exports: [
@@ -47,7 +49,8 @@ import { ToastComponent } from 'src/app/components/toast/toast.component';
     EditCommentComponent,
     EditUserComponent,
     UserNavUnderlineComponent,
-    ToastComponent
+    ToastComponent,
+    AnswerTypeDisplayPipe
   ],
 })
 export class SharedModule {}

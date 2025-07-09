@@ -28,16 +28,24 @@
           aria-current="page">{{statusMap[status]}}</a>
       </div>
     </div>
-    <div class="row g-3 mb-4">
-      <div *ngIf="myTests.length > 0">
-        <h4 class="text-secondary mt-3 mb-3">Seansınız İçin Atanmış Testler</h4>
-        <div class="row d-flex justify-content-center">
-          <div class="col-md-4 col-sm-6" *ngFor="let testCard of myTests; let i = index">
-            <app-user-test-card [testCard]="testCard" (startTestEvent)="startTest($event)"></app-user-test-card>
+      <div *ngIf="userTests.length > 0">
+        <h4 class="text-secondary mt-3 mb-3">Size Atanmış Testler</h4>
+        <div class="row justify-content-center mt-3 g-3">
+          <div class="col-md-4 col-sm-6 test-card-container mb-4" *ngFor="let userTest of userTests">
+            <div class="test-circle mx-auto">
+              <img *ngIf="userTest.testTemplateImageUrl" [src]="userTest.testTemplateImageUrl" alt="Test image">
+            </div>
+            <div
+              class="card test-card card-body test-card-body test-card-body-large d-flex flex-column justify-content-between mt-2">
+              <h5 class="card-title text-center mb-0">{{ userTest.testTemplateTitle }}</h5>
+              <p class="card-text text-secondary">Test henüz tamamlanmadı.</p>
+              <button (click)="startUserTest(userTest)"
+                      class="btn btn-outline-primary btn-primary-outline-custom btn-test">Teste Başla
+              </button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
     <div *ngIf="isUpcomingSession && upcomingSession.sessionLink" class="row mx-1 g-2">
       <button (click)="goToSession()" class="btn btn-primary">Seansa Git</button>
     </div>

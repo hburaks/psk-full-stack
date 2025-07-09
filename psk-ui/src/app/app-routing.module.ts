@@ -11,6 +11,7 @@ import { TestCardDetailComponent } from './components/test-card-detail/test-card
 import { TestResultComponent } from './components/test-result/test-result.component';
 import { SessionsComponent } from './pages/sessions/sessions.component';
 import { TokenService } from './custom-services/token/token.service';
+import { TestSolverComponent } from './components/test-solver/test-solver.component';
 
 const routes: Routes = [
   { 
@@ -46,6 +47,8 @@ const routes: Routes = [
   { path: 'blog', component: BlogComponent },
   { path: 'blog/:id', component: BlogCardDetailComponent },
   { path: 'test', component: TestComponent },
+  { path: 'public-test/:id', component: TestSolverComponent },
+  { path: 'user-test/:id', component: TestSolverComponent },
   { path: 'test/:id', component: TestCardDetailComponent },
   { path: 'test-result', component: TestResultComponent },
   { path: 'session', component: SessionsComponent },

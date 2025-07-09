@@ -1,9 +1,8 @@
-import { Component, Input } from '@angular/core';
-import { SessionResponseV2 } from 'src/app/services/models/session-response-v-2';
-import { UserTestForAdminResponse } from 'src/app/services/models/user-test-for-admin-response';
-import { TestService } from 'src/app/services/services';
-import { SessionControllerV2Service } from 'src/app/services/services/session-controller-v-2.service';
-import { PublicTestResponse, UserWithIncomingSessionResponse } from 'src/app/services/models';
+import {Component, Input} from '@angular/core';
+import {SessionResponseV2} from 'src/app/services/models/session-response-v-2';
+import {TestTemplateAdminService, UserTestAdminService} from 'src/app/services/services';
+import {SessionControllerV2Service} from 'src/app/services/services/session-controller-v-2.service';
+import {TestTemplateResponse, UserTestListResponse, UserWithIncomingSessionResponse} from 'src/app/services/models';
 
 @Component({
   selector: 'app-upcoming-session',
@@ -21,9 +20,9 @@ export class UpcomingSessionComponent {
   bindingNoteForUser: string = '';
   bindingNoteForPsychologist: string = '';
 
-  testResults: UserTestForAdminResponse[] = [];
+  testResults: UserTestListResponse[] = [];
 
-  publicTests: PublicTestResponse[] = [];
+  testTemplates: TestTemplateResponse[] = [];
 
   isAddingTestToUser: boolean = false;
 
@@ -41,7 +40,7 @@ export class UpcomingSessionComponent {
     this.getUpcomingSession();
   }
 
-  receiveAddedTest(test: UserTestForAdminResponse | null) {
+  receiveAddedTest(test: UserTestListResponse | null) {
     if (test) {
       this.testResults = [...this.testResults, test];
     }
@@ -49,7 +48,8 @@ export class UpcomingSessionComponent {
 
   constructor(
     private sessionControllerV2Service: SessionControllerV2Service,
-    private testService: TestService
+    private testTemplateAdminService: TestTemplateAdminService,
+    private userTestAdminService: UserTestAdminService
   ) {}
 
   ngAfterViewInit() {
@@ -94,8 +94,8 @@ export class UpcomingSessionComponent {
   }
 
   getTestResultOfUser(userId: number) {
-    this.testService
-      .getAllTestsAssignedToUserV2({ userId: userId })
+    this.userTestAdminService
+      .getAllUserTests()
       .subscribe((result) => {
         if (result.length > 0) {
           this.testResults = result;
@@ -114,13 +114,21 @@ export class UpcomingSessionComponent {
   }
 
   addTestToUser() {
-    this.testService.getAllPublicTests().subscribe({
-      next: (result) => {
-        this.publicTests = result;
+    const userId = this.selectedUser?.id || this.upcomingSession?.userForSessionResponse?.id;
+
+    if (!userId) {
+      this.toastErrorMessage = 'Kullanıcı bilgisi bulunamadı';
+      this.showToast = true;
+      return;
+    }
+
+    this.testTemplateAdminService.getAvailableTestTemplatesForUser({userId: userId}).subscribe({
+      next: (templates) => {
+        this.testTemplates = templates;
         this.isAddingTestToUser = true;
       },
       error: (error) => {
-        this.toastErrorMessage = 'Testler getirilirken bir hata oluştu';
+        this.toastErrorMessage = 'Uygun test şablonları getirilirken bir hata oluştu';
         this.showToast = true;
       },
     });

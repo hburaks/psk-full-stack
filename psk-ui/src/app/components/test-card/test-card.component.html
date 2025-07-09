@@ -7,14 +7,14 @@
   <div class="card test-card">
     <div class="card-body test-card-body test-card-body-large d-flex flex-column justify-content-between">
       <div>
-        <h5 class="card-title text-center">{{testCard.title}}</h5>
-        <p class="card-text text-secondary">{{testCard.subTitle}}</p>
+        <h5 class="card-title text-center">{{currentData.title}}</h5>
+        <p class="card-text text-secondary">{{currentData.subTitle}}</p>
       </div>
-      <a *ngIf="!isEditPage" href="test/{{testCard.id}}" class="btn btn-outline-primary btn-test">Teste Başla</a>
+      <a *ngIf="!isEditPage" href="public-test/{{currentData.id}}" class="btn btn-outline-primary btn-test">Teste Başla</a>
       <div *ngIf="isEditPage" class="d-flex justify-content-between w-100">
-        <button (click)="editTest()" class="btn btn-outline-primary">Düzenle</button>
+        <button (click)="editTestTemplate()" class="btn btn-outline-primary">Düzenle</button>
         <button type="button" class="btn btn-primary btn-primary-custom" data-bs-toggle="modal"
-          [attr.data-bs-target]="'#testModal' + testCard.id">
+          [attr.data-bs-target]="'#testModal' + currentData.id">
           Kaldır
         </button>
       </div>
@@ -22,20 +22,20 @@
   </div>
 </div>
 
-<div class="modal fade" [id]="'testModal' + testCard.id" tabindex="-1"
-  [attr.aria-labelledby]="'testModalLabel' + testCard.id" aria-hidden="true">
+<div class="modal fade" [id]="'testModal' + currentData.id" tabindex="-1"
+  [attr.aria-labelledby]="'testModalLabel' + currentData.id" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" [id]="'testModalLabel' + testCard.id">Testi Kaldır</h1>
+        <h1 class="modal-title fs-5" [id]="'testModalLabel' + currentData.id">Testi Kaldır</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        "{{testCard.title}}" testini kaldırmak istediğinize emin misiniz?
+        "{{currentData.title}}" testini kaldırmak istediğinize emin misiniz?
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Vazgeç</button>
-        <button data-bs-dismiss="modal" (click)="deleteTest()" type="button" class="btn btn-primary">Kaldır</button>
+        <button data-bs-dismiss="modal" (click)="deleteTestTemplate()" type="button" class="btn btn-primary">Kaldır</button>
       </div>
     </div>
   </div>

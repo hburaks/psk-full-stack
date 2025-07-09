@@ -1,0 +1,122 @@
+erDiagram
+    BaseEntity {
+        int id PK
+        timestamp createdAt
+        timestamp updatedAt
+    }
+
+    User {
+        int id PK
+        string firstname
+        string lastname
+        string email
+        string password
+        string phoneNumber
+        string birthYear
+        boolean accountLocked
+        boolean enabled
+    }
+
+    Role {
+        int id PK
+        string name
+    }
+
+    Token {
+        int id PK
+        string token
+        timestamp createdAt
+        timestamp expiresAt
+        timestamp validatedAt
+    }
+
+    Session {
+        int id PK
+        timestamp date
+        enum sessionStatus
+        string noteForUser
+        string noteForPsychologist
+        boolean isSessionPaid
+        boolean isMock
+        string sessionLink
+        string googleEventId
+    }
+
+    UserTest {
+        int id PK
+        timestamp assignedAt
+        timestamp completedAt
+        boolean isCompleted
+    }
+
+    TestTemplate {
+        int id PK
+        string title
+        string subTitle
+        string imageUrl
+        boolean isActive
+    }
+
+    Comment {
+        int id PK
+        int score
+        string title
+        string text
+        string imageUrl
+    }
+
+    Blog {
+        int id PK
+        string title
+        string subTitle
+        string text
+        boolean shareable
+        string imageFileName
+    }
+
+    Question {
+        int id PK
+        string text
+        int orderIndex
+        enum answerType
+    }
+
+    Choice {
+        int id PK
+        string text
+        enum answerType
+    }
+
+    UserAnswer {
+        int id PK
+        string textAnswer
+        timestamp answeredAt
+    }
+
+    %% Inheritance
+    Session ||--|| BaseEntity : "extends"
+    UserTest ||--|| BaseEntity : "extends"
+    TestTemplate ||--|| BaseEntity : "extends"
+    Comment ||--|| BaseEntity : "extends"
+    Blog ||--|| BaseEntity : "extends"
+    Question ||--|| BaseEntity : "extends"
+    Choice ||--|| BaseEntity : "extends"
+    UserAnswer ||--|| BaseEntity : "extends"
+
+    %% Relationships
+    User ||--|{ Token : "has"
+    User ||--o{ Session : "has"
+    User }o--o{ Role : "has"
+    User ||--o{ UserTest : "takes"
+    User ||--o{ UserTest : "assigns"
+
+    TestTemplate ||--o{ Question : "contains"
+    TestTemplate ||--o{ Comment : "has"
+    TestTemplate ||--|{ UserTest : "is template for"
+
+    Question }o--o{ Choice : "has"
+    Question ||--o{ UserAnswer : "is answered by"
+
+    UserTest ||--o{ UserAnswer : "contains"
+
+    Choice ||--o{ UserAnswer : "is selected for"

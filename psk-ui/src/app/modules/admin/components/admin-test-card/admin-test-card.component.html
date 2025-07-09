@@ -3,39 +3,42 @@
 <div *ngIf="testResults.length > 0" class="row  justify-content-center mt-3 g-3">
   <div class="col-md-4 col-sm-6 test-card-container mb-4" *ngFor="let testCard of testResults; let i = index">
     <div class="test-circle mx-auto">
-      <img *ngIf="testCard.imageUrl" [src]="testCard.imageUrl" alt="Test image">
+      <img *ngIf="testCard.testTemplateImageUrl" [src]="testCard.testTemplateImageUrl" alt="Test image">
     </div>
     <div
       class="card test-card card-body test-card-body test-card-body-large d-flex flex-column justify-content-between mt-2">
-      <h5 class="card-title text-center mb-0">{{testCard.title}}</h5>
-      <p *ngIf="!testCard.answerDistribution" class="card-text text-secondary">Test sonucu henüz alınmadı.</p>
-      <button *ngIf="testCard.testId !== undefined && !testCard.answerDistribution"
-        (click)="removeTestFromUser(testCard.testId)" class="btn btn-outline-primary btn-primary-outline-custom btn-test">Testi
+      <h5 class="card-title text-center mb-0">{{testCard.testTemplateTitle}}</h5>
+      <p *ngIf="!testCard.isCompleted" class="card-text text-secondary">Test henüz tamamlanmadı.</p>
+      <button *ngIf="testCard.id !== undefined && !testCard.isCompleted"
+        (click)="removeTestFromUser(testCard.id)" class="btn btn-outline-primary btn-primary-outline-custom btn-test">Testi
         Kaldır</button>
-      <p *ngIf="testCard.answerDistribution" class="card-text text-secondary mb-0 pb-0">
-        {{formatAnswerDistribution(testCard.answerDistribution)}}</p>
-      <p *ngIf="testCard.answerDistribution" class=" card-text text-secondary fw-bold mb-0 pb-0">Tamamlandığı tarih:</p>
-      <p *ngIf="testCard.answerDistribution" class="card-text text-secondary mb-0 mt-0">
-        {{testCard.lastModifiedDate | date:'dd.MM.yyyy HH:mm'}}</p>
-      <button *ngIf="testCard.answerDistribution && testCard.testId !== undefined" (click)="seeResult(testCard.testId)"
+      <p *ngIf="testCard.isCompleted" class="card-text text-secondary mb-0 pb-0">
+        Test tamamlandı</p>
+      <p *ngIf="testCard.isCompleted" class=" card-text text-secondary fw-bold mb-0 pb-0">Tamamlandığı tarih:</p>
+      <p *ngIf="testCard.isCompleted" class="card-text text-secondary mb-0 mt-0">
+        {{testCard.completedAt | date:'dd.MM.yyyy HH:mm'}}</p>
+      <button *ngIf="testCard.isCompleted && testCard.id !== undefined" (click)="seeResult(testCard.id)"
         class="btn btn-outline-primary btn-primary-outline-custom btn-test">Test Sonucu</button>
     </div>
   </div>
 </div>
 
-<div *ngIf="publicTests.length > 0" class="row justify-content-center mt-3 g-3">
-  <div class="col-md-4 col-sm-6 test-card-container mb-4" *ngFor="let testCard of publicTests; let i = index">
+<!-- Test Templates Section -->
+<h4 *ngIf="testTemplates.length > 0" class="text-secondary mt-3 mb-3">Atanabilir Test Şablonları</h4>
+<div *ngIf="testTemplates.length > 0" class="row justify-content-center mt-3 g-3">
+  <div class="col-md-4 col-sm-6 test-card-container mb-4" *ngFor="let template of testTemplates; let i = index">
     <div class="test-circle mx-auto">
-      <img *ngIf="testCard.imageUrl" [src]="testCard.imageUrl" alt="Test image">
+      <img *ngIf="template.imageUrl" [src]="template.imageUrl" alt="Test image">
     </div>
     <div class="card test-card card-body test-card-body test-card-body-large d-flex justify-content-between">
-      <h5 class="card-title text-center">{{testCard.title}}</h5>
-      <p class="card-text text-secondary">{{testCard.subTitle}}</p>
-      <button *ngIf="testCard.id !== undefined" (click)="addTestToUser(testCard.id)"
-        class="btn btn-outline-primary btn-primary-outline-custom btn-test">Testi Danışana Ata</button>
+      <h5 class="card-title text-center">{{template.title}}</h5>
+      <p class="card-text text-secondary">{{template.subTitle}}</p>
+      <button *ngIf="template.id !== undefined" (click)="addTestTemplateToUser(template.id)"
+        class="btn btn-outline-primary btn-primary-outline-custom btn-test">Test Şablonunu Ata</button>
     </div>
   </div>
 </div>
+
 
 
 <div *ngIf="isResultOpen" class="mt-4 row">

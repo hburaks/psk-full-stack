@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
@@ -52,7 +53,7 @@ public class SessionServiceImpl implements SessionService {
     public List<SessionResponse> getMySessions(Authentication connectedUser) {
         User user = (User) connectedUser.getPrincipal();
 
-        List<Session> sessions = sessionRepository.findByUserId(user.getId());
+        List<Session> sessions = sessionRepository.findByUserIdOrderByDateDesc(user.getId());
 
         return sessions
                 .stream()
@@ -253,6 +254,7 @@ public class SessionServiceImpl implements SessionService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public PageResponse<UserWithIncomingSessionResponse> getAllUsersWithSessionV2(int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
 
@@ -349,7 +351,7 @@ public class SessionServiceImpl implements SessionService {
 
     @Override
     public List<SessionResponseV2> getAllSessionsOfUserV2(Integer userId) {
-        List<Session> sessions = sessionRepository.findByUserId(userId);
+        List<Session> sessions = sessionRepository.findByUserIdOrderByDateDesc(userId);
 
         return sessions.stream()
                 .map(sessionMapper::toSessionResponseV2)

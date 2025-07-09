@@ -5,8 +5,8 @@ import {
   Input,
   Output,
 } from '@angular/core';
-import { AdminTestResponse, PublicTestResponse } from 'src/app/services/models';
-import { TestService } from 'src/app/services/services';
+import { TestTemplateResponse } from 'src/app/services/models';
+import { TestTemplateAdminService } from 'src/app/services/services';
 import { debounceTime } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 
@@ -16,12 +16,12 @@ import { Subject } from 'rxjs';
   styleUrls: ['./test-card-list.component.scss'],
 })
 export class TestCardListComponent {
-  @Input() testCardList: PublicTestResponse[] = [];
+  @Input() testCardList: TestTemplateResponse[] = [];
 
-  adminTestList: AdminTestResponse[] = [];
+  testTemplateList: TestTemplateResponse[] = [];
 
   @Input() isEditPage: boolean = false;
-  @Output() editTestEvent = new EventEmitter<AdminTestResponse>();
+  @Output() editTestTemplateEvent = new EventEmitter<TestTemplateResponse>();
 
   @Output() addTestEvent = new EventEmitter<void>();
 
@@ -34,7 +34,7 @@ export class TestCardListComponent {
 
   private resizeSubject = new Subject<void>();
 
-  constructor(private testService: TestService) {
+  constructor(private testTemplateAdminService: TestTemplateAdminService) {
     this.resizeSubject
       .pipe(debounceTime(1000))
       .subscribe(() => this.updateScreenSize());
@@ -52,20 +52,20 @@ export class TestCardListComponent {
     this.resizeSubject.next();
   }
 
-  editTest(test: AdminTestResponse) {
-    this.editTestEvent.emit(test);
+  editTestTemplate(testTemplate: TestTemplateResponse) {
+    this.editTestTemplateEvent.emit(testTemplate);
   }
 
-  deleteTest(test: AdminTestResponse) {
+  deleteTestTemplate(testTemplate: TestTemplateResponse) {
     if (this.isEditPage) {
-      this.testService.deleteTestV2({ testId: test.id! }).subscribe({
+      this.testTemplateAdminService.deleteTestTemplate({ id: testTemplate.id! }).subscribe({
         next: () => {
-          this.adminTestList = this.adminTestList.filter(
-            (t) => t.id !== test.id
+          this.testTemplateList = this.testTemplateList.filter(
+            (t) => t.id !== testTemplate.id
           );
         },
         error: (err: any) => {
-          console.error('Error deleting test', err);
+          console.error('Error deleting test template', err);
         },
       });
     }
@@ -83,12 +83,12 @@ export class TestCardListComponent {
 
   fetchTestList() {
     if (this.isEditPage) {
-      this.testService.getAllTest().subscribe({
-        next: (adminTests: Array<AdminTestResponse>) => {
-          this.adminTestList = adminTests || [];
+      this.testTemplateAdminService.getAllTestTemplates().subscribe({
+        next: (testTemplates: Array<TestTemplateResponse>) => {
+          this.testTemplateList = testTemplates || [];
         },
         error: (err: any) => {
-          console.error('Error fetching public tests', err);
+          console.error('Error fetching test templates', err);
         },
       });
     }

@@ -5,27 +5,22 @@
         <div class="card-body my-1 row">
           <div class="test-logo mt-0 col-4">
             <div class="test-circle mx-auto">
-              <img *ngIf="testCard.imageUrl" [src]="testCard.imageUrl" alt="Test image">
+              <img *ngIf="testCard.testTemplateImageUrl" [src]="testCard.testTemplateImageUrl" alt="Test image">
             </div>
           </div>
           <div class="col-8 d-flex flex-column justify-content-center about-text">
-              <p class="fs-5 fw-bold">{{testCard.title}}</p>
-              <p class="fw-light mt-2 text-secondary">{{testCard.subTitle}}</p>
+              <p class="fs-5 fw-bold">{{testCard.testTemplateTitle}}</p>
+              <p class="fw-light mt-2 text-secondary">{{testCard.testTemplateSubTitle}}</p>
           </div>
         </div>
       </div>
     </div>
     <div>
-      <div class="row mx-0 my-2 py-4 px-md-5 px-sm-2" *ngFor="let question of testCard?.questions; let i = index">
-        <div class="col">
-          <p><span class="fw-bold">{{i + 1}}- </span>{{question.text}}</p>
-          <div class="simple alert" [ngClass]="{
-                                                            'alert-primary': selectedChoices[i] === j,
-                                                            'alert-dark': selectedChoices[i] !== j
-                                                          }" (click)="selectChoice(i, j, question.id ?? 0)"
-            *ngFor="let choice of question.choices; let j = index">
-            {{j === 0 ? 'A) ' : j === 1 ? 'B) ' : j === 2 ? 'C) ' : j === 3 ? 'D) ' : 'E) '}}{{choice.text}}
-          </div>
+      <!-- Legacy question display - UserTestListResponse doesn't contain questions -->
+      <div class="row mx-0 my-2 py-4 px-md-5 px-sm-2">
+        <div class="col text-center text-muted">
+          <p>Bu test için soru detayları ayrı bir API çağrısı ile alınmalıdır.</p>
+          <p><strong>Test ID:</strong> {{testCard.id}}</p>
         </div>
       </div>
     </div>

@@ -1,9 +1,20 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
-import {
-  AdminTestCommentRequest,
-  AdminTestCommentResponse,
-} from 'src/app/services/models';
-import { FileControllerService, TestService } from 'src/app/services/services';
+import { FileControllerService } from 'src/app/services/services';
+
+interface AdminTestCommentRequest {
+  commentId?: number;
+  text?: string;
+  score?: number;
+  title?: string;
+}
+
+interface AdminTestCommentResponse {
+  commentId?: number;
+  text?: string;
+  score?: number;
+  title?: string;
+  imageUrl?: string;
+}
 
 @Component({
   selector: 'app-edit-comment',
@@ -20,7 +31,6 @@ export class EditCommentComponent {
 
 
   constructor(
-    private testService: TestService,
     private fileService: FileControllerService
   ) {}
 
@@ -75,23 +85,11 @@ export class EditCommentComponent {
   uploadCommentImageToServer(index: number, file: File) {
     if (file) {
       const reader = new FileReader();
+      reader.onload = () => {
+        this.comments![index].imageUrl = reader.result as string;
+        this.updateModal();
+      };
       reader.readAsDataURL(file);
-      this.testService
-        .uploadImageForComment({
-          commentId: this.comments![index].commentId!,
-          body: { file: file },
-        })
-        .subscribe({
-          next: (response) => {
-            reader.onload = () => {
-              this.comments![index].imageUrl = reader.result as string;
-            };
-            reader.readAsDataURL(file);
-          },
-          error: (error) => {
-            console.error('Error uploading image:', error);
-          },
-        });
     }
   }
 

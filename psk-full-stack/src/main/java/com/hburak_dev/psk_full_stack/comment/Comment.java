@@ -1,18 +1,15 @@
 package com.hburak_dev.psk_full_stack.comment;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hburak_dev.psk_full_stack.common.BaseEntity;
-import com.hburak_dev.psk_full_stack.test.Test;
+import com.hburak_dev.psk_full_stack.testtemplate.TestTemplate;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-import java.util.List;
 
 
 @Getter
@@ -21,6 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Table(name = "comment")
 public class Comment extends BaseEntity {
 
     private Integer score;
@@ -30,8 +28,12 @@ public class Comment extends BaseEntity {
     private String text;
 
     private String imageUrl;
-    @ManyToMany(mappedBy = "comments")
-    @JsonIgnore
-    private List<Test> tests;
+
+    @Column(name = "test_template_id")
+    private Long testTemplateId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "test_template_id", insertable = false, updatable = false)
+    private TestTemplate testTemplate;
 
 }

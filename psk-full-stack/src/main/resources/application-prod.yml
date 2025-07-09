@@ -7,13 +7,11 @@ spring:
     hikari:
       maximum-pool-size: 5
   jpa:
-    hibernate:
-      ddl-auto: update
     show-sql: false
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
+        ddl-auto: update
         format_sql: true
   mail:
     host: ${EMAIL_HOST_NAME}
@@ -37,8 +35,7 @@ application:
     frontend:
       activation-url: https://psk-full-stack.vercel.app/activate-account
   file:
-    uploads:
-      photos-output-path: /tmp/uploads
+    upload-dir: ${UPLOAD_DIR:/app/uploads}
   cors:
     origins: https://psk-full-stack-dek1m6p8f-hburaks-projects.vercel.app,https://psk-full-stack.vercel.app/
 server:

@@ -3,7 +3,6 @@ package com.hburak_dev.psk_full_stack.user;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.hburak_dev.psk_full_stack.role.Role;
 import com.hburak_dev.psk_full_stack.session.Session;
-import com.hburak_dev.psk_full_stack.test.Test;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -49,9 +48,6 @@ public class User implements UserDetails, Principal {
     private boolean accountLocked;
     private boolean enabled;
 
-    @OneToMany(mappedBy = "user")
-    @JsonIgnoreProperties({ "user", "cover" })
-    private List<Test> tests;
 
     @OneToMany(mappedBy = "user")
     @JsonIgnoreProperties("user")

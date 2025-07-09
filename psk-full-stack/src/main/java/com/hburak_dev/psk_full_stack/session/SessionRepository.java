@@ -9,7 +9,7 @@ public interface SessionRepository extends JpaRepository<Session, Integer> {
 
     List<Session> findByDateBetween(LocalDateTime startOfWeek, LocalDateTime endOfWeek);
 
-    List<Session> findByUserId(Integer userId);
+    List<Session> findByUserIdOrderByDateDesc(Integer userId);
 
     boolean existsByDate(LocalDateTime date);
 

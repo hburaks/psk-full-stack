@@ -2,6 +2,13 @@ package com.hburak_dev.psk_full_stack.handler;
 
 import com.hburak_dev.psk_full_stack.exception.ActivationTokenException;
 import com.hburak_dev.psk_full_stack.exception.SessionNotFoundException;
+import com.hburak_dev.psk_full_stack.exception.TestTemplateNotFoundException;
+import com.hburak_dev.psk_full_stack.exception.UserTestNotFoundException;
+import com.hburak_dev.psk_full_stack.exception.UserTestAccessDeniedException;
+import com.hburak_dev.psk_full_stack.exception.UserTestAlreadyCompletedException;
+import com.hburak_dev.psk_full_stack.exception.QuestionNotFoundException;
+import com.hburak_dev.psk_full_stack.exception.InvalidAnswerFormatException;
+import com.hburak_dev.psk_full_stack.exception.AnswerNotFoundException;
 import jakarta.mail.MessagingException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -127,6 +134,97 @@ public class GlobalExceptionHandler {
                 .error("Session Not Found")
                 .build();
         return new ResponseEntity<>(response, BAD_REQUEST);
+    }
+
+    @ExceptionHandler(TestTemplateNotFoundException.class)
+    public ResponseEntity<ExceptionResponse> handleTestTemplateNotFoundException(TestTemplateNotFoundException exp) {
+        return ResponseEntity
+                .status(exp.getErrorCode().getHttpStatus())
+                .body(
+                        ExceptionResponse.builder()
+                                .businessErrorCode(exp.getErrorCode().getCode())
+                                .businessErrorDescription(exp.getErrorCode().getDescription())
+                                .error(exp.getMessage())
+                                .build()
+                );
+    }
+
+    @ExceptionHandler(UserTestNotFoundException.class)
+    public ResponseEntity<ExceptionResponse> handleUserTestNotFoundException(UserTestNotFoundException exp) {
+        return ResponseEntity
+                .status(exp.getErrorCode().getHttpStatus())
+                .body(
+                        ExceptionResponse.builder()
+                                .businessErrorCode(exp.getErrorCode().getCode())
+                                .businessErrorDescription(exp.getErrorCode().getDescription())
+                                .error(exp.getMessage())
+                                .build()
+                );
+    }
+
+    @ExceptionHandler(UserTestAccessDeniedException.class)
+    public ResponseEntity<ExceptionResponse> handleUserTestAccessDeniedException(UserTestAccessDeniedException exp) {
+        return ResponseEntity
+                .status(exp.getErrorCode().getHttpStatus())
+                .body(
+                        ExceptionResponse.builder()
+                                .businessErrorCode(exp.getErrorCode().getCode())
+                                .businessErrorDescription(exp.getErrorCode().getDescription())
+                                .error(exp.getMessage())
+                                .build()
+                );
+    }
+
+    @ExceptionHandler(UserTestAlreadyCompletedException.class)
+    public ResponseEntity<ExceptionResponse> handleUserTestAlreadyCompletedException(UserTestAlreadyCompletedException exp) {
+        return ResponseEntity
+                .status(exp.getErrorCode().getHttpStatus())
+                .body(
+                        ExceptionResponse.builder()
+                                .businessErrorCode(exp.getErrorCode().getCode())
+                                .businessErrorDescription(exp.getErrorCode().getDescription())
+                                .error(exp.getMessage())
+                                .build()
+                );
+    }
+
+    @ExceptionHandler(QuestionNotFoundException.class)
+    public ResponseEntity<ExceptionResponse> handleQuestionNotFoundException(QuestionNotFoundException exp) {
+        return ResponseEntity
+                .status(exp.getErrorCode().getHttpStatus())
+                .body(
+                        ExceptionResponse.builder()
+                                .businessErrorCode(exp.getErrorCode().getCode())
+                                .businessErrorDescription(exp.getErrorCode().getDescription())
+                                .error(exp.getMessage())
+                                .build()
+                );
+    }
+
+    @ExceptionHandler(InvalidAnswerFormatException.class)
+    public ResponseEntity<ExceptionResponse> handleInvalidAnswerFormatException(InvalidAnswerFormatException exp) {
+        return ResponseEntity
+                .status(exp.getErrorCode().getHttpStatus())
+                .body(
+                        ExceptionResponse.builder()
+                                .businessErrorCode(exp.getErrorCode().getCode())
+                                .businessErrorDescription(exp.getErrorCode().getDescription())
+                                .error(exp.getMessage())
+                                .build()
+                );
+    }
+
+    @ExceptionHandler(AnswerNotFoundException.class)
+    public ResponseEntity<ExceptionResponse> handleAnswerNotFoundException(AnswerNotFoundException exp) {
+        return ResponseEntity
+                .status(exp.getErrorCode().getHttpStatus())
+                .body(
+                        ExceptionResponse.builder()
+                                .businessErrorCode(exp.getErrorCode().getCode())
+                                .businessErrorDescription(exp.getErrorCode().getDescription())
+                                .error(exp.getMessage())
+                                .build()
+                );
     }
 
 }

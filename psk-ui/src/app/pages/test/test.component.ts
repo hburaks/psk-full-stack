@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { PublicTestResponse } from 'src/app/services/models';
-import { TestService } from 'src/app/services/services';
+import { TestTemplateResponse } from 'src/app/services/models';
+import { PublicTestService } from 'src/app/services/services';
 
 @Component({
   selector: 'app-test',
@@ -8,34 +8,34 @@ import { TestService } from 'src/app/services/services';
   styleUrls: ['./test.component.scss'],
 })
 export class TestComponent implements OnInit {
-  testCardList: PublicTestResponse[] = [];
+  testCardList: TestTemplateResponse[] = [];
 
-  test: PublicTestResponse = {
-    imageUrl: './assets/materials/logo-ex.svg',
+  test: TestTemplateResponse = {
     id: 1,
-    questions: [],
-    subTitle: 'Test kartı için oluşturulmuş kısa bir örnek alt başlık içeriği.',
     title: 'Test',
+    subTitle: 'Test kartı için oluşturulmuş kısa bir örnek alt başlık içeriği.',
+    createdDate: '',
+    lastModifiedDate: ''
   };
 
-  fetchedTestList: PublicTestResponse[] = [this.test, this.test, this.test];
+  fetchedTestList: TestTemplateResponse[] = [this.test, this.test, this.test];
 
-  constructor(private testServiceV3: TestService) {}
+  constructor(private publicTestService: PublicTestService) {}
 
   ngOnInit(): void {
     this.getTestList();
   }
 
   getTestList() {
-    this.testServiceV3.getAllPublicTests().subscribe({
-      next: (publicTests: Array<PublicTestResponse>) => {
-        this.fetchedTestList = publicTests || [];
+    this.publicTestService.getAllActiveTestTemplates().subscribe({
+      next: (testTemplates: Array<TestTemplateResponse>) => {
+        this.fetchedTestList = testTemplates || [];
         if (this.fetchedTestList.length !== 0) {
           this.testCardList = this.fetchedTestList;
         }
       },
       error: (err) => {
-        console.error('Error fetching public tests', err);
+        console.error('Error fetching test templates', err);
       },
     });
   }
