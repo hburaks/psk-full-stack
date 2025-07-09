@@ -7,7 +7,6 @@ export interface PublicTestResultResponse {
   answeredQuestions?: number;
   comment?: PublicTestAnswerCommentResponse;
   message?: string;
-  score?: number;
   submittedAt?: string;
   testTemplateId?: number;
   testTitle?: string;

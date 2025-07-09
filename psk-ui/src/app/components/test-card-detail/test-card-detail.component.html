@@ -48,13 +48,16 @@
       </div>
     </div>
 
-    <!-- Test Template Question Management Navigation -->
-    <div *ngIf="isEditPage && editableTestTemplate && !showQuestionManagement" class="row mx-0 my-4 py-4 px-md-5 px-sm-2 border rounded">
+    <!-- Test Template Management Navigation -->
+    <div *ngIf="isEditPage && editableTestTemplate && !showQuestionManagement && !showCommentManagement" class="row mx-0 my-4 py-4 px-md-5 px-sm-2 border rounded">
       <div class="col-12">
-        <h5 class="mb-3">{{ editableTestTemplate.title }} - Soru Yönetimi</h5>
-        <p class="text-muted">Bu test için soruları yönetebilirsiniz.</p>
+        <h5 class="mb-3">{{ editableTestTemplate.title }} - İçerik Yönetimi</h5>
+        <p class="text-muted">Bu test için soruları ve yorumları yönetebilirsiniz.</p>
         <button class="btn btn-outline-primary me-2" (click)="navigateToQuestionManagement()">
           Soruları Yönet
+        </button>
+        <button class="btn btn-outline-primary me-2" (click)="navigateToCommentManagement()">
+          Yorumları Yönet
         </button>
       </div>
     </div>
@@ -64,6 +67,9 @@
       <div class="col-12">
         <div class="d-flex justify-content-between align-items-center mb-3">
           <h5 class="mb-0">{{ editableTestTemplate.title }} - Soruları</h5>
+          <button class="btn btn-outline-secondary" (click)="showQuestionManagement = false">
+            ← Geri Dön
+          </button>
         </div>
 
         <div *ngFor="let question of templateQuestions; let i = index" class="border rounded p-3 mb-3">
@@ -93,8 +99,51 @@
         </div>
 
         <div class="d-flex justify-content-start">
-          <button class="btn btn-outline-primary" (click)="addTemplateQuestion()">
+          <button class="btn btn-outline-primary me-2" (click)="addTemplateQuestion()">
             + Soru Ekle
+          </button>
+          <button class="btn btn-primary" (click)="saveTemplateQuestions()">
+            Soruları Kaydet
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Test Template Comment Management Interface -->
+    <div *ngIf="isEditPage && editableTestTemplate && showCommentManagement" class="row mx-0 my-4 py-4 px-md-5 px-sm-2 border rounded">
+      <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h5 class="mb-0">{{ editableTestTemplate.title }} - Yorumları</h5>
+        </div>
+
+        <div *ngFor="let comment of templateComments; let i = index" class="border rounded p-3 mb-3">
+          <div class="row">
+            <div class="col-md-2">
+              <label class="form-label">Puan</label>
+              <input [(ngModel)]="comment.score" type="number" min="1" max="5" class="form-control" />
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Başlık</label>
+              <input [(ngModel)]="comment.title" class="form-control" placeholder="Yorum başlığı" />
+            </div>
+            <div class="col-md-5">
+              <label class="form-label">Yorum</label>
+              <textarea [(ngModel)]="comment.text" class="form-control" rows="3" placeholder="Yorum metni"></textarea>
+            </div>
+            <div class="col-md-1 d-flex align-items-end">
+              <button class="btn btn-outline-danger" (click)="removeTemplateComment(i)">
+                Sil
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-start">
+          <button class="btn btn-outline-primary me-2" (click)="addTemplateComment()">
+            + Yorum Ekle
+          </button>
+          <button class="btn btn-primary" (click)="saveTemplateComments()">
+            Yorumları Kaydet
           </button>
         </div>
       </div>

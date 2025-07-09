@@ -1,13 +1,15 @@
 import {AfterViewInit, Component, EventEmitter, Input, Output,} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {
+  AdminTestCommentRequest,
+  AdminTestCommentResponse,
   Choice,
   QuestionResponse,
   ScoringStrategyResponse,
   TestTemplateResponse,
   TestTemplateUpdateRequest,
 } from 'src/app/services/models';
-import {QuestionAdminService, ScoringAdminService, TestTemplateAdminService} from 'src/app/services/services';
+import {CommentAdminService, QuestionAdminService, ScoringAdminService, TestTemplateAdminService} from 'src/app/services/services';
 
 @Component({
   selector: 'app-test-card-detail',
@@ -41,6 +43,10 @@ export class TestCardDetailComponent implements AfterViewInit {
   templateQuestions: QuestionResponse[] = [];
   showQuestionManagement: boolean = false;
 
+  // Comment management for test templates
+  templateComments: AdminTestCommentResponse[] = [];
+  showCommentManagement: boolean = false;
+
   // Strategy management
   availableStrategies: ScoringStrategyResponse[] = [];
   selectedStrategy: string | null = null;
@@ -54,7 +60,8 @@ export class TestCardDetailComponent implements AfterViewInit {
     private route: ActivatedRoute,
     private testTemplateAdminService: TestTemplateAdminService,
     private questionAdminService: QuestionAdminService,
-    private scoringAdminService: ScoringAdminService
+    private scoringAdminService: ScoringAdminService,
+    private commentAdminService: CommentAdminService
   ) {
     this.cardId = this.route.snapshot.params['id'];
   }
@@ -296,6 +303,99 @@ export class TestCardDetailComponent implements AfterViewInit {
         this.showToast = true;
         this.toastType = 'error';
         this.toastMessage = 'Sorular güncellenirken bir hata oluştu. Lütfen tekrar deneyin.';
+      }
+    });
+  }
+
+  navigateToCommentManagement() {
+    if (this.editableTestTemplate?.id) {
+      this.loadTemplateComments(this.editableTestTemplate.id);
+      this.showCommentManagement = true;
+    } else {
+      // Yeni test için önce template'i kaydet
+      this.saveTestTemplateForCommentManagement();
+    }
+  }
+
+  saveTestTemplateForCommentManagement() {
+    const params = {
+      body: this.updateTestTemplate,
+    };
+    this.testTemplateAdminService.createTestTemplate(params).subscribe({
+      next: (response: TestTemplateResponse) => {
+        // Kaydedilen template'i güncelle
+        this.editableTestTemplate = response;
+        this.testCard = response;
+        // Comment yönetimi sayfasına geç
+        if (response.id) {
+          this.loadTemplateComments(response.id);
+          this.showCommentManagement = true;
+        }
+      },
+      error: (err: any) => {
+        console.error('Error creating test template for comment management', err);
+        this.showToast = true;
+        this.toastType = 'error';
+        this.toastMessage = 'Test kaydedilirken bir hata oluştu. Lütfen tekrar deneyin.';
+      },
+    });
+  }
+
+  loadTemplateComments(testTemplateId: number) {
+    this.commentAdminService.getCommentsByTestTemplate({ testTemplateId }).subscribe({
+      next: (comments: AdminTestCommentResponse[]) => {
+        this.templateComments = comments || [];
+      },
+      error: (err: any) => {
+        console.error('Error loading template comments', err);
+      },
+    });
+  }
+
+  addTemplateComment() {
+    const newComment: AdminTestCommentRequest = {
+      score: 1,
+      title: '',
+      text: ''
+    };
+    this.templateComments.push(newComment as AdminTestCommentResponse);
+  }
+
+  removeTemplateComment(index: number) {
+    this.templateComments.splice(index, 1);
+  }
+
+  saveTemplateComments() {
+    if (!this.editableTestTemplate?.id) {
+      this.showToast = true;
+      this.toastType = 'error';
+      this.toastMessage = 'Test template ID is missing';
+      return;
+    }
+
+    const commentRequests: AdminTestCommentRequest[] = this.templateComments.map(comment => ({
+      commentId: comment.commentId,
+      score: comment.score,
+      title: comment.title,
+      text: comment.text
+    }));
+
+    this.commentAdminService.updateTestTemplateComments({
+      testTemplateId: this.editableTestTemplate.id,
+      body: commentRequests
+    }).subscribe({
+      next: (updatedComments) => {
+        this.templateComments = updatedComments;
+        this.showCommentManagement = false;
+        this.showToast = true;
+        this.toastType = 'success';
+        this.toastMessage = 'Yorumlar başarıyla güncellendi!';
+      },
+      error: (error) => {
+        console.error('Error updating comments:', error);
+        this.showToast = true;
+        this.toastType = 'error';
+        this.toastMessage = 'Yorumlar güncellenirken bir hata oluştu. Lütfen tekrar deneyin.';
       }
     });
   }

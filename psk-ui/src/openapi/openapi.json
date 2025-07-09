@@ -361,6 +361,122 @@
         }
       }
     },
+    "/v2/admin/comments/test-template/{testTemplateId}": {
+      "get": {
+        "tags": ["Comment Admin"],
+        "summary": "Get all comments for a test template",
+        "operationId": "getCommentsByTestTemplate",
+        "parameters": [
+          {
+            "name": "testTemplateId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AdminTestCommentResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Comment Admin"],
+        "summary": "Update all comments for a test template",
+        "description": "Update all comments for a test template in bulk",
+        "operationId": "updateTestTemplateComments",
+        "parameters": [
+          {
+            "name": "testTemplateId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/AdminTestCommentRequest"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AdminTestCommentResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Comment Admin"],
+        "summary": "Create a new comment for a test template",
+        "operationId": "createComment",
+        "parameters": [
+          {
+            "name": "testTemplateId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdminTestCommentRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminTestCommentResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/user/user": {
       "get": {
         "tags": ["User"],
@@ -1201,77 +1317,6 @@
         "responses": {
           "200": {
             "description": "OK"
-          }
-        }
-      }
-    },
-    "/v2/admin/comments/test-template/{testTemplateId}": {
-      "get": {
-        "tags": ["Comment Admin"],
-        "summary": "Get all comments for a test template",
-        "operationId": "getCommentsByTestTemplate",
-        "parameters": [
-          {
-            "name": "testTemplateId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/AdminTestCommentResponse"
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "tags": ["Comment Admin"],
-        "summary": "Create a new comment for a test template",
-        "operationId": "createComment",
-        "parameters": [
-          {
-            "name": "testTemplateId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AdminTestCommentRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AdminTestCommentResponse"
-                }
-              }
-            }
           }
         }
       }
@@ -2462,6 +2507,47 @@
           }
         }
       },
+      "AdminTestCommentRequest": {
+        "type": "object",
+        "properties": {
+          "commentId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "score": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "title": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          }
+        }
+      },
+      "AdminTestCommentResponse": {
+        "type": "object",
+        "properties": {
+          "commentId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "score": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "title": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "imageUrl": {
+            "type": "string"
+          }
+        }
+      },
       "UserRequest": {
         "type": "object",
         "properties": {
@@ -2849,47 +2935,6 @@
           "orderIndex": {
             "type": "integer",
             "format": "int32"
-          }
-        }
-      },
-      "AdminTestCommentRequest": {
-        "type": "object",
-        "properties": {
-          "commentId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "score": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "title": {
-            "type": "string"
-          },
-          "text": {
-            "type": "string"
-          }
-        }
-      },
-      "AdminTestCommentResponse": {
-        "type": "object",
-        "properties": {
-          "commentId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "score": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "title": {
-            "type": "string"
-          },
-          "text": {
-            "type": "string"
-          },
-          "imageUrl": {
-            "type": "string"
           }
         }
       },

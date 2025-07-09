@@ -9,11 +9,11 @@ import { ApiConfiguration, ApiConfigurationParams } from './api-configuration';
 import { BlogService } from './services/blog.service';
 import { TestTemplateAdminService } from './services/test-template-admin.service';
 import { QuestionAdminService } from './services/question-admin.service';
+import { CommentAdminService } from './services/comment-admin.service';
 import { UserService } from './services/user.service';
 import { PublicTestService } from './services/public-test.service';
 import { SessionControllerV2Service } from './services/session-controller-v-2.service';
 import { UserTestAdminService } from './services/user-test-admin.service';
-import { CommentAdminService } from './services/comment-admin.service';
 import { UserTestService } from './services/user-test.service';
 import { SessionControllerService } from './services/session-controller.service';
 import { AuthenticationService } from './services/authentication.service';
@@ -32,11 +32,11 @@ import { ScoringAdminService } from './services/scoring-admin.service';
     BlogService,
     TestTemplateAdminService,
     QuestionAdminService,
+    CommentAdminService,
     UserService,
     PublicTestService,
     SessionControllerV2Service,
     UserTestAdminService,
-    CommentAdminService,
     UserTestService,
     SessionControllerService,
     AuthenticationService,
