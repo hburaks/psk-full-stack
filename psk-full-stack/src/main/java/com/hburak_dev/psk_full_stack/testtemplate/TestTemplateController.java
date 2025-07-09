@@ -25,8 +25,9 @@ public class TestTemplateController {
     @PostMapping
     @Operation(summary = "Create a new test template")
     public ResponseEntity<TestTemplateResponse> createTestTemplate(
-            @Valid @RequestBody TestTemplateCreateRequest request) {
-        TestTemplateResponse response = testTemplateService.createTestTemplate(request);
+            @Valid @RequestBody TestTemplateCreateRequest request,
+            Authentication connectedUser) {
+        TestTemplateResponse response = testTemplateService.createTestTemplate(request, connectedUser);
         return ResponseEntity.ok(response);
     }
 

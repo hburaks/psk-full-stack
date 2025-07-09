@@ -6,6 +6,7 @@ import com.hburak_dev.psk_full_stack.handler.BusinessErrorCodes;
 import com.hburak_dev.psk_full_stack.question.QuestionResponse;
 import com.hburak_dev.psk_full_stack.question.QuestionServiceInterface;
 import com.hburak_dev.psk_full_stack.service.FileStorageService;
+import com.hburak_dev.psk_full_stack.user.User;
 import com.hburak_dev.psk_full_stack.usertest.UserTestRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -32,8 +33,12 @@ public class TestTemplateServiceImpl implements TestTemplateServiceInterface {
 
     @Override
     @Transactional
-    public TestTemplateResponse createTestTemplate(TestTemplateCreateRequest request) {
+    public TestTemplateResponse createTestTemplate(TestTemplateCreateRequest request, Authentication connectedUser) {
         TestTemplate testTemplate = testTemplateMapper.toTestTemplate(request);
+        
+        // Set createdBy from authenticated user
+        User user = (User) connectedUser.getPrincipal();
+        testTemplate.setCreatedBy(user.getId());
         
         // Create comments from request if provided
         if (request.getComments() != null && !request.getComments().isEmpty()) {

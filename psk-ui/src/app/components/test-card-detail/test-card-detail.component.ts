@@ -193,7 +193,34 @@ export class TestCardDetailComponent implements AfterViewInit {
     if (this.editableTestTemplate?.id) {
       this.loadTemplateQuestions(this.editableTestTemplate.id);
       this.showQuestionManagement = true;
+    } else {
+      // Yeni test için önce template'i kaydet
+      this.saveTestTemplateForQuestionManagement();
     }
+  }
+
+  saveTestTemplateForQuestionManagement() {
+    const params = {
+      body: this.updateTestTemplate,
+    };
+    this.testTemplateAdminService.createTestTemplate(params).subscribe({
+      next: (response: TestTemplateResponse) => {
+        // Kaydedilen template'i güncelle
+        this.editableTestTemplate = response;
+        this.testCard = response;
+        // Soru yönetimi sayfasına geç
+        if (response.id) {
+          this.loadTemplateQuestions(response.id);
+          this.showQuestionManagement = true;
+        }
+      },
+      error: (err: any) => {
+        console.error('Error creating test template for question management', err);
+        this.showToast = true;
+        this.toastType = 'error';
+        this.toastMessage = 'Test kaydedilirken bir hata oluştu. Lütfen tekrar deneyin.';
+      },
+    });
   }
 
   loadTemplateQuestions(testTemplateId: number) {
@@ -273,11 +300,69 @@ export class TestCardDetailComponent implements AfterViewInit {
     });
   }
 
+  saveNewTestWithQuestions() {
+    // Update the scoring strategy in the update request
+    if (this.selectedStrategy) {
+      this.updateTestTemplate.scoringStrategy = this.selectedStrategy as 'SIMPLE_LINEAR' | 'WEIGHTED' | 'PERCENTAGE';
+    }
+
+    // Create new template first
+    this.testTemplateAdminService.createTestTemplate({
+      body: this.updateTestTemplate
+    }).subscribe({
+      next: (response: TestTemplateResponse) => {
+        this.editableTestTemplate = response;
+        this.testCard = response;
+        
+        // Update question template IDs
+        this.templateQuestions.forEach(q => {
+          q.testTemplateId = response.id;
+        });
+        
+        // Save questions if there are any
+        if (this.templateQuestions && this.templateQuestions.length > 0) {
+          this.testTemplateAdminService.updateTestTemplateQuestions({
+            id: response.id!,
+            body: this.templateQuestions
+          }).subscribe({
+            next: (updatedQuestions) => {
+              this.templateQuestions = updatedQuestions;
+              // Finally upload image if selected
+              if (this.selectedFile) {
+                this.uploadImageForNewTemplate(response.id!);
+              } else {
+                this.showSuccessAndClose(true);
+              }
+            },
+            error: (error) => {
+              console.error('Error updating questions:', error);
+              this.showToast = true;
+              this.toastType = 'error';
+              this.toastMessage = 'Sorular kaydedilirken bir hata oluştu.';
+            }
+          });
+        } else {
+          // No questions to save, just upload image if selected
+          if (this.selectedFile) {
+            this.uploadImageForNewTemplate(response.id!);
+          } else {
+            this.showSuccessAndClose(true);
+          }
+        }
+      },
+      error: (error) => {
+        console.error('Error creating test template:', error);
+        this.showToast = true;
+        this.toastType = 'error';
+        this.toastMessage = 'Test oluşturulurken bir hata oluştu.';
+      }
+    });
+  }
+
   saveAllTestChanges() {
     if (!this.editableTestTemplate?.id) {
-      this.showToast = true;
-      this.toastType = 'error';
-      this.toastMessage = 'Test template ID is missing';
+      // Yeni test için önce template'i oluştur
+      this.saveNewTestWithQuestions();
       return;
     }
 
@@ -311,7 +396,7 @@ export class TestCardDetailComponent implements AfterViewInit {
               if (this.selectedFile) {
                 this.uploadSelectedImage();
               } else {
-                this.showSuccessAndClose();
+                this.showSuccessAndClose(true);
               }
             },
             error: (error) => {
@@ -339,13 +424,16 @@ export class TestCardDetailComponent implements AfterViewInit {
     });
   }
 
-  private showSuccessAndClose() {
+  private showSuccessAndClose(isNewTest: boolean = false) {
     this.showToast = true;
     this.toastType = 'success';
-    this.toastMessage = 'Test başarıyla güncellendi!';
-    setTimeout(() => {
-      this.closeModalEvent.emit();
-    }, 2000);
+    this.toastMessage = isNewTest ? 'Test başarıyla oluşturuldu!' : 'Test başarıyla güncellendi!';
+    if (!isNewTest) {
+      console.log('close modal');
+      setTimeout(() => {
+        this.closeModalEvent.emit();
+      }, 2000);
+    } 
   }
 
   closeToast() {
@@ -420,7 +508,7 @@ export class TestCardDetailComponent implements AfterViewInit {
     }).subscribe({
       next: (response) => {
         console.log('Image uploaded successfully', response);
-        this.showSuccessAndClose();
+        this.showSuccessAndClose(true);
       },
       error: (error) => {
         console.error('Error uploading image:', error);

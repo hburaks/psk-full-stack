@@ -104,7 +104,7 @@
     <div *ngIf="isEditPage && editableTestTemplate" class="row mx-0 px-md-5 px-sm-2 my-4">
       <div class="col-12 text-end">
         <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#testUpdateModal">
-          Testi Güncelle
+          {{ editableTestTemplate?.id ? 'Testi Güncelle' : 'Test Oluştur' }}
         </button>
       </div>
     </div>
@@ -123,11 +123,11 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="testUpdateModalLabel">Testi Güncelle</h1>
+        <h1 class="modal-title fs-5" id="testUpdateModalLabel">{{ editableTestTemplate?.id ? 'Testi Güncelle' : 'Test Oluştur' }}</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        Testin tüm değişiklikleri kaydedilecek, onaylıyor musunuz?
+        {{ editableTestTemplate?.id ? 'Testin tüm değişiklikleri kaydedilecek, onaylıyor musunuz?' : 'Yeni test oluşturulacak, onaylıyor musunuz?' }}
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Vazgeç</button>

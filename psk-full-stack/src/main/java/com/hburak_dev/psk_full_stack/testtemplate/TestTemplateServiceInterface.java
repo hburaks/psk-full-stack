@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface TestTemplateServiceInterface {
 
-    TestTemplateResponse createTestTemplate(TestTemplateCreateRequest request);
+    TestTemplateResponse createTestTemplate(TestTemplateCreateRequest request, Authentication connectedUser);
 
     List<TestTemplateResponse> getAllTestTemplates();
 
