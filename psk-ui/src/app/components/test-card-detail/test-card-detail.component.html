@@ -36,6 +36,9 @@
                   <button class="btn btn-outline-secondary me-2" (click)="closeModalEvent.emit()">
                     ← Geri Dön
                   </button>
+                  <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#testUpdateModal">
+                    {{ editableTestTemplate?.id ? 'Test Bilgilerini Güncelle' : 'Test Bilgilerini Kaydet' }}
+                  </button>
                 </div>
               </ng-container>
             </ng-container>
@@ -49,7 +52,7 @@
     </div>
 
     <!-- Test Template Management Navigation -->
-    <div *ngIf="isEditPage && editableTestTemplate && !showQuestionManagement && !showCommentManagement" class="row mx-0 my-4 py-4 px-md-5 px-sm-2 border rounded">
+    <div *ngIf="isEditPage && editableTestTemplate && editableTestTemplate.id && !showQuestionManagement && !showCommentManagement" class="row mx-0 my-4 py-4 px-md-5 px-sm-2 border rounded">
       <div class="col-12">
         <h5 class="mb-3">{{ editableTestTemplate.title }} - İçerik Yönetimi</h5>
         <p class="text-muted">Bu test için soruları ve yorumları yönetebilirsiniz.</p>
@@ -68,7 +71,7 @@
         <div class="d-flex justify-content-between align-items-center mb-3">
           <h5 class="mb-0">{{ editableTestTemplate.title }} - Soruları</h5>
           <button class="btn btn-outline-secondary" (click)="showQuestionManagement = false">
-            ← Geri Dön
+            <i class="fas fa-times"></i>
           </button>
         </div>
 
@@ -99,11 +102,8 @@
         </div>
 
         <div class="d-flex justify-content-start">
-          <button class="btn btn-outline-primary me-2" (click)="addTemplateQuestion()">
+          <button class="btn btn-outline-primary" (click)="addTemplateQuestion()">
             + Soru Ekle
-          </button>
-          <button class="btn btn-primary" (click)="saveTemplateQuestions()">
-            Soruları Kaydet
           </button>
         </div>
       </div>
@@ -114,6 +114,9 @@
       <div class="col-12">
         <div class="d-flex justify-content-between align-items-center mb-3">
           <h5 class="mb-0">{{ editableTestTemplate.title }} - Yorumları</h5>
+          <button class="btn btn-outline-secondary" (click)="showCommentManagement = false">
+            <i class="fas fa-times"></i>
+          </button>
         </div>
 
         <div *ngFor="let comment of templateComments; let i = index" class="border rounded p-3 mb-3">
@@ -139,24 +142,13 @@
         </div>
 
         <div class="d-flex justify-content-start">
-          <button class="btn btn-outline-primary me-2" (click)="addTemplateComment()">
+          <button class="btn btn-outline-primary" (click)="addTemplateComment()">
             + Yorum Ekle
-          </button>
-          <button class="btn btn-primary" (click)="saveTemplateComments()">
-            Yorumları Kaydet
           </button>
         </div>
       </div>
     </div>
 
-    <!-- Common Save Button for Edit Mode -->
-    <div *ngIf="isEditPage && editableTestTemplate" class="row mx-0 px-md-5 px-sm-2 my-4">
-      <div class="col-12 text-end">
-        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#testUpdateModal">
-          {{ editableTestTemplate?.id ? 'Testi Güncelle' : 'Test Oluştur' }}
-        </button>
-      </div>
-    </div>
     
     <div class="row mx-0 px-md-5 px-sm-2">
       <div *ngIf="!isEditPage" class="col-12 text-end">

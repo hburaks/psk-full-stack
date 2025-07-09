@@ -527,13 +527,18 @@ export class TestCardDetailComponent implements AfterViewInit {
   private showSuccessAndClose(isNewTest: boolean = false) {
     this.showToast = true;
     this.toastType = 'success';
-    this.toastMessage = isNewTest ? 'Test başarıyla oluşturuldu!' : 'Test başarıyla güncellendi!';
+    this.toastMessage = isNewTest ? 'Test başarıyla oluşturuldu! Artık soru ve yorum ekleyebilirsiniz.' : 'Test başarıyla güncellendi!';
     if (!isNewTest) {
       console.log('close modal');
       setTimeout(() => {
         this.closeModalEvent.emit();
       }, 2000);
-    } 
+    } else {
+      // Yeni test oluşturulduğunda toast'ı biraz daha uzun süre göster
+      setTimeout(() => {
+        this.showToast = false;
+      }, 4000);
+    }
   }
 
   closeToast() {
