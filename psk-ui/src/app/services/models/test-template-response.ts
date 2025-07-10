@@ -6,6 +6,7 @@ export interface TestTemplateResponse {
   createdBy?: string;
   createdDate?: string;
   id?: number;
+  imagePath?: string;
   imageUrl?: string;
   isActive?: boolean;
   lastModifiedBy?: string;

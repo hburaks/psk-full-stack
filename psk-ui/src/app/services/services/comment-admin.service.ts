@@ -16,6 +16,8 @@ import { createComment } from '../fn/comment-admin/create-comment';
 import { CreateComment$Params } from '../fn/comment-admin/create-comment';
 import { getCommentsByTestTemplate } from '../fn/comment-admin/get-comments-by-test-template';
 import { GetCommentsByTestTemplate$Params } from '../fn/comment-admin/get-comments-by-test-template';
+import { updateTestTemplateComments } from '../fn/comment-admin/update-test-template-comments';
+import { UpdateTestTemplateComments$Params } from '../fn/comment-admin/update-test-template-comments';
 
 
 /**
@@ -56,6 +58,39 @@ export class CommentAdminService extends BaseService {
    */
   getCommentsByTestTemplate(params: GetCommentsByTestTemplate$Params, context?: HttpContext): Observable<Array<AdminTestCommentResponse>> {
     return this.getCommentsByTestTemplate$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<AdminTestCommentResponse>>): Array<AdminTestCommentResponse> => r.body)
+    );
+  }
+
+  /** Path part for operation `updateTestTemplateComments()` */
+  static readonly UpdateTestTemplateCommentsPath = '/v2/admin/comments/test-template/{testTemplateId}';
+
+  /**
+   * Update all comments for a test template.
+   *
+   * Update all comments for a test template in bulk
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `updateTestTemplateComments()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  updateTestTemplateComments$Response(params: UpdateTestTemplateComments$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<AdminTestCommentResponse>>> {
+    return updateTestTemplateComments(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * Update all comments for a test template.
+   *
+   * Update all comments for a test template in bulk
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `updateTestTemplateComments$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  updateTestTemplateComments(params: UpdateTestTemplateComments$Params, context?: HttpContext): Observable<Array<AdminTestCommentResponse>> {
+    return this.updateTestTemplateComments$Response(params, context).pipe(
       map((r: StrictHttpResponse<Array<AdminTestCommentResponse>>): Array<AdminTestCommentResponse> => r.body)
     );
   }

@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,8 +25,9 @@ public class TestTemplateController {
     @PostMapping
     @Operation(summary = "Create a new test template")
     public ResponseEntity<TestTemplateResponse> createTestTemplate(
-            @Valid @RequestBody TestTemplateCreateRequest request) {
-        TestTemplateResponse response = testTemplateService.createTestTemplate(request);
+            @Valid @RequestBody TestTemplateCreateRequest request,
+            Authentication connectedUser) {
+        TestTemplateResponse response = testTemplateService.createTestTemplate(request, connectedUser);
         return ResponseEntity.ok(response);
     }
 
@@ -86,5 +88,16 @@ public class TestTemplateController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @PutMapping("/{id}/questions")
+    @Operation(summary = "Update test template questions",
+               description = "Update all questions and choices for a test template")
+    public ResponseEntity<List<QuestionResponse>> updateTestTemplateQuestions(
+            @PathVariable Integer id,
+            @Valid @RequestBody List<QuestionResponse> questions,
+            Authentication connectedUser) {
+        List<QuestionResponse> updatedQuestions = testTemplateService.updateTestTemplateQuestions(id, questions, connectedUser);
+        return ResponseEntity.ok(updatedQuestions);
     }
 }

@@ -1,6 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {TestTemplateResponse} from 'src/app/services/models';
-import {FileControllerService} from 'src/app/services/services';
 
 @Component({
   selector: 'app-test-card',
@@ -16,17 +15,10 @@ export class TestCardComponent implements OnInit {
 
   @Input() imageUrl: string | null = null;
 
-  constructor(private fileService: FileControllerService) {
+  constructor() {
   }
 
   ngOnInit(): void {
-    if (this.imageUrl && this.imageUrl.length > 0) {
-      this.fileService
-        .downloadTestFile({ fileName: this.imageUrl })
-        .subscribe((response) => {
-          console.log(response);
-        });
-    }
   }
 
   editTestTemplate() {
@@ -41,12 +33,4 @@ export class TestCardComponent implements OnInit {
     return this.testTemplate || this.testCard;
   }
 
-  // Legacy methods for backward compatibility
-  editTest() {
-    this.editTestTemplate();
-  }
-
-  deleteTest() {
-    this.deleteTestTemplate();
-  }
 }

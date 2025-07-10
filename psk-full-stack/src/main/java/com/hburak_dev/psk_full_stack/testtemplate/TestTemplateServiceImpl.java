@@ -6,10 +6,12 @@ import com.hburak_dev.psk_full_stack.handler.BusinessErrorCodes;
 import com.hburak_dev.psk_full_stack.question.QuestionResponse;
 import com.hburak_dev.psk_full_stack.question.QuestionServiceInterface;
 import com.hburak_dev.psk_full_stack.service.FileStorageService;
+import com.hburak_dev.psk_full_stack.user.User;
 import com.hburak_dev.psk_full_stack.usertest.UserTestRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,8 +33,12 @@ public class TestTemplateServiceImpl implements TestTemplateServiceInterface {
 
     @Override
     @Transactional
-    public TestTemplateResponse createTestTemplate(TestTemplateCreateRequest request) {
+    public TestTemplateResponse createTestTemplate(TestTemplateCreateRequest request, Authentication connectedUser) {
         TestTemplate testTemplate = testTemplateMapper.toTestTemplate(request);
+        
+        // Set createdBy from authenticated user
+        User user = (User) connectedUser.getPrincipal();
+        testTemplate.setCreatedBy(user.getId());
         
         // Create comments from request if provided
         if (request.getComments() != null && !request.getComments().isEmpty()) {
@@ -203,5 +209,16 @@ public class TestTemplateServiceImpl implements TestTemplateServiceInterface {
 
         log.info("Image uploaded for test template id: {}, filename: {}", testTemplateId, fileName);
         return fileName;
+    }
+
+    @Override
+    @Transactional
+    public List<QuestionResponse> updateTestTemplateQuestions(Integer testTemplateId, List<QuestionResponse> questions, Authentication connectedUser) {
+        if (!testTemplateRepository.existsById(testTemplateId)) {
+            throw new TestTemplateNotFoundException("Test template not found with id: " + testTemplateId, BusinessErrorCodes.TEST_TEMPLATE_NOT_FOUND);
+        }
+        
+        log.info("Updating {} questions for test template id: {}", questions.size(), testTemplateId);
+        return questionService.updateQuestionsForTestTemplate(testTemplateId.longValue(), questions, connectedUser);
     }
 }
