@@ -24,6 +24,8 @@ import { TestService } from './custom-services/test/test.service';
 import { SharedModule } from './modules/shared/shared.module';
 import { CustomUserService } from './custom-services/custom-user/custom-user.service';
 import { TestSolverComponent } from './components/test-solver/test-solver.component';
+import { ApiModule } from './services/api.module';
+import { environment } from '../environments/environment';
 
 @NgModule({
   declarations: [
@@ -46,6 +48,7 @@ import { TestSolverComponent } from './components/test-solver/test-solver.compon
     ReactiveFormsModule,
     CodeInputModule,
     SharedModule,
+    ApiModule.forRoot({ rootUrl: environment.apiUrl }),
   ],
   providers: [
     HttpClient,
