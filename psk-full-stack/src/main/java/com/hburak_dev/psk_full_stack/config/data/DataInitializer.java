@@ -34,7 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-@Profile("dev")
+@Profile("uat")
 public class DataInitializer {
 
         private final SessionRepository sessionRepository;
