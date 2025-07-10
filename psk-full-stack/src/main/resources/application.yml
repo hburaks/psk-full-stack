@@ -2,7 +2,7 @@ spring:
   application:
     name: psk-full-stack
   profiles:
-    active: dev
+    active: ${SPRING_PROFILES_ACTIVE:uat}
   servlet:
     multipart:
       max-file-size: 10MB

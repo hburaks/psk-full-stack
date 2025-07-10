@@ -1,5 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {TestTemplateResponse} from 'src/app/services/models';
+import {environment} from 'src/environments/environment';
 
 @Component({
   selector: 'app-test-card',
@@ -31,6 +32,19 @@ export class TestCardComponent implements OnInit {
 
   get currentData() {
     return this.testTemplate || this.testCard;
+  }
+
+  get fullImageUrl() {
+    const data = this.currentData;
+    if (!data?.imageUrl) {
+      return null;
+    }
+    
+    if (data.imageUrl.startsWith('http')) {
+      return data.imageUrl;
+    }
+    
+    return `${environment.apiUrl}${data.imageUrl}`;
   }
 
 }

@@ -1,15 +1,11 @@
 package com.hburak_dev.psk_full_stack.testtemplate;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class TestTemplateMapper {
-
-    @Value("${server.port}")
-    private String serverPort;
 
     public TestTemplate toTestTemplate(TestTemplateCreateRequest request) {
         return TestTemplate.builder()
@@ -32,8 +28,7 @@ public class TestTemplateMapper {
     public TestTemplateResponse toTestTemplateResponse(TestTemplate testTemplate) {
         String imageUrl = null;
         if (testTemplate.getImageUrl() != null) {
-            imageUrl = String.format("http://localhost:%s/api/v3/files/test-template/download/%s",
-                    serverPort, testTemplate.getImageUrl());
+            imageUrl = String.format("/v3/files/test-template/download/%s", testTemplate.getImageUrl());
         }
 
         return TestTemplateResponse.builder()

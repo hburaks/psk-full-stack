@@ -10,6 +10,7 @@ import {
   TestTemplateUpdateRequest,
 } from 'src/app/services/models';
 import {CommentAdminService, QuestionAdminService, ScoringAdminService, TestTemplateAdminService} from 'src/app/services/services';
+import {environment} from 'src/environments/environment';
 
 @Component({
   selector: 'app-test-card-detail',
@@ -82,7 +83,7 @@ export class TestCardDetailComponent implements AfterViewInit {
       this.testCard = this.editableTestTemplate;
       // Set imageUrl for display purposes only, don't include in update request
       if (this.editableTestTemplate?.imageUrl) {
-        this.imageUrl = this.editableTestTemplate.imageUrl;
+        this.imageUrl = this.getFullImageUrl(this.editableTestTemplate.imageUrl);
       }
     }
 
@@ -627,5 +628,17 @@ export class TestCardDetailComponent implements AfterViewInit {
 
   getResult() {
     console.log('Test completion not implemented for TestTemplate workflow');
+  }
+
+  getFullImageUrl(imageUrl: string): string {
+    if (!imageUrl) {
+      return '';
+    }
+    
+    if (imageUrl.startsWith('http')) {
+      return imageUrl;
+    }
+    
+    return `${environment.apiUrl}${imageUrl}`;
   }
 }
