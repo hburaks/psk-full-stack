@@ -37,7 +37,7 @@ application:
   file:
     upload-dir: ${UPLOAD_DIR:/app/uploads}
   cors:
-    origins: https://psk-full-stack-dek1m6p8f-hburaks-projects.vercel.app,https://psk-full-stack.vercel.app/
+    origins: ${CORS_ORIGINS}
 server:
   port: 8088 
 google:
