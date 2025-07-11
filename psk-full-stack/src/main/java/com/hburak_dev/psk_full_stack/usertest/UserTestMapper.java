@@ -15,8 +15,8 @@ public class UserTestMapper {
     public UserTestResponse toUserTestResponse(UserTest userTest) {
         String imageUrl = null;
         if (userTest.getTestTemplate() != null && userTest.getTestTemplate().getImageUrl() != null) {
-            imageUrl = String.format("http://localhost:%s/api/v3/files/test-template/download/%s",
-                    serverPort, userTest.getTestTemplate().getImageUrl());
+            imageUrl = String.format("/v3/files/test-template/download/%s",
+                    userTest.getTestTemplate().getImageUrl());
         }
 
         return UserTestResponse.builder()
@@ -53,8 +53,8 @@ public class UserTestMapper {
     public UserTestListResponse toUserTestListResponse(UserTest userTest) {
         String imageUrl = null;
         if (userTest.getTestTemplate() != null && userTest.getTestTemplate().getImageUrl() != null) {
-            imageUrl = String.format("http://localhost:%s/api/v3/files/test-template/download/%s",
-                    serverPort, userTest.getTestTemplate().getImageUrl());
+            imageUrl = String.format("/v3/files/test-template/download/%s",
+                    userTest.getTestTemplate().getImageUrl());
         }
 
         return UserTestListResponse.builder()

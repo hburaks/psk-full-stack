@@ -24,8 +24,8 @@ public class BlogMapper {
     public BlogResponse toBlogResponse(Blog blog) {
         String imageUrl = null;
         if (blog.getImageFileName() != null) {
-            imageUrl = String.format("http://localhost:%s/api/v3/files/blog/download/%s",
-                    serverPort, blog.getImageFileName());
+            imageUrl = String.format("/v3/files/blog/download/%s",
+                    blog.getImageFileName());
         }
 
         return BlogResponse.builder()

@@ -12,8 +12,8 @@ public class CommentMapper {
     public PublicTestAnswerCommentResponse toPublicTestAnswerCommentResponse(Comment resultComment) {
         String imageUrl = null;
         if (resultComment.getImageUrl() != null) {
-            imageUrl = String.format("http://localhost:%s/api/v3/files/comment/download/%s",
-                    serverPort, resultComment.getImageUrl());
+            imageUrl = String.format("/v3/files/comment/download/%s",
+                    resultComment.getImageUrl());
         }
         return PublicTestAnswerCommentResponse.builder()
                 .title(resultComment.getTitle())
@@ -76,8 +76,8 @@ public class CommentMapper {
     public UserCommentResponse toUserCommentResponse(Comment comment) {
         String imageUrl = null;
         if (comment.getImageUrl() != null) {
-            imageUrl = String.format("http://localhost:%s/api/v3/files/comment/download/%s",
-                    serverPort, comment.getImageUrl());
+            imageUrl = String.format("/v3/files/comment/download/%s",
+                    comment.getImageUrl());
         }
         return UserCommentResponse.builder()
                 .score(comment.getScore())
@@ -90,8 +90,8 @@ public class CommentMapper {
     public AdminTestCommentResponse toAdminCommentResponse(Comment comment) {
         String imageUrl = null;
         if (comment.getImageUrl() != null) {
-            imageUrl = String.format("http://localhost:%s/api/v3/files/comment/download/%s",
-                    serverPort, comment.getImageUrl());
+            imageUrl = String.format("/v3/files/comment/download/%s",
+                    comment.getImageUrl());
         }
         return AdminTestCommentResponse.builder()
                 .commentId(comment.getId())
